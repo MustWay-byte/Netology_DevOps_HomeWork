@@ -1,6 +1,6 @@
 Задача 1
 
-Выполнена.
+<img width="743" height="183" alt="1" src="https://github.com/user-attachments/assets/3cf1fd41-0faf-4810-bf32-ace70c3fd188" />
 
 Задача 2
 
