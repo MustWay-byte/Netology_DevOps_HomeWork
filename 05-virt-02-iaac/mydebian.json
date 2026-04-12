@@ -1,0 +1,35 @@
+{
+    "builders": [
+        {
+            "type": "yandex",
+            "token": "xxxxxxx",
+            "folder_id": "xxxxxxxxx",
+            "zone": "ru-central1-a",
+            "image_name": "debian-11-docker",
+            "image_description": "my custom debian with docker",
+            "source_image_family": "debian-11",
+            "subnet_id": "xxxxxxxx",
+            "use_ipv4_nat": true,
+            "disk_type": "network-hdd",
+            "ssh_username": "debian"
+        }
+    ],
+    "provisioners": [
+    {
+        "type": "shell",
+        "inline": [
+            "echo 'hello from packer'",
+            "sudo rm -f /etc/apt/sources.list.d/backports.list",
+            "sudo sed -i '/backports/d' /etc/apt/sources.list",
+            "sudo apt-get update -y",
+            "sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release htop tmux",
+            "curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
+            "echo \"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
+            "sudo apt-get update -y",
+            "sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin",
+            "sudo usermod -aG docker $USER",
+            "echo 'Docker, htop, tmux installation completed'"
+        ]
+    }
+]
+}
