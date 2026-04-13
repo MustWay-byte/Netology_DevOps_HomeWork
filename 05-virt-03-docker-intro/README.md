@@ -98,12 +98,38 @@ https://hub.docker.com/r/mustway/custom-nginx
 
 # Задача 5
 
+<img width="1401" height="361" alt="image" src="https://github.com/user-attachments/assets/d6fbb9a2-22b9-4d31-8380-18ffbe1cc89a" />
 
+**Создание директории, файлов и запуск портейнера**
 
+Согласно документации Docker Compose, если в директории присутствуют оба файла (compose.yaml и docker-compose.yaml), приоритет имеет compose.yaml. Это стандартное поведение инструмента.
 
+<img width="449" height="214" alt="image" src="https://github.com/user-attachments/assets/8d351c79-d9f8-4d6c-b72e-aa7763b1a102" />
 
+**Отредактированный файл compose.yaml для запуска двух файлов одновременно**
 
+<img width="1123" height="20" alt="image" src="https://github.com/user-attachments/assets/19eb3475-1b22-4c04-bf21-18d61da86005" />
 
+**Создание тега для локального реестра**
 
+<img width="903" height="232" alt="image" src="https://github.com/user-attachments/assets/458e3f13-575b-479e-9210-3437b496525b" />
 
+**Загрузка образа в локальный реестр**
 
+<img width="1838" height="1012" alt="й" src="https://github.com/user-attachments/assets/2a6e670d-aaa5-4508-bdcb-c4fe250b3de4" />
+
+**Создание аккаунта администратора**
+
+<img width="1845" height="1028" alt="image" src="https://github.com/user-attachments/assets/53879b1a-17a2-4073-8580-b3e2f4a6bcd7" />
+
+**Создание контейнера с созданной страницей при помощи портейнера**
+
+<img width="648" height="938" alt="image" src="https://github.com/user-attachments/assets/edf66e73-279f-4a73-888b-67d9487227f8" />
+
+**Информация о контейнере с Nginx**
+
+<img width="1847" height="272" alt="image" src="https://github.com/user-attachments/assets/dc40c9dc-b7fd-4149-a7d3-be0ecdf27ba9" />
+
+**Удаление манифеста и остановка контейнеров**
+
+Ранее в этой директории существовал файл compose.yaml, в котором был описан сервис portainer. Docker Compose запустил контейнер task5-portainer-1 на основе этого описания. Docker Compose обнаружил, что есть запущенные контейнеры, которые не соответствуют ни одному сервису в текущем compose-файле. Такие контейнеры называются осиротевшими. Это предупреждение напоминает, что был случайно удален сервис из конфигурации, и предлагается убрать «осиротевшие» контейнеры с помощью флага --remove-orphans.
