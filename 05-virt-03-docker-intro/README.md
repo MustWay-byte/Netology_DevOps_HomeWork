@@ -120,7 +120,7 @@ https://hub.docker.com/r/mustway/custom-nginx
 
 **Создание аккаунта администратора**
 
-<img width="1845" height="1028" alt="image" src="https://github.com/user-attachments/assets/53879b1a-17a2-4073-8580-b3e2f4a6bcd7" />
+<img width="1845" height="1028" alt="577297050-53879b1a-17a2-4073-8580-b3e2f4a6bcd7" src="https://github.com/user-attachments/assets/af675e74-7bac-4e56-be0e-4038ee706f96" />
 
 **Создание контейнера с созданной страницей при помощи портейнера**
 
