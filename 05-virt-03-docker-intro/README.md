@@ -76,5 +76,34 @@ https://hub.docker.com/r/mustway/custom-nginx
 
 # Задача 4
 
+<img width="1240" height="127" alt="image" src="https://github.com/user-attachments/assets/2fb702e0-890c-4b15-b32a-4e9d74fb81e2" />
+
+**Запуск контейнера CentOS**
+
+<img width="1508" height="164" alt="image" src="https://github.com/user-attachments/assets/68eedbac-3b9f-4333-8771-a3f47c97c988" />
+
+**Запуск контейнера Debian**
+
+<img width="1171" height="27" alt="image" src="https://github.com/user-attachments/assets/dd4b3dc1-f512-4ead-9f92-898442d6d8fb" />
+
+**Создание файла в контейнере**
+
+<img width="739" height="22" alt="image" src="https://github.com/user-attachments/assets/04734b37-1e8c-4ed6-bf15-4ed195b59707" />
+
+**Создание файла на хостовой машине**
+
+<img width="1695" height="383" alt="image" src="https://github.com/user-attachments/assets/63092426-403b-4c8f-be8a-0547b22b0f38" />
+
+**Отображение всех файлов**
 
 # Задача 5
+
+
+
+
+
+
+
+
+
+
