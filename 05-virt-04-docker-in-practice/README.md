@@ -1339,6 +1339,20 @@ vulnerabilities:
 
 # Задача 4
 
+<img width="1106" height="891" alt="image" src="https://github.com/user-attachments/assets/305169e8-d272-4e39-8a16-d31ac4857ea9" />
+
+**Проверка доступности сервиса**
+
+<img width="1595" height="180" alt="image" src="https://github.com/user-attachments/assets/33041a35-307e-421e-97b2-d6ff72addfca" />
+
+**Настроенный context и проверка контейнеров**
+
+<img width="717" height="919" alt="image" src="https://github.com/user-attachments/assets/dd640e38-e63a-4ed7-9e6b-a7e00bf1a237" />
+
+**SQL-запрос**
+
+Ссылка на fork: https://github.com/MustWay-byte/shvirtd-example-python
+
 # Задача 5
 
 # Задача 6
