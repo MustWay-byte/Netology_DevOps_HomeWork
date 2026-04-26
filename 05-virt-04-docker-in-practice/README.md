@@ -1392,3 +1392,7 @@ vulnerabilities:
 **Распаковка бинарника при помощи Dockerfile**
 
 # Задача 7
+
+<img width="644" height="130" alt="image" src="https://github.com/user-attachments/assets/a03769b2-02e5-475d-ae42-d3ba411951e5" />
+
+**Запуск при помощи runC**
