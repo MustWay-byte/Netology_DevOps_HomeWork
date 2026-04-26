@@ -1381,6 +1381,14 @@ vulnerabilities:
 
 # Задача 6.1
 
+<img width="749" height="163" alt="image" src="https://github.com/user-attachments/assets/a45ebe54-7dfe-4421-b24a-d0ce8d2440ff" />
+
+**Распаковка бинарника при помощи Docker cp**
+
 # Задача 6.2
+
+<img width="834" height="412" alt="image" src="https://github.com/user-attachments/assets/374bba6a-3f6b-4da9-a81d-b49098c12e61" />
+
+**Распаковка бинарника при помощи Dockerfile**
 
 # Задача 7
