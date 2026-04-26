@@ -1367,6 +1367,18 @@ vulnerabilities:
 
 # Задача 6
 
+<img width="1568" height="913" alt="image" src="https://github.com/user-attachments/assets/534c7fab-60e3-4e20-b2d2-9d3778357fc8" />
+
+**Анализ файла при помощи Dive**
+
+<img width="1007" height="250" alt="image" src="https://github.com/user-attachments/assets/de625707-d467-4842-ad83-781e21f0c2d4" />
+
+**Docker save, нахождение бинарника**
+
+<img width="1511" height="125" alt="image" src="https://github.com/user-attachments/assets/9b462ee9-1e60-4a19-ad46-23f68bb431a3" />
+
+**Распаковка бинарника**
+
 # Задача 6.1
 
 # Задача 6.2
