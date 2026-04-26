@@ -1355,6 +1355,16 @@ vulnerabilities:
 
 # Задача 5
 
+Ссылка на скрипт: https://github.com/MustWay-byte/shvirtd-example-python/blob/main/backup.sh
+
+<img width="1060" height="476" alt="image" src="https://github.com/user-attachments/assets/7af27e4d-1977-48f0-8fb0-eee99678f43b" />
+
+**Настройка Crontab**
+
+<img width="1110" height="57" alt="image" src="https://github.com/user-attachments/assets/85b5d126-2e4c-464f-a3c3-0ca2ddb2276c" />
+
+**Список резервных копий**
+
 # Задача 6
 
 # Задача 6.1
