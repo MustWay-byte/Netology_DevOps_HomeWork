@@ -1333,6 +1333,10 @@ vulnerabilities:
 
 # Задача 3
 
+<img width="1226" height="839" alt="Снимок экрана 2026-04-26 185831" src="https://github.com/user-attachments/assets/c2fad873-9342-4b5c-a340-c3840a5b78f8" />
+
+**SQL-запрос**
+
 # Задача 4
 
 # Задача 5
