@@ -6,5 +6,9 @@
 
 # Задача 2
 
+<img width="728" height="346" alt="задача2" src="https://github.com/user-attachments/assets/062cead4-310b-438f-948a-36a9087c5710" />
+
+**Просмотр сервисов задеплоенного приложения и удаление стенда**
+
 
 
