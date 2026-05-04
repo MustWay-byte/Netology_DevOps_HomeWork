@@ -12,7 +12,14 @@
 
 # Задача 3
 
+<img width="1832" height="1029" alt="image" src="https://github.com/user-attachments/assets/bda44b01-b6fb-4f07-ac98-7be5e9bc60f5" />
 
+**Мониторинг графиков в Grafana**
 
-**Решается**
+<img width="742" height="288" alt="image" src="https://github.com/user-attachments/assets/fd99bccd-70e9-4d23-88cc-657691b94687" />
 
+**Проверка статуса кластера**
+
+<img width="1533" height="188" alt="image" src="https://github.com/user-attachments/assets/fd2b8597-f1e0-4be0-836c-9dceef8af40a" />
+
+**Список сервисов мониторинга**
