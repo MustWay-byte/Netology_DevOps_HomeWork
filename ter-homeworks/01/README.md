@@ -53,6 +53,22 @@ CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS   
 
 3) Автоматическое восстановление инфраструктуры в сочетании с мониторингом.
 
-<img width="731" height="97" alt="image" src="https://github.com/user-attachments/assets/08fc9422-639e-4c5c-97c6-a86804c9a834" />
+<img width="736" height="118" alt="image" src="https://github.com/user-attachments/assets/c8335d0c-db4e-4c9a-838f-df423dfb1a7c" />
 
-**Вывод Docker-контейнеров**
+**Вывод Docker-контейнера**
+
+mustway@mustway-server:~/ter-homeworks/01/src$ cat terraform.tfstate
+{
+  "version": 4,
+  "terraform_version": "1.15.2",
+  "serial": 12,
+  "lineage": "c88e0f8d-a0df-ca52-0b79-21205d7d3815",
+  "outputs": {},
+  "resources": [],
+  "check_results": null
+}
+
+Образ не был удалён, потому что в коде ресурса docker_image явно задан параметр keep_locally = true. Именно строка keep_locally = true указывает провайдеру Docker сохранять образ в локальном хранилище после уничтожения ресурса. Это поведение полностью соответствует официальной документации. Согласно документации Terraform-провайдера Docker для ресурса docker_image: keep_locally - (Optional, boolean) If true, then the Docker image won't be deleted on destroy operation. If this is false, it will delete the image from the docker local storage on destroy operation.
+
+# Задание 2
+
