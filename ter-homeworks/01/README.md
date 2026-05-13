@@ -72,3 +72,14 @@ mustway@mustway-server:~/ter-homeworks/01/src$ cat terraform.tfstate
 
 # Задание 2
 
+Согласно документации провайдера Docker, конфигурация для подключения по SSH выглядит так:
+
+hcl
+provider "docker" {
+  host     = "ssh://yc-user@<публичный_IP_вашей_ВМ>:22"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+<img width="727" height="94" alt="image" src="https://github.com/user-attachments/assets/6d50abf8-060b-40ae-b84e-cbf392083742" />
+
+**Вывод Docker-контейнера**
