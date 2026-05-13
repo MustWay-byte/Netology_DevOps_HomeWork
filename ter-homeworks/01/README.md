@@ -83,3 +83,85 @@ provider "docker" {
 <img width="727" height="94" alt="image" src="https://github.com/user-attachments/assets/6d50abf8-060b-40ae-b84e-cbf392083742" />
 
 **Вывод Docker-контейнера**
+
+# Задание 3
+
+Выполнение кода через opentofu:
+
+mustway@mustway-server:~/ter-homeworks/01/src$ tofu apply
+random_password.mysql_wordpress_password: Refreshing state... [id=none]
+random_password.mysql_root_password: Refreshing state... [id=none]
+docker_image.mysql: Refreshing state... [id=sha256:c36050afdca850f23cef85703f84c7531a5ae155a11b5ee1c60acb09937c4084mysql:8]
+
+OpenTofu used the selected providers to generate the following execution plan.
+Resource actions are indicated with the following symbols:
+  + create
+
+OpenTofu will perform the following actions:
+
+  # docker_container.mysql will be created
+  + resource "docker_container" "mysql" {
+      + attach                                      = false
+      + bridge                                      = (known after apply)
+      + command                                     = (known after apply)
+      + container_logs                              = (known after apply)
+      + container_read_refresh_timeout_milliseconds = 15000
+      + entrypoint                                  = (known after apply)
+      + env                                         = (sensitive value)
+      + exit_code                                   = (known after apply)
+      + hostname                                    = (known after apply)
+      + id                                          = (known after apply)
+      + image                                       = "sha256:c36050afdca850f23cef85703f84c7531a5ae155a11b5ee1c60acb09937c4084"
+      + init                                        = (known after apply)
+      + ipc_mode                                    = (known after apply)
+      + log_driver                                  = (known after apply)
+      + logs                                        = false
+      + memory_reservation                          = 0
+      + must_run                                    = true
+      + name                                        = "mysql"
+      + network_data                                = (known after apply)
+      + network_mode                                = "bridge"
+      + platform                                    = (known after apply)
+      + read_only                                   = false
+      + remove_volumes                              = true
+      + restart                                     = "no"
+      + rm                                          = false
+      + runtime                                     = (known after apply)
+      + security_opts                               = (known after apply)
+      + shm_size                                    = (known after apply)
+      + start                                       = true
+      + stdin_open                                  = false
+      + stop_signal                                 = (known after apply)
+      + stop_timeout                                = (known after apply)
+      + tty                                         = false
+      + wait                                        = false
+      + wait_timeout                                = 60
+
+      + healthcheck (known after apply)
+
+      + labels (known after apply)
+
+      + ports {
+          + external = 3306
+          + internal = 3306
+          + ip       = "127.0.0.1"
+          + protocol = "tcp"
+        }
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  OpenTofu will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+docker_container.mysql: Creating...
+docker_container.mysql: Creation complete after 1s [id=b9c39cf8647fa3777fe63962ecb218520ce9b8a37deff7fa7fb0dc08faa2293e]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+<img width="734" height="116" alt="image" src="https://github.com/user-attachments/assets/579f5d0a-d958-47c5-8fdb-c62c0025e404" />
+
+**Вывод Docker-контейнера**
