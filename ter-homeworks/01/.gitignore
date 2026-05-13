@@ -1,0 +1,10 @@
+# Терраформ-служебные файлы
+**/.terraform/*
+.terraform*
+
+# State-файлы
+*.tfstate
+*.tfstate.*
+
+# Файлы с секретами
+personal.auto.tfvars
