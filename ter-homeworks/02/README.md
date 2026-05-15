@@ -191,4 +191,10 @@ variable "vm_db_preemptible" {
 
 # Задание 9
 
+<img width="976" height="532" alt="1" src="https://github.com/user-attachments/assets/4e39ce8e-b5df-478a-8b11-8c6c94bf2cdb" />
 
+**Ввод команды curl на ВМ 1**
+
+<img width="953" height="516" alt="2" src="https://github.com/user-attachments/assets/a02caf1a-b1d5-4b91-a5b9-46315fafca21" />
+
+**Ввод команды curl на ВМ 2**
