@@ -169,7 +169,7 @@ variable "vm_db_preemptible" {
 
 **Отображение второго элемента списка**
 
-Объяснение: индексация списков начинается с 0, поэтому второй элемент — индекс 1.
+Объяснение: индексация списков начинается с 0, поэтому второй элемент индекс 1.
 
 <img width="215" height="40" alt="image" src="https://github.com/user-attachments/assets/2e5661b7-41af-4619-b9f1-28f3155d4805" />
 
@@ -183,5 +183,12 @@ variable "vm_db_preemptible" {
 
 **Отображение interpolation-выражения**
 
+# Задание 8
+
+<img width="586" height="60" alt="image" src="https://github.com/user-attachments/assets/2dd34b09-704d-41f0-ac1b-51bf0b28e8b7" />
+
+**Отображение строки из переменной**
+
+# Задание 9
 
 
