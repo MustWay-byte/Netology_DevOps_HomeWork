@@ -162,3 +162,26 @@ variable "vm_db_preemptible" {
 <img width="729" height="268" alt="image" src="https://github.com/user-attachments/assets/9a6cc633-112f-4833-ae47-5087399a59c7" />
 
 **Ввод команды Terraform plan**
+
+# Задание 7
+
+<img width="591" height="54" alt="image" src="https://github.com/user-attachments/assets/19933f19-859f-4e32-9962-477bb9fe918d" />
+
+**Отображение второго элемента списка**
+
+Объяснение: индексация списков начинается с 0, поэтому второй элемент — индекс 1.
+
+<img width="215" height="40" alt="image" src="https://github.com/user-attachments/assets/2e5661b7-41af-4619-b9f1-28f3155d4805" />
+
+**Отображение длины списка**
+
+<img width="222" height="40" alt="image" src="https://github.com/user-attachments/assets/e1df98a9-f019-4f62-836a-fca52ebda10a" />
+
+**Отображение значения ключа**
+
+<img width="729" height="95" alt="image" src="https://github.com/user-attachments/assets/f7cbe67b-640c-4ac9-a5b3-9b1496444c19" />
+
+**Отображение interpolation-выражения**
+
+
+
