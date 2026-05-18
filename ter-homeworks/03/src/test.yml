@@ -1,0 +1,9 @@
+---
+- name: Test connection to all VMs
+  hosts: all
+  gather_facts: no
+  any_errors_fatal: false
+  tasks:
+    - name: Ping hosts
+      ansible.builtin.ping:
+      ignore_unreachable: yes
