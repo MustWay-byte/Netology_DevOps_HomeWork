@@ -43,3 +43,22 @@
 <img width="627" height="346" alt="image" src="https://github.com/user-attachments/assets/17be155b-bd76-452e-a5bc-c0eefa055ccd" />
 
 **Обработка выражений**
+
+# Задание 8
+
+Ошибка в шаблоне hosts.tftpl: пропущена закрывающая скобка } у выражения ${i["network_interface"][0]["nat_ip_address"], из-за чего Terraform пытается интерпретировать весь дальнейший текст как часть этого же выражения. Кроме того, в ключе "platform_id " присутствует лишний пробел, что также приведёт к ошибке или некорректному значению.
+
+Исправленный шаблон:
+
+hcl
+[webservers]
+%{~ for i in webservers ~}
+${i["name"]} ansible_host=${i["network_interface"][0]["nat_ip_address"]} platform_id=${i["platform_id"]}
+%{~ endfor ~}
+
+Изменения:
+
+1) Добавлена } после ["nat_ip_address"].
+
+2) Убран пробел в ключе "platform_id".
+
