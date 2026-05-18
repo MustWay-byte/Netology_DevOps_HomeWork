@@ -34,3 +34,10 @@
 
 # Задание 6
 
+<img width="1443" height="638" alt="image" src="https://github.com/user-attachments/assets/eaf05e6b-9add-41aa-9d48-0dffdee90e0b" />
+
+**Работа Ansible**
+
+# Задание 7
+
+
