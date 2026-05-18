@@ -62,3 +62,12 @@ ${i["name"]} ansible_host=${i["network_interface"][0]["nat_ip_address"]} platfor
 
 2) Убран пробел в ключе "platform_id".
 
+# Задание 9
+
+<img width="591" height="993" alt="image" src="https://github.com/user-attachments/assets/1fdef33f-bbaa-4878-a713-d5e341ee8066" />
+
+**Выражение для формирования первого списка**
+
+<img width="819" height="982" alt="image" src="https://github.com/user-attachments/assets/1d450b86-6b01-419f-b77c-1997d33f03c5" />
+
+**Выражение для формирования второго списка**
