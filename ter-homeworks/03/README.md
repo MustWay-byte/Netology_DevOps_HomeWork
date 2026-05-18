@@ -12,3 +12,10 @@
 
 # Задание 3
 
+<img width="1277" height="426" alt="image" src="https://github.com/user-attachments/assets/fbe78e74-a137-45c0-80b5-c1a8098b65d7" />
+
+**Инициализированные диски**
+
+<img width="1854" height="303" alt="image" src="https://github.com/user-attachments/assets/f85fc541-46a1-4f13-9c72-1a2a90b8d64f" />
+
+**Инициализированная виртуальная машина**
