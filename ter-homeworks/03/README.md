@@ -40,4 +40,6 @@
 
 # Задание 7
 
+<img width="627" height="346" alt="image" src="https://github.com/user-attachments/assets/17be155b-bd76-452e-a5bc-c0eefa055ccd" />
 
+**Обработка выражений**
