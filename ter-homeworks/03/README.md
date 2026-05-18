@@ -27,3 +27,10 @@
 **Содержимое файла "hosts.ini"**
 
 # Задание 5
+
+<img width="705" height="414" alt="image" src="https://github.com/user-attachments/assets/3cf15fd9-3177-4c1b-b788-626029bd4346" />
+
+**Вывод команды "terraform output"**
+
+# Задание 6
+
