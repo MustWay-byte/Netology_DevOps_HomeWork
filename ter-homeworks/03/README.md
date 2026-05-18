@@ -19,3 +19,11 @@
 <img width="1854" height="303" alt="image" src="https://github.com/user-attachments/assets/f85fc541-46a1-4f13-9c72-1a2a90b8d64f" />
 
 **Инициализированная виртуальная машина**
+
+# Задание 4
+
+<img width="1428" height="129" alt="image" src="https://github.com/user-attachments/assets/e4aeeb2b-e655-4411-8209-1b29dd2b8922" />
+
+**Содержимое файла "hosts.ini"**
+
+# Задание 5
