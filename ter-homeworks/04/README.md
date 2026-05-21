@@ -132,4 +132,17 @@ module "vpc_dev" {
 
 **Просмотр кластера**
 
+# Задание 6
+
+<img width="1033" height="116" alt="image" src="https://github.com/user-attachments/assets/c8c081a6-93b1-445a-a702-7101a0e590eb" />
+
+**Просмотр списка бакетов**
+
+# Задание 7
+
+<img width="1851" height="563" alt="image" src="https://github.com/user-attachments/assets/f7504135-f6c8-4eef-9915-608e13f1a6f6" />
+
+**Вывод секрета**
+
+# Задание 8
 
