@@ -124,3 +124,12 @@ module "vpc_dev" {
 
 # Задание 5
 
+<img width="1254" height="997" alt="image" src="https://github.com/user-attachments/assets/154384fc-fd61-4f6f-bdf8-6d74c9735f35" />
+
+**Проверка плана**
+
+<img width="1502" height="496" alt="image" src="https://github.com/user-attachments/assets/f58bca1a-358c-493d-9f2e-52ea05cc2c66" />
+
+**Просмотр кластера**
+
+
