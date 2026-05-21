@@ -1,2 +1,13 @@
 terraform.tfvars
 **/personal.auto.tfvars
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
+*.tfstate.*
+terraform.tfstate
+*.tfvars
+!example.tfvars
+# Зеркала провайдеров
+terraform.d/
