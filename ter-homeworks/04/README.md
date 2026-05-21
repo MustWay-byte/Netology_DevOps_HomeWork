@@ -146,3 +146,6 @@ module "vpc_dev" {
 
 # Задание 8
 
+<img width="982" height="963" alt="image" src="https://github.com/user-attachments/assets/e031fc6a-7e2a-4088-aa45-f11a8b183398" />
+
+**Вывод ВМ после отработки двух модулей**
