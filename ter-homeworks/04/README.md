@@ -18,3 +18,13 @@
 
 # Задание 2
 
+<img width="553" height="167" alt="image" src="https://github.com/user-attachments/assets/6c3a0c36-562c-4cff-aa5f-8c7d6bbdac58" />
+
+**Информация о модуле**
+
+<img width="1208" height="698" alt="image" src="https://github.com/user-attachments/assets/383195ed-c263-4a2c-9199-342a11dc8c9a" />
+
+**Документация к модулю**
+
+# Задание 3
+
