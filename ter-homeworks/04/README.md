@@ -46,5 +46,81 @@
 
 # Задание 4
 
+Код:
 
+mustway@mustway-server:~/ter-hw04-project$ cat vpc/variables.tf
+variable "env_name" {
+  description = "Name of the VPC network"
+  type        = string
+}
+
+variable "subnets" {
+  description = "List of subnets with zone and CIDR"
+  type = list(object({
+    zone = string
+    cidr = string
+  }))
+  default = []
+}
+mustway@mustway-server:~/ter-hw04-project$ cat vpc/main.tf
+resource "yandex_vpc_network" "this" {
+  name = var.env_name
+}
+
+resource "yandex_vpc_subnet" "this" {
+  for_each = { for idx, s in var.subnets : s.zone => s }
+
+  name           = "${var.env_name}-${each.key}"
+  zone           = each.value.zone
+  network_id     = yandex_vpc_network.this.id
+  v4_cidr_blocks = [each.value.cidr]
+}
+mustway@mustway-server:~/ter-hw04-project$ cat vpc/outputs.tf
+output "network_id" {
+  description = "ID of the created VPC network"
+  value       = yandex_vpc_network.this.id
+}
+
+output "subnets" {
+  description = "Map of created subnets by zone"
+  value = {
+    for k, s in yandex_vpc_subnet.this :
+    k => {
+      id   = s.id
+      name = s.name
+      zone = s.zone
+      cidr = s.v4_cidr_blocks[0]
+    }
+  }
+}
+mustway@mustway-server:~/ter-hw04-project$ cat main.tf
+# Провайдер и cloud-init не нужны для демонстрации VPC, 
+# но оставим providers.tf как есть. А модули объявим здесь.
+
+module "vpc_prod" {
+  source   = "./vpc"
+  env_name = "production"
+  subnets = [
+    { zone = "ru-central1-a", cidr = "10.0.11.0/24" },
+    { zone = "ru-central1-b", cidr = "10.0.12.0/24" },
+  ]
+}
+
+module "vpc_dev" {
+  source   = "./vpc"
+  env_name = "develop"
+  subnets = [
+    { zone = "ru-central1-a", cidr = "10.0.21.0/24" },
+  ]
+}
+
+<img width="671" height="1000" alt="image" src="https://github.com/user-attachments/assets/aea1299a-a713-4686-a769-5dfb0a887a05" />
+
+**Проверка плана**
+
+<img width="1167" height="506" alt="image" src="https://github.com/user-attachments/assets/dd5df99d-d1f0-4c63-882a-e77d5d62b43a" />
+
+**Вывод списка сетей и подсетей**
+
+# Задание 5
 
