@@ -235,43 +235,37 @@ http://111.88.246.121
 ## Задание 5*. Хранение паролей в LockBox и интеграция с Terraform
 
 В пятом задании пароль для БД хранится в LockBox.  
-Terraform использует пароль для создания и настройки пользователя базы данных.
+Terraform использует этот пароль при создании и настройке пользователя базы данных.
 
-В LockBox созданы ключи:
-- `db_password`;
-- `DB_PASSWORD`.
-
-Оба значения синхронизированы с текущим паролем БД.
+В LockBox создан секрет `netology-db-secret`, который содержит актуальные параметры подключения к БД.
 
 ### Команды для проверки
 
 **Проверка LockBox**
 ```bash
 yc lockbox secret list
-yc lockbox payload get --name netology-db-secret
 ```
 
-**Проверка Terraform**
+**Проверка пользователя БД через Terraform**
 ```bash
-cd terraform
-terraform init
-terraform state list
-terraform plan
-terraform apply
+terraform state show yandex_mdb_mysql_user.appuser
 ```
 
 ### Скриншоты
 
-**Проверка Terraform**
+**Проверка LockBox**
 ```bash
-cd terraform
-terraform init
-terraform state list
-terraform plan
-terraform apply
+yc lockbox secret list
 ```
 
-<img width="1770" height="970" alt="image" src="https://github.com/user-attachments/assets/b60d22a7-4eb2-4d60-b9b3-9ea0251a3dde" />
+<img width="1219" height="133" alt="image" src="https://github.com/user-attachments/assets/59d59c25-8a64-4c27-88b4-37a3ba571e6d" />
+
+**Проверка пользователя БД**
+```bash
+terraform state show yandex_mdb_mysql_user.appuser
+```
+
+<img width="1467" height="371" alt="image" src="https://github.com/user-attachments/assets/28efcc3a-f895-4332-b6b9-c0f58706afc0" />
 
 ---
 
