@@ -14,5 +14,3 @@ module "vpc_dev" {
     { zone = "ru-central1-a", cidr = "10.0.21.0/24" },
   ]
 }
-# trigger lock demo
-
