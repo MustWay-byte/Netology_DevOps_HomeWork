@@ -1,0 +1,9 @@
+**/.env
+**/.terraform/
+**/terraform.tfstate
+**/terraform.tfstate.*
+**/_pycache_pycache_/
+**/.pytest_cache/
+**/terraform.tfvars
+terraform-mirror/
+.terraform.d/
