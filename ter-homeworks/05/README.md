@@ -57,3 +57,7 @@
 **Тестирование валидации**
 
 # Задание 6
+
+<img width="1914" height="988" alt="image" src="https://github.com/user-attachments/assets/2d801bbb-d1ae-495f-a235-7cc88393eb41" />
+
+**Создание и удаление инфраструктуры при помощи GitHub Actions**
