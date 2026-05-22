@@ -65,3 +65,13 @@
 <img width="1903" height="778" alt="image" src="https://github.com/user-attachments/assets/869cc02c-e796-4736-92f1-ed281bb46532" />
 
 **Удаление инфраструктуры при помощи GitHub Actions**
+
+# Задание 7
+
+<img width="1391" height="849" alt="image" src="https://github.com/user-attachments/assets/65b3a6a0-2c3d-4712-ab6b-19926c3ad78c" />
+
+**Вывод файлов**
+
+<img width="727" height="480" alt="image" src="https://github.com/user-attachments/assets/24a212d2-7bd4-4d25-b160-6a9ea6ce278b" />
+
+**Вывод output**
