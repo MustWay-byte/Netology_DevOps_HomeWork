@@ -28,3 +28,16 @@
 
 # Задание 2
 
+<img width="1785" height="890" alt="image" src="https://github.com/user-attachments/assets/ef42ffb0-3564-4087-8b2c-bde09e1c25c4" />
+
+**Процесс миграции**
+
+<img width="1481" height="486" alt="image" src="https://github.com/user-attachments/assets/ecefc8ab-14a7-4657-8695-490fedbdf698" />
+
+**Ошибка state lock**
+
+<img width="731" height="255" alt="image" src="https://github.com/user-attachments/assets/0a2185bd-eb61-43d6-9865-289b34f2b872" />
+
+**Осавобождение state lock**
+
+
