@@ -1,7 +1,8 @@
 terraform {
+  required_version = ">= 1.5.0, < 2.0.0"
   
   backend "s3" {
-    bucket  = "simple-bucket-mustway-abc123"
+    bucket  = "tfstate-bucket-sdmohxfa"
     key     = "terraform.tfstate"
     region  = "ru-central1"
     
@@ -23,9 +24,23 @@ terraform {
   }
 }
 
-variable "yc_cloud_id" {}
-variable "yc_folder_id" {}
-variable "yc_sa_key_path" {}
+variable "yc_cloud_id" {
+  description = "Yandex Cloud ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "yc_folder_id" {
+  description = "Yandex Cloud Folder ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "yc_sa_key_path" {
+  description = "Path to service account key file"
+  type        = string
+  sensitive   = true
+}
 
 provider "yandex" {
   cloud_id                 = var.yc_cloud_id
