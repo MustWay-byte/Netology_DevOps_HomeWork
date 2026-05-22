@@ -19,8 +19,11 @@ jobs:
         working-directory: ter-homeworks/04
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository (force clean)
         uses: actions/checkout@v3
+        with:
+          clean: true
+          fetch-depth: 1
 
       - name: Install Terraform manually (version 1.8.4)
         run: |
@@ -54,6 +57,9 @@ jobs:
           aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           EOF
+
+      - name: Show providers.tf content (debug)
+        run: cat providers.tf
 
       - name: Terraform Init
         env:
