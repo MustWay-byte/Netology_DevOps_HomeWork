@@ -38,6 +38,6 @@
 
 <img width="731" height="255" alt="image" src="https://github.com/user-attachments/assets/0a2185bd-eb61-43d6-9865-289b34f2b872" />
 
-**Осавобождение state lock**
+**Освобождение state lock**
 
 
