@@ -161,19 +161,24 @@ http://111.88.246.121
 Скриншотами зафиксированы:
 
 <img width="1818" height="185" alt="image" src="https://github.com/user-attachments/assets/e58b56a9-4bc5-4d87-8529-e3dd50a7c976" />
-- виртуальная машина;
+
+**- виртуальная машина;**
 
 <img width="1263" height="352" alt="image" src="https://github.com/user-attachments/assets/a580c005-0535-40fd-8cac-172a5e3f8c53" />
-- подсеть;
+
+**- подсеть;**
   
 <img width="1248" height="246" alt="image" src="https://github.com/user-attachments/assets/4a54d03f-0051-4e90-92c7-053ae43bb874" />
-- security group;
+
+**- security group;**
 
 <img width="1050" height="191" alt="image" src="https://github.com/user-attachments/assets/406a11f6-a833-41e9-955d-034be945874e" />
-- кластер Managed MySQL;
+
+**- кластер Managed MySQL;**
 
 <img width="880" height="193" alt="image" src="https://github.com/user-attachments/assets/008a3f6d-cf7a-4d19-8753-eedb3674c98b" />
-- Container Registry.
+
+**- Container Registry.**
 
 ### 8. Проверка Terraform
 
