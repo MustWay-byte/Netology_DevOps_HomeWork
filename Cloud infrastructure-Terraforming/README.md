@@ -224,9 +224,8 @@ curl http://localhost
 <img width="710" height="978" alt="image" src="https://github.com/user-attachments/assets/d8d2ca83-495f-4b6b-9e56-cb68d10af70b" />
 
 **Проверка работы приложения в браузере**
-```text
-http://111.88.246.121
-```
+
+[http://111.88.246.121](http://111.88.246.121)
 
 <img width="1847" height="1036" alt="image" src="https://github.com/user-attachments/assets/bb5cd213-7355-47ab-9d8c-6a7b75f9e569" />
 
