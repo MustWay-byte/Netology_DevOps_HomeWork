@@ -89,18 +89,103 @@ Web-приложение успешно развернуто в Yandex Cloud и 
 При обращении к приложению отображается статус подключения к базе данных.  
 Если соединение успешно, на странице отображается сообщение о том, что подключение к MySQL выполнено успешно, а также версия MySQL.
 
-## Скриншоты
+## Скриншоты и проверки
 
-Скриншоты приведены ниже и подтверждают:
-- создание инфраструктуры;
-- запуск контейнера;
-- доступность приложения;
-- успешное подключение к базе данных;
-- состояние ресурсов в Yandex Cloud.
+Ниже приведены команды и скриншоты, подтверждающие создание инфраструктуры, запуск приложения и подключение к базе данных.
 
-<img width="792" height="155" alt="image" src="https://github.com/user-attachments/assets/2330ebc8-2cb3-4820-866e-ddd9a1b9f5f2" />
+### 1. Проверка виртуальной машины
 
-**Ввод команд в виртуальной машине**
+```bash
+yc compute instance list
+```
+
+<img width="876" height="112" alt="image" src="https://github.com/user-attachments/assets/080c14ef-e6e2-4491-90d7-2b2ecd7a7515" />
+
+**На скриншоте видно, что VM создана и находится в состоянии `RUNNING`**
+
+### 2. Проверка Managed MySQL
+
+```bash
+yc managed-mysql cluster list
+yc managed-mysql user list --cluster-name netology-mysql
+```
+
+<img width="1162" height="228" alt="image" src="https://github.com/user-attachments/assets/98943769-0722-4ff2-960b-4f85d210055c" />
+
+**На скриншоте видно, что кластер базы данных создан и пользователь `appuser` имеет права на базу `appdb`**
+
+### 3. Проверка Container Registry
+
+```bash
+yc container registry list
+yc container image list --repository-name crp814amdni497ck780u/netology-app
+```
+
+<img width="1336" height="284" alt="image" src="https://github.com/user-attachments/assets/943b89cc-7a25-4b8f-9e44-3a8cb0609f08" />
+
+**На скриншоте видно, что образ web-приложения загружен в Container Registry**
+
+### 4. Проверка Docker на VM
+
+```bash
+docker ps
+```
+
+<img width="1508" height="59" alt="image" src="https://github.com/user-attachments/assets/bed32783-fc91-4f8a-98c9-9d4ed55c7412" />
+
+**На скриншоте видно, что контейнер приложения запущен и порт `80` проброшен наружу**
+
+### 5. Проверка работы приложения локально
+
+```bash
+curl http://localhost
+```
+<img width="710" height="978" alt="image" src="https://github.com/user-attachments/assets/d8d2ca83-495f-4b6b-9e56-cb68d10af70b" />
+
+**На скриншоте видно HTML-страницу приложения и статус подключения к MySQL**
+
+### 6. Проверка работы приложения в браузере
+
+Открой в браузере адрес:
+
+```text
+http://111.88.246.121
+```
+
+<img width="1847" height="1036" alt="image" src="https://github.com/user-attachments/assets/bb5cd213-7355-47ab-9d8c-6a7b75f9e569" />
+
+**На скриншоте видно, что приложение открывается по IP-адресу машины и показывает статус подключения к MySQL**
+
+### 7. Проверка облачной инфраструктуры в консоли Yandex Cloud
+
+Скриншотами зафиксированы:
+
+<img width="1818" height="185" alt="image" src="https://github.com/user-attachments/assets/e58b56a9-4bc5-4d87-8529-e3dd50a7c976" />
+- виртуальная машина;
+
+<img width="1263" height="352" alt="image" src="https://github.com/user-attachments/assets/a580c005-0535-40fd-8cac-172a5e3f8c53" />
+- подсеть;
+  
+<img width="1248" height="246" alt="image" src="https://github.com/user-attachments/assets/4a54d03f-0051-4e90-92c7-053ae43bb874" />
+- security group;
+
+<img width="1050" height="191" alt="image" src="https://github.com/user-attachments/assets/406a11f6-a833-41e9-955d-034be945874e" />
+- кластер Managed MySQL;
+
+<img width="880" height="193" alt="image" src="https://github.com/user-attachments/assets/008a3f6d-cf7a-4d19-8753-eedb3674c98b" />
+- Container Registry.
+
+### 8. Проверка Terraform
+
+```bash
+terraform init
+terraform plan
+terraform apply
+```
+
+<img width="1770" height="970" alt="image" src="https://github.com/user-attachments/assets/b60d22a7-4eb2-4d60-b9b3-9ea0251a3dde" />
+
+**На скриншоте видно успешное применение конфигурации Terraform без ошибок**
 
 ## Заключение
 
