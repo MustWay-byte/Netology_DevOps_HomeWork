@@ -1,0 +1,20 @@
+terraform {
+  required_providers {
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 3.3"
+    }
+  }
+}
+
+resource "null_resource" "get_secret" {
+  provisioner "local-exec" {
+    command = <<-EOT
+      curl -s -H "X-Vault-Token: education" http://127.0.0.1:8200/v1/secret/data/example | jq -r '.data.data.test' > vault_secret.txt
+    EOT
+  }
+}
+
+output "vault_example_test_key" {
+  value = try(file("${path.module}/vault_secret.txt"), "")
+}
