@@ -6,3 +6,9 @@ remote-state-infra/outputs.json
 *.tfstate.backup
 .env
 **/.env
+.env
+**/.env
+*.tfstate
+*.tfstate.backup
+.terraform/
+.env
