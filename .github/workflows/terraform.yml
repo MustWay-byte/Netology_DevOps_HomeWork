@@ -48,7 +48,11 @@ jobs:
           RC
 
       - name: Create YC SA key file
-        run: echo '${{ secrets.YC_SERVICE_ACCOUNT_KEY_FILE }}' > /tmp/key.json
+        shell: bash
+        run: |
+          cat > /tmp/key.json <<'EOF'
+          ${{ secrets.YC_SERVICE_ACCOUNT_KEY_FILE }}
+          EOF
 
       - name: Create backend credentials file
         run: |
