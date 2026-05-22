@@ -22,10 +22,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.8.4
+      - name: Install Terraform manually (version 1.8.4)
+        run: |
+          wget -q https://releases.hashicorp.com/terraform/1.8.4/terraform_1.8.4_linux_amd64.zip
+          unzip -o terraform_1.8.4_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+          terraform version
 
       - name: Create terraformrc for Yandex mirror
         run: |
