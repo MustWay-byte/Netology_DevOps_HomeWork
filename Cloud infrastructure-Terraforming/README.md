@@ -71,12 +71,15 @@ yc compute instance list
 <img width="876" height="112" alt="image" src="https://github.com/user-attachments/assets/080c14ef-e6e2-4491-90d7-2b2ecd7a7515" />
 
 **В консоли Yandex Cloud: виртуальная машина**
+
 <img width="1818" height="185" alt="image" src="https://github.com/user-attachments/assets/e58b56a9-4bc5-4d87-8529-e3dd50a7c976" />
 
 **В консоли Yandex Cloud: подсеть**
+
 <img width="1263" height="352" alt="image" src="https://github.com/user-attachments/assets/a580c005-0535-40fd-8cac-172a5e3f8c53" />
 
 **В консоли Yandex Cloud: security group**
+
 <img width="1248" height="246" alt="image" src="https://github.com/user-attachments/assets/4a54d03f-0051-4e90-92c7-053ae43bb874" />
 
 **Проверка Managed MySQL**
@@ -88,9 +91,11 @@ yc managed-mysql user list --cluster-name netology-mysql
 <img width="1162" height="228" alt="image" src="https://github.com/user-attachments/assets/98943769-0722-4ff2-960b-4f85d210055c" />
 
 **В консоли Yandex Cloud: кластер Managed MySQL**
+
 <img width="1050" height="191" alt="image" src="https://github.com/user-attachments/assets/406a11f6-a833-41e9-955d-034be945874e" />
 
 **В консоли Yandex Cloud: Container Registry**
+
 <img width="880" height="193" alt="image" src="https://github.com/user-attachments/assets/008a3f6d-cf7a-4d19-8753-eedb3674c98b" />
 
 ---
