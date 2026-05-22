@@ -49,3 +49,11 @@
 <img width="758" height="871" alt="image" src="https://github.com/user-attachments/assets/34874c16-4352-4d29-adee-c1f4c9213251" />
 
 **Тестирование валидации**
+
+# Задание 5
+
+<img width="758" height="905" alt="image" src="https://github.com/user-attachments/assets/8c9d2b00-5d7c-462b-a385-f528e1006336" />
+
+**Тестирование валидации**
+
+# Задание 6
