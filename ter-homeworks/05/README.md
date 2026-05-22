@@ -58,6 +58,10 @@
 
 # Задание 6
 
-<img width="1914" height="988" alt="image" src="https://github.com/user-attachments/assets/2d801bbb-d1ae-495f-a235-7cc88393eb41" />
+<img width="1891" height="789" alt="image" src="https://github.com/user-attachments/assets/dad3ce10-9d15-419c-9631-90585619ab41" />
 
-**Создание и удаление инфраструктуры при помощи GitHub Actions**
+**Создание инфраструктуры при помощи GitHub Actions**
+
+<img width="1903" height="778" alt="image" src="https://github.com/user-attachments/assets/869cc02c-e796-4736-92f1-ed281bb46532" />
+
+**Удаление инфраструктуры при помощи GitHub Actions**
