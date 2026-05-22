@@ -98,11 +98,11 @@ Web-приложение успешно развернуто в Yandex Cloud и 
 - успешное подключение к базе данных;
 - состояние ресурсов в Yandex Cloud.
 
+<img width="792" height="155" alt="image" src="https://github.com/user-attachments/assets/2330ebc8-2cb3-4820-866e-ddd9a1b9f5f2" />
+
+**Ввод команд в виртуальной машине**
+
 ## Заключение
 
 В ходе выполнения проекта были закреплены навыки работы с Terraform, Docker, Docker Compose и Yandex Cloud.  
 Было выполнено развертывание приложения в облачной инфраструктуре с использованием управляемой базы данных и контейнерного реестра.
-
-<img width="792" height="155" alt="image" src="https://github.com/user-attachments/assets/2330ebc8-2cb3-4820-866e-ddd9a1b9f5f2" />
-
-**Ввод команд в виртуальной машине**
