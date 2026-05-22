@@ -1,10 +1,10 @@
-name: "Terraform CI/CD"
+name: Terraform CI/CD
 
 on:
   workflow_dispatch:
     inputs:
       action:
-        description: "Choose action: apply or destroy"
+        description: Choose action
         required: true
         type: choice
         options:
@@ -14,6 +14,7 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: ter-homeworks/04
@@ -25,7 +26,7 @@ jobs:
           fetch-depth: 1
           clean: true
 
-      - name: Install Terraform manually (1.8.4)
+      - name: Install Terraform manually
         run: |
           wget -q https://releases.hashicorp.com/terraform/1.8.4/terraform_1.8.4_linux_amd64.zip
           unzip -o terraform_1.8.4_linux_amd64.zip
@@ -34,7 +35,7 @@ jobs:
 
       - name: Create terraformrc for Yandex mirror
         run: |
-          cat > ~/.terraformrc << 'RC'
+          cat > ~/.terraformrc <<'RC'
           provider_installation {
             network_mirror {
               url = "https://terraform-mirror.yandexcloud.net/"
@@ -52,18 +53,18 @@ jobs:
       - name: Create backend credentials file
         run: |
           mkdir -p ~/.aws
-          cat > ~/.aws/credentials << 'CREDS'
+          cat > ~/.aws/credentials <<'CREDS'
           [default]
           aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           CREDS
 
-      - name: DEBUG: show providers.tf
+      - name: Debug providers.tf
         run: |
           pwd
-          ls -R
+          ls -la
           echo "----- providers.tf -----"
-          sed -n '1,80p' providers.tf || echo "NO providers.tf"
+          sed -n '1,120p' providers.tf || echo "NO providers.tf"
 
       - name: Terraform Init
         env:
@@ -73,7 +74,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        if: github.event.inputs.action == 'apply'
+        if: ${{ github.event.inputs.action == 'apply' }}
         env:
           TF_VAR_yc_cloud_id: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_yc_folder_id: ${{ secrets.YC_FOLDER_ID }}
@@ -81,7 +82,7 @@ jobs:
         run: terraform plan -no-color -out=tfplan
 
       - name: Terraform Apply
-        if: github.event.inputs.action == 'apply'
+        if: ${{ github.event.inputs.action == 'apply' }}
         env:
           TF_VAR_yc_cloud_id: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_yc_folder_id: ${{ secrets.YC_FOLDER_ID }}
@@ -89,7 +90,7 @@ jobs:
         run: terraform apply -auto-approve tfplan
 
       - name: Terraform Destroy
-        if: github.event.inputs.action == 'destroy'
+        if: ${{ github.event.inputs.action == 'destroy' }}
         env:
           TF_VAR_yc_cloud_id: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_yc_folder_id: ${{ secrets.YC_FOLDER_ID }}
