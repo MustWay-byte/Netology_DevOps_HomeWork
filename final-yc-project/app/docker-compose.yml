@@ -1,0 +1,14 @@
+services:
+  web:
+    image: cr.yandex/crp814amdni497ck780u/netology-app:latest
+    container_name: netology-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    env_file:
+      - .env
+    environment:
+      DB_HOST: "rc1a-18qp4d8rp70qsd8e.mdb.yandexcloud.net"
+      DB_PORT: "3306"
+      DB_NAME: "appdb"
+      DB_USER: "appuser"
