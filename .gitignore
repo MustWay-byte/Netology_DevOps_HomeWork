@@ -1,1 +1,6 @@
 terraform.tfvars
+remote-state-infra/outputs.json
+*.tfstate
+*.tfstate.backup
+*.tfstate
+*.tfstate.backup
