@@ -40,4 +40,10 @@
 
 **Освобождение state lock**
 
+# Задание 3
+
+Ссылка на Pull Request: https://github.com/MustWay-byte/Netology_DevOps_HomeWork/pull/2
+
+# Задание 4
+
 
