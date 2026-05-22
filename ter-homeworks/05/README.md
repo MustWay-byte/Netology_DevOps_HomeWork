@@ -46,4 +46,6 @@
 
 # Задание 4
 
+<img width="758" height="871" alt="image" src="https://github.com/user-attachments/assets/34874c16-4352-4d29-adee-c1f4c9213251" />
 
+**Тестирование валидации**
