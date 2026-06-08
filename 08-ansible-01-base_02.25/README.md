@@ -56,4 +56,10 @@
 
 # Задание 9
 
+<img width="1466" height="993" alt="image" src="https://github.com/user-attachments/assets/8dedced0-6190-407c-939b-43a33f248091" />
+
+**Вывод списка плагинов**
+
+# Задание 10
+
 
