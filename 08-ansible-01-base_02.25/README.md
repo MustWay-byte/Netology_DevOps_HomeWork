@@ -32,7 +32,7 @@
 
 # Задание 5
 
-<img width="1628" height="620" alt="image" src="https://github.com/user-attachments/assets/515b99bd-a0ec-4bba-8cad-6b318d8bf304" />
+<img width="1628" height="140" alt="604462808-515b99bd-a0ec-4bba-8cad-6b318d8bf304" src="https://github.com/user-attachments/assets/57232d14-326a-455d-8881-d8201f0e01d0" />
 
 **Изменение переменных**
 
