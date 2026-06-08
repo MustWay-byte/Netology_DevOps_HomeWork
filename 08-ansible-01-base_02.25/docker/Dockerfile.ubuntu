@@ -2,7 +2,6 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Меняем репозитории на зеркало Яндекса для ускорения загрузки
 RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirror.yandex.ru/ubuntu/|g' /etc/apt/sources.list
 
 RUN apt-get update && \
