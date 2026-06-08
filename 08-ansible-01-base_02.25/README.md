@@ -86,4 +86,12 @@
 
 # Необязательная часть
 
+# Задание 1
+
+<img width="1627" height="835" alt="image" src="https://github.com/user-attachments/assets/c4faba59-d50b-4c44-8e7e-85ef079003b4" />
+
+**Расшифровка зашифрованных переменных**
+
+# Задание 2
+
 
