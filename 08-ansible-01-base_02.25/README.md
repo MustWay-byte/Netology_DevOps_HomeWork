@@ -20,3 +20,15 @@
 
 # Задание 4
 
+<img width="1840" height="549" alt="image" src="https://github.com/user-attachments/assets/34a59bfa-7871-4086-b077-d0b7ace16fac" />
+
+**Вывод Playbook**
+
+Согласно полученному выводу, значения факта some_fact для управляемых хостов такие:
+
+1) deb_host (Ubuntu) - "deb".
+
+2) el_host (Rocky Linux) - "el".
+
+# Задание 5
+
