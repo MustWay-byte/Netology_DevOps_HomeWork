@@ -68,4 +68,9 @@
 
 # Задание 11
 
+<img width="1636" height="734" alt="image" src="https://github.com/user-attachments/assets/38a8c417-1d6b-4c2c-ae52-9cd21b8883e4" />
+
+**Вывод Playbook**
+
+# Задание 12
 
