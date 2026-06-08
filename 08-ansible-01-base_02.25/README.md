@@ -38,3 +38,9 @@
 
 # Задание 6
 
+<img width="1625" height="587" alt="image" src="https://github.com/user-attachments/assets/4d26d83b-83cc-49af-8225-108673528a70" />
+
+**Вывод Playbook**
+
+# Задание 7
+
