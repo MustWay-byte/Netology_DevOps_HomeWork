@@ -44,3 +44,9 @@
 
 # Задание 7
 
+<img width="1320" height="165" alt="image" src="https://github.com/user-attachments/assets/e71998b4-2326-4ab3-a57f-138711710b2d" />
+
+**Шифрование фактов**
+
+# Задание 8
+
