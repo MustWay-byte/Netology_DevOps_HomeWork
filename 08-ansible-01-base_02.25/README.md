@@ -32,3 +32,9 @@
 
 # Задание 5
 
+<img width="1628" height="620" alt="image" src="https://github.com/user-attachments/assets/515b99bd-a0ec-4bba-8cad-6b318d8bf304" />
+
+**Изменение переменных**
+
+# Задание 6
+
