@@ -112,4 +112,10 @@
 
 # Задание 5
 
+<img width="1847" height="984" alt="image" src="https://github.com/user-attachments/assets/8a522197-b35e-4b88-bea9-dbfa2fc1d21d" />
 
+**Отработка скрипта**
+
+# Задание 6
+
+Сделано.
