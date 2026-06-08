@@ -8,3 +8,9 @@
 
 # Задание 2
 
+<img width="1632" height="441" alt="image" src="https://github.com/user-attachments/assets/f9e1bfc6-d23a-4547-bdcd-53098c0c310e" />
+
+**Изменение переменной**
+
+# Задание 3
+
