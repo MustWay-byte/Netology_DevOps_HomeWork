@@ -103,3 +103,13 @@
 <img width="1635" height="750" alt="image" src="https://github.com/user-attachments/assets/9a603b97-577f-4876-90af-5dcff82f7108" />
 
 **Вывод Playbook**
+
+# Задание 4
+
+<img width="1633" height="941" alt="image" src="https://github.com/user-attachments/assets/3eafdffe-1b5b-4eaf-a2ef-6b4a0eaebffd" />
+
+**Вывод Playbook**
+
+# Задание 5
+
+
