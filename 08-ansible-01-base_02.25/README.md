@@ -50,3 +50,10 @@
 
 # Задание 8
 
+<img width="1623" height="595" alt="image" src="https://github.com/user-attachments/assets/441b4cca-9a33-4bd4-926c-2ed12bea97f4" />
+
+**Вывод Playbook**
+
+# Задание 9
+
+
