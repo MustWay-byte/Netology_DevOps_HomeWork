@@ -94,10 +94,12 @@
 
 # Задание 2
 
-<img width="1837" height="871" alt="image" src="https://github.com/user-attachments/assets/ba20ea88-5bbb-4c13-b6b3-1dcb9083e544" />
+<img width="1843" height="132" alt="image" src="https://github.com/user-attachments/assets/7b768455-7570-4f8d-beb1-59f6ce677a13" />
 
 **Шифрование значения переменной**
 
 # Задание 3
 
+<img width="1635" height="750" alt="image" src="https://github.com/user-attachments/assets/9a603b97-577f-4876-90af-5dcff82f7108" />
 
+**Вывод Playbook**
