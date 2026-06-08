@@ -14,3 +14,9 @@
 
 # Задание 3
 
+<img width="1423" height="206" alt="image" src="https://github.com/user-attachments/assets/e91d0696-1407-480e-91bb-5c5bb8d4eabc" />
+
+**Создание собственного окружения**
+
+# Задание 4
+
