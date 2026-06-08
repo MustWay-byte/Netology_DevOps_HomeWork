@@ -74,3 +74,12 @@
 
 # Задание 12
 
+<img width="1360" height="468" alt="image" src="https://github.com/user-attachments/assets/1761cca4-1757-45cb-852c-ab0859a0f35f" />
+
+**Push в ветку master**
+
+# Задание 13
+
+Сделано.
+
+## Задание 1
