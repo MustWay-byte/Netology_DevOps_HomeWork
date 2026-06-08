@@ -94,4 +94,10 @@
 
 # Задание 2
 
+<img width="1837" height="871" alt="image" src="https://github.com/user-attachments/assets/ba20ea88-5bbb-4c13-b6b3-1dcb9083e544" />
+
+**Шифрование значения переменной**
+
+# Задание 3
+
 
