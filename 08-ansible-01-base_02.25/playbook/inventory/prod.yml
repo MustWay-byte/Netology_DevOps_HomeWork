@@ -1,9 +1,21 @@
 ---
-  el:
-    hosts:
-      centos7:
-        ansible_connection: docker
-  deb:
-    hosts:
-      ubuntu:
-        ansible_connection: docker
+all:
+  children:
+    deb:
+      hosts:
+        deb_host:
+          ansible_host: localhost
+          ansible_port: 2222
+          ansible_user: ansible
+          ansible_password: ansible
+    el:
+      hosts:
+        el_host:
+          ansible_host: localhost
+          ansible_port: 2223
+          ansible_user: ansible
+          ansible_password: ansible
+    local:
+      hosts:
+        localhost:
+          ansible_connection: local
