@@ -62,4 +62,10 @@
 
 # Задание 10
 
+<img width="1436" height="224" alt="image" src="https://github.com/user-attachments/assets/7a4fa3df-11ad-4255-9ace-4de7c629b560" />
+
+**Добавление группы хостов**
+
+# Задание 11
+
 
