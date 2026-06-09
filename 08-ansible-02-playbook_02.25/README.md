@@ -38,3 +38,11 @@
 
 **Запуск Playbook**
 
+# Задача 8
+
+<img width="1399" height="839" alt="image" src="https://github.com/user-attachments/assets/180c7ab0-a04c-4038-a657-091cab196936" />
+
+**Запуск Playbook**
+
+# Задача 9
+
