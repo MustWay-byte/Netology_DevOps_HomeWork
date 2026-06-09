@@ -1,0 +1,10 @@
+FROM fedora:latest
+
+RUN dnf -y install openssh-server sudo python3 && \
+    ssh-keygen -A && \
+    useradd -m -s /bin/bash ansible && \
+    echo 'ansible:ansible' | chpasswd && \
+    echo 'ansible ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]

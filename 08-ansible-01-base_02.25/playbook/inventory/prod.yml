@@ -19,3 +19,10 @@ all:
       hosts:
         localhost:
           ansible_connection: local
+    fedora:
+      hosts:
+        fedora_host:
+          ansible_host: localhost
+          ansible_port: 2224
+          ansible_user: ansible
+          ansible_password: ansible
