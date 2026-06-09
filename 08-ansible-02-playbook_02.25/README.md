@@ -12,9 +12,22 @@
 
 # Задача 3
 
+Модули использованы.
+
+# Задача 4
+
 <img width="1632" height="1000" alt="image" src="https://github.com/user-attachments/assets/9854a753-a518-468a-8043-182adc07c1d6" />
 
 **Запуск Playbook**
 
-# Задача 4
+# Задача 5
 
+<img width="1105" height="82" alt="image" src="https://github.com/user-attachments/assets/d1a6452d-c930-413a-8895-ee6ea9fc6c17" />
+
+**Запуск Ansible-lint**
+
+# Задача 6
+
+<img width="1411" height="890" alt="image" src="https://github.com/user-attachments/assets/0c4741a1-2b0d-4d68-b74c-476469dc1fd4" />
+
+**Запуск Playbook**
