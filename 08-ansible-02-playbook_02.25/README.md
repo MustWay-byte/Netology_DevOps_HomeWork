@@ -31,3 +31,10 @@
 <img width="1411" height="890" alt="image" src="https://github.com/user-attachments/assets/0c4741a1-2b0d-4d68-b74c-476469dc1fd4" />
 
 **Запуск Playbook**
+
+# Задача 7
+
+<img width="1046" height="998" alt="image" src="https://github.com/user-attachments/assets/ac11485f-409c-4f27-9a4d-3a36dfa32186" />
+
+**Запуск Playbook**
+
