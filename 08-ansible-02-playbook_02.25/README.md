@@ -12,3 +12,9 @@
 
 # Задача 3
 
+<img width="1632" height="1000" alt="image" src="https://github.com/user-attachments/assets/9854a753-a518-468a-8043-182adc07c1d6" />
+
+**Запуск Playbook**
+
+# Задача 4
+
