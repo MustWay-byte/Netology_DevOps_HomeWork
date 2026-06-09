@@ -1,5 +1,10 @@
 ---
-clickhouse:
-  hosts:
-    clickhouse-01:
-      ansible_host: <IP_here>
+all:
+  children:
+    clickhouse:
+      hosts:
+        clickhouse-01:
+          ansible_host: localhost
+          ansible_port: 2223
+          ansible_user: ansible
+          ansible_password: ansible

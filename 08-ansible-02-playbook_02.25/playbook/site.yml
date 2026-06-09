@@ -1,36 +1,89 @@
 ---
 - name: Install Clickhouse
   hosts: clickhouse
-  handlers:
-    - name: Start clickhouse service
-      become: true
-      ansible.builtin.service:
-        name: clickhouse-server
-        state: restarted
+  become: true
   tasks:
-    - block:
-        - name: Get clickhouse distrib
-          ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.noarch.rpm"
-            dest: "./{{ item }}-{{ clickhouse_version }}.rpm"
-          with_items: "{{ clickhouse_packages }}"
-      rescue:
-        - name: Get clickhouse distrib
-          ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
-            dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
-    - name: Install clickhouse packages
-      become: true
-      ansible.builtin.yum:
+    - name: Add ClickHouse repository
+      ansible.builtin.yum_repository:
+        name: clickhouse
+        description: ClickHouse official repository
+        baseurl: https://packages.clickhouse.com/rpm/stable/
+        gpgcheck: false
+        enabled: true
+
+    - name: Install ClickHouse packages
+      ansible.builtin.dnf:
         name:
-          - clickhouse-common-static-{{ clickhouse_version }}.rpm
-          - clickhouse-client-{{ clickhouse_version }}.rpm
-          - clickhouse-server-{{ clickhouse_version }}.rpm
-      notify: Start clickhouse service
-    - name: Flush handlers
-      meta: flush_handlers
-    - name: Create database
-      ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
-      register: create_db
-      failed_when: create_db.rc != 0 and create_db.rc !=82
-      changed_when: create_db.rc == 0
+          - clickhouse-server
+          - clickhouse-client
+        state: present
+        update_cache: true
+
+    - name: Start ClickHouse manually (no systemd)
+      ansible.builtin.shell: |
+        nohup clickhouse-server --config-file=/etc/clickhouse-server/config.xml &
+      args:
+        creates: /var/run/clickhouse-server/clickhouse-server.pid
+      changed_when: false
+      failed_when: false
+
+- name: Install and configure Vector
+  hosts: clickhouse
+  become: true
+  vars:
+    vector_version: "0.42.0"
+  handlers:
+    - name: Restart Vector
+      ansible.builtin.shell: |
+        pkill vector || true
+        nohup vector --config /etc/vector/vector.toml &
+      listen: "Restart vector"
+      changed_when: true
+
+  tasks:
+    - name: Install findutils
+      ansible.builtin.dnf:
+        name: findutils
+        state: present
+
+    - name: Create Vector config directory
+      ansible.builtin.file:
+        path: /etc/vector
+        state: directory
+        mode: '0755'
+
+    - name: Download Vector binary archive
+      ansible.builtin.get_url:
+        url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-x86_64-unknown-linux-gnu.tar.gz"
+        dest: /tmp/vector.tar.gz
+        mode: '0644'
+
+    - name: Extract Vector archive
+      ansible.builtin.unarchive:
+        src: /tmp/vector.tar.gz
+        dest: /tmp
+        remote_src: true
+        creates: /usr/local/bin/vector
+
+    - name: Find and install Vector binary
+      ansible.builtin.shell: |
+        find /tmp/vector-*/bin -name vector -exec cp {} /usr/local/bin/vector \;
+      args:
+        creates: /usr/local/bin/vector
+      changed_when: false
+      notify: Restart Vector
+
+    - name: Deploy Vector configuration from template
+      ansible.builtin.template:
+        src: vector.toml.j2
+        dest: /etc/vector/vector.toml
+        mode: '0644'
+      notify: Restart Vector
+
+    - name: Start Vector (initial run)
+      ansible.builtin.shell: |
+        nohup vector --config /etc/vector/vector.toml &
+      args:
+        creates: /var/run/vector.pid
+      changed_when: false
+      failed_when: false

@@ -1,6 +1,6 @@
 ---
-clickhouse_version: "22.3.3.44"
+# Переменные больше не используются, оставлены для совместимости
+clickhouse_version: "latest"
 clickhouse_packages:
-  - clickhouse-client
   - clickhouse-server
-  - clickhouse-common-static
+  - clickhouse-client
