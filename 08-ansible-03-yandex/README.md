@@ -184,3 +184,39 @@
     state: started
     enabled: true
 ```
+
+# Задание 4 – Подготовьте свой inventory-файл `prod.yml`
+
+Инвентарный файл `inventory/prod.yml` содержит три группы хостов, соответствующие сервисам:
+
+- **clickhouse** – хост `clickhouse-01` (Ubuntu 22.04)
+- **vector** – хост `vector-01` (Ubuntu 22.04)
+- **lighthouse** – хост `lighthouse-01` (Ubuntu 22.04)
+
+Для подключения используется SSH-ключ, пользователь `ubuntu`, внешние IP-адреса машин в Yandex Cloud.
+
+## Код `inventory/prod.yml`
+
+```yaml
+---
+all:
+  children:
+    clickhouse:
+      hosts:
+        clickhouse-01:
+          ansible_host: 89.169.146.142
+          ansible_user: ubuntu
+          ansible_ssh_private_key_file: ~/.ssh/id_rsa
+    vector:
+      hosts:
+        vector-01:
+          ansible_host: 111.88.249.78
+          ansible_user: ubuntu
+          ansible_ssh_private_key_file: ~/.ssh/id_rsa
+    lighthouse:
+      hosts:
+        lighthouse-01:
+          ansible_host: 89.169.130.25
+          ansible_user: ubuntu
+          ansible_ssh_private_key_file: ~/.ssh/id_rsa
+```
