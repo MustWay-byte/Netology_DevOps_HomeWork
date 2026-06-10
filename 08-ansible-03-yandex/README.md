@@ -76,3 +76,46 @@
         enabled: true
 ```
 
+# Задание 2 – Использование рекомендованных модулей
+
+При написании play для LightHouse использованы модули:
+- **`apt`** – для установки пакетов на Ubuntu (аналог `yum` для RedHat-дистрибутивов).  
+- **`get_url`** – для загрузки архива LightHouse из официального репозитория.  
+- **`template`** – для создания конфигурации Nginx из Jinja2-шаблона.
+
+Ниже показано, как эти модули применены в задачах playbook.  
+Обратите внимание: для Ubuntu-хостов применяется `apt`, но если бы целевая ОС была RedHat-совместимой, мы бы использовали `yum` (или `dnf`). В других частях плейбука (`ClickHouse`, `Vector`) также задействованы `yum_repository` / `dnf`, что полностью покрывает рекомендацию.
+
+## Фрагмент playbook с указанными модулями
+
+### Установка Nginx (модуль `apt`)
+
+```yaml
+- name: Install Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: true
+```
+
+### Скачивание статики LightHouse (модуль get_url)
+
+```yaml
+- name: Download LightHouse static
+  ansible.builtin.get_url:
+    url: "https://github.com/VKCOM/lighthouse/releases/download/{{ lighthouse_version }}/lighthouse-{{ lighthouse_version }}.tar.gz"
+    dest: /tmp/lighthouse.tar.gz
+    mode: '0644'
+```
+
+### Конфигурация Nginx через шаблон (модуль template)
+
+```yaml
+- name: Configure Nginx for LightHouse
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/lighthouse
+    mode: '0644'
+  notify: Restart Nginx
+```
+
