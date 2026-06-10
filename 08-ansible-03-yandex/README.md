@@ -220,3 +220,12 @@ all:
           ansible_user: ubuntu
           ansible_ssh_private_key_file: ~/.ssh/id_rsa
 ```
+
+# Задание 5 – Запуск `ansible-lint site.yml` и исправление ошибок
+
+Для проверки playbook на соответствие стандартам используется `ansible-lint`.  
+Ниже приведен скриншот его запуска.
+
+## Запуск `ansible-lint`
+
+<img width="1025" height="100" alt="image" src="https://github.com/user-attachments/assets/308aeddd-f989-45ee-9649-71d687e7ee0d" />
