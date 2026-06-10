@@ -119,3 +119,68 @@
   notify: Restart Nginx
 ```
 
+# Задание 3 – Tasks: скачать статику LightHouse, установить Nginx, настроить конфиг, запустить веб-сервер
+
+В play «Install and configure LightHouse» последовательно выполняются следующие задачи, реализующие все требуемые шаги:
+
+1. **Установка Nginx** – модуль `apt` ставит веб-сервер.
+2. **Скачивание статики LightHouse** – модуль `get_url` загружает архив с официального релиза.
+3. **Настройка конфига** – модуль `template` генерирует конфигурационный файл Nginx из Jinja2-шаблона, определяя порт `8686` и корневую директиву `/var/www/lighthouse`.
+4. **Запуск веб-сервера** – модуль `service` запускает Nginx и включает его в автозагрузку.
+
+Дополнительно обеспечивается активация конфигурации (симлинк в `sites-enabled`), удаление стандартного сайта и перезапуск Nginx через handler при изменениях.
+
+## Код tasks (фрагмент playbook)
+
+```yaml
+- name: Install Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: true
+
+- name: Download LightHouse static
+  ansible.builtin.get_url:
+    url: "https://github.com/VKCOM/lighthouse/releases/download/{{ lighthouse_version }}/lighthouse-{{ lighthouse_version }}.tar.gz"
+    dest: /tmp/lighthouse.tar.gz
+    mode: '0644'
+
+- name: Create directory for LightHouse
+  ansible.builtin.file:
+    path: /var/www/lighthouse
+    state: directory
+    mode: '0755'
+
+- name: Extract LightHouse
+  ansible.builtin.unarchive:
+    src: /tmp/lighthouse.tar.gz
+    dest: /var/www/lighthouse
+    remote_src: true
+    creates: /var/www/lighthouse/index.html
+
+- name: Configure Nginx for LightHouse
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/lighthouse
+    mode: '0644'
+  notify: Restart Nginx
+
+- name: Enable Nginx site
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/lighthouse
+    dest: /etc/nginx/sites-enabled/lighthouse
+    state: link
+  notify: Restart Nginx
+
+- name: Remove default Nginx site
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Restart Nginx
+
+- name: Start Nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+```
