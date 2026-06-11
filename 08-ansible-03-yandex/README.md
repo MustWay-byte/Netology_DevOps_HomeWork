@@ -2,21 +2,19 @@
 
 В файл `site.yml` добавлен третий play, который:
 
-- Устанавливает **Nginx** на хост из группы `lighthouse`.
-- Скачивает архив со статикой **LightHouse** (веб-интерфейс ClickHouse) из официального репозитория VKCOM.
-- Распаковывает статику в `/var/www/lighthouse`.
+- Устанавливает **Nginx** и **unzip** на хост из группы `lighthouse`.
+- Скачивает ZIP-архив с актуальной версией **LightHouse** (ветка `master`) из репозитория VKCOM.
+- Распаковывает архив во временную папку и копирует файлы в `/var/www/lighthouse`.
 - Настраивает Nginx через **Jinja2-шаблон** для отдачи LightHouse на порту `8686`.
 - Активирует конфигурацию, удаляет дефолтный сайт и запускает Nginx.
 - Использует **handler** `Restart Nginx`, который перезапускает веб-сервер при изменении конфигурации.
 
-## Код play
+## Код play (финальная версия)
 
 ```yaml
 - name: Install and configure LightHouse
   hosts: lighthouse
   become: true
-  vars:
-    lighthouse_version: "stable"
   handlers:
     - name: Restart Nginx
       ansible.builtin.service:
@@ -30,10 +28,15 @@
         state: present
         update_cache: true
 
-    - name: Download LightHouse static
+    - name: Install unzip (required to extract Lighthouse)
+      ansible.builtin.apt:
+        name: unzip
+        state: present
+
+    - name: Download LightHouse (master branch)
       ansible.builtin.get_url:
-        url: "https://github.com/VKCOM/lighthouse/releases/download/{{ lighthouse_version }}/lighthouse-{{ lighthouse_version }}.tar.gz"
-        dest: /tmp/lighthouse.tar.gz
+        url: "https://github.com/VKCOM/lighthouse/archive/refs/heads/master.zip"
+        dest: /tmp/lighthouse.zip
         mode: '0644'
 
     - name: Create directory for LightHouse
@@ -44,10 +47,17 @@
 
     - name: Extract LightHouse
       ansible.builtin.unarchive:
-        src: /tmp/lighthouse.tar.gz
-        dest: /var/www/lighthouse
+        src: /tmp/lighthouse.zip
+        dest: /tmp
         remote_src: true
+        creates: /tmp/lighthouse-master/index.html
+
+    - name: Copy Lighthouse files to web root
+      ansible.builtin.shell: |
+        cp -r /tmp/lighthouse-master/* /var/www/lighthouse/
+      args:
         creates: /var/www/lighthouse/index.html
+      changed_when: false
 
     - name: Configure Nginx for LightHouse
       ansible.builtin.template:
@@ -79,37 +89,42 @@
 # Задание 2 – Использование рекомендованных модулей
 
 При написании play для LightHouse использованы модули:
-- **`apt`** – для установки пакетов на Ubuntu (аналог `yum` для RedHat-дистрибутивов).  
-- **`get_url`** – для загрузки архива LightHouse из официального репозитория.  
-- **`template`** – для создания конфигурации Nginx из Jinja2-шаблона.
 
-Ниже показано, как эти модули применены в задачах playbook.  
-Обратите внимание: для Ubuntu-хостов применяется `apt`, но если бы целевая ОС была RedHat-совместимой, мы бы использовали `yum` (или `dnf`). В других частях плейбука (`ClickHouse`, `Vector`) также задействованы `yum_repository` / `dnf`, что полностью покрывает рекомендацию.
+1) apt – для установки Nginx и unzip.
 
-## Фрагмент playbook с указанными модулями
+2) get_url – для загрузки архива LightHouse из репозитория.
 
-### Установка Nginx (модуль `apt`)
+3) template – для создания конфигурации Nginx из Jinja2-шаблона.
 
+Ниже показано, как эти модули применены в задачах playbook.
+Для установки пакетов на Ubuntu используется apt; если бы целевая ОС была RedHat-совместимой, применялся бы yum / dnf.
+
+Фрагмент playbook с указанными модулями
+
+Установка Nginx и unzip (модуль apt)
 ```yaml
 - name: Install Nginx
   ansible.builtin.apt:
     name: nginx
     state: present
     update_cache: true
+
+- name: Install unzip
+  ansible.builtin.apt:
+    name: unzip
+    state: present
 ```
 
-### Скачивание статики LightHouse (модуль get_url)
-
+Скачивание LightHouse (модуль get_url)
 ```yaml
-- name: Download LightHouse static
+- name: Download LightHouse (master branch)
   ansible.builtin.get_url:
-    url: "https://github.com/VKCOM/lighthouse/releases/download/{{ lighthouse_version }}/lighthouse-{{ lighthouse_version }}.tar.gz"
-    dest: /tmp/lighthouse.tar.gz
+    url: "https://github.com/VKCOM/lighthouse/archive/refs/heads/master.zip"
+    dest: /tmp/lighthouse.zip
     mode: '0644'
 ```
 
-### Конфигурация Nginx через шаблон (модуль template)
-
+Конфигурация Nginx через шаблон (модуль template)
 ```yaml
 - name: Configure Nginx for LightHouse
   ansible.builtin.template:
@@ -123,15 +138,21 @@
 
 В play «Install and configure LightHouse» последовательно выполняются следующие задачи, реализующие все требуемые шаги:
 
-1. **Установка Nginx** – модуль `apt` ставит веб-сервер.
-2. **Скачивание статики LightHouse** – модуль `get_url` загружает архив с официального релиза.
-3. **Настройка конфига** – модуль `template` генерирует конфигурационный файл Nginx из Jinja2-шаблона, определяя порт `8686` и корневую директиву `/var/www/lighthouse`.
-4. **Запуск веб-сервера** – модуль `service` запускает Nginx и включает его в автозагрузку.
+Установка Nginx – модуль apt ставит веб-сервер.
 
-Дополнительно обеспечивается активация конфигурации (симлинк в `sites-enabled`), удаление стандартного сайта и перезапуск Nginx через handler при изменениях.
+Установка unzip – модуль apt устанавливает утилиту для распаковки ZIP.
 
-## Код tasks (фрагмент playbook)
+Скачивание LightHouse – модуль get_url загружает архив master.zip.
 
+Распаковка и копирование файлов – unarchive извлекает архив во временную папку, затем shell копирует содержимое в /var/www/lighthouse.
+
+Настройка конфига – модуль template генерирует конфигурационный файл Nginx из Jinja2-шаблона, определяя порт 8686 и корневую директиву /var/www/lighthouse.
+
+Запуск веб-сервера – активация сайта, удаление дефолтного конфига и запуск Nginx с автозагрузкой.
+
+Дополнительно используется handler Restart Nginx для перезапуска сервиса при изменении конфигурации.
+
+Код tasks (фрагмент playbook)
 ```yaml
 - name: Install Nginx
   ansible.builtin.apt:
@@ -139,10 +160,15 @@
     state: present
     update_cache: true
 
-- name: Download LightHouse static
+- name: Install unzip
+  ansible.builtin.apt:
+    name: unzip
+    state: present
+
+- name: Download LightHouse (master branch)
   ansible.builtin.get_url:
-    url: "https://github.com/VKCOM/lighthouse/releases/download/{{ lighthouse_version }}/lighthouse-{{ lighthouse_version }}.tar.gz"
-    dest: /tmp/lighthouse.tar.gz
+    url: "https://github.com/VKCOM/lighthouse/archive/refs/heads/master.zip"
+    dest: /tmp/lighthouse.zip
     mode: '0644'
 
 - name: Create directory for LightHouse
@@ -153,10 +179,17 @@
 
 - name: Extract LightHouse
   ansible.builtin.unarchive:
-    src: /tmp/lighthouse.tar.gz
-    dest: /var/www/lighthouse
+    src: /tmp/lighthouse.zip
+    dest: /tmp
     remote_src: true
+    creates: /tmp/lighthouse-master/index.html
+
+- name: Copy Lighthouse files to web root
+  ansible.builtin.shell: |
+    cp -r /tmp/lighthouse-master/* /var/www/lighthouse/
+  args:
     creates: /var/www/lighthouse/index.html
+  changed_when: false
 
 - name: Configure Nginx for LightHouse
   ansible.builtin.template:
@@ -187,15 +220,17 @@
 
 # Задание 4 – Подготовьте свой inventory-файл `prod.yml`
 
-Инвентарный файл `inventory/prod.yml` содержит три группы хостов, соответствующие сервисам:
+Инвентарный файл inventory/prod.yml содержит три группы хостов, соответствующие сервисам, развёрнутым в Docker-контейнерах на локальной машине:
 
-- **clickhouse** – хост `clickhouse-01` (Ubuntu 22.04)
-- **vector** – хост `vector-01` (Ubuntu 22.04)
-- **lighthouse** – хост `lighthouse-01` (Ubuntu 22.04)
+clickhouse – хост clickhouse-01 (Ubuntu 22.04, порт 2222)
 
-Для подключения используется SSH-ключ, пользователь `ubuntu`, внешние IP-адреса машин в Yandex Cloud.
+vector – хост vector-01 (Ubuntu 22.04, порт 2223)
 
-## Код `inventory/prod.yml`
+lighthouse – хост lighthouse-01 (Ubuntu 22.04, порт 2224)
+
+Подключение по SSH с пользователем ansible и паролем ansible.
+
+Код inventory/prod.yml
 
 ```yaml
 ---
@@ -204,28 +239,35 @@ all:
     clickhouse:
       hosts:
         clickhouse-01:
-          ansible_host: 89.169.146.142
-          ansible_user: ubuntu
-          ansible_ssh_private_key_file: ~/.ssh/id_rsa
+          ansible_host: localhost
+          ansible_port: 2222
+          ansible_user: ansible
+          ansible_password: ansible
+          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
     vector:
       hosts:
         vector-01:
-          ansible_host: 111.88.249.78
-          ansible_user: ubuntu
-          ansible_ssh_private_key_file: ~/.ssh/id_rsa
+          ansible_host: localhost
+          ansible_port: 2223
+          ansible_user: ansible
+          ansible_password: ansible
+          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
     lighthouse:
       hosts:
         lighthouse-01:
-          ansible_host: 89.169.130.25
-          ansible_user: ubuntu
-          ansible_ssh_private_key_file: ~/.ssh/id_rsa
+          ansible_host: localhost
+          ansible_port: 2224
+          ansible_user: ansible
+          ansible_password: ansible
+          ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
 ```
 
 # Задание 5 – Запуск `ansible-lint site.yml` и исправление ошибок
 
-Для проверки playbook на соответствие стандартам используется `ansible-lint`.  
+Для проверки playbook на соответствие стандартам используется ansible-lint.
 Ниже приведен скриншот его запуска.
 
-## Запуск `ansible-lint`
+Запуск ansible-lint
 
 <img width="1025" height="100" alt="image" src="https://github.com/user-attachments/assets/308aeddd-f989-45ee-9649-71d687e7ee0d" />
+
