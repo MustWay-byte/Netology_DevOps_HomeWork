@@ -262,9 +262,17 @@ all:
 # Задание 5 – Запуск `ansible-lint site.yml` и исправление ошибок
 
 Для проверки playbook на соответствие стандартам используется ansible-lint.
-Ниже приведен скриншот его запуска.
 
 **Запуск ansible-lint**
 
 <img width="1025" height="100" alt="image" src="https://github.com/user-attachments/assets/308aeddd-f989-45ee-9649-71d687e7ee0d" />
+
+# Задание 6 – Запуск playbook с флагом `--check`
+
+Флаг `--check` выполняет сухую проверку (dry-run): Ansible покажет планируемые изменения, но не будет вносить реальных правок.
+Это позволяет убедиться в корректности playbook.
+
+**Запуск проверки Playbook**
+
+<img width="1042" height="1005" alt="image" src="https://github.com/user-attachments/assets/d0d196a5-d0cf-4565-8fe9-0110a957f8e2" />
 
