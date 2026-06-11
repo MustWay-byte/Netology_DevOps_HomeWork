@@ -294,7 +294,7 @@ all:
 
 <img width="1041" height="999" alt="image" src="https://github.com/user-attachments/assets/c11895be-b935-473b-a8e8-cc1b2cb2fc7a" />
 
-# Задание 9 – Описание Playbook
+# Задание 9 – Описание playbook
 
 Playbook автоматизирует развёртывание трёх сервисов:
 
