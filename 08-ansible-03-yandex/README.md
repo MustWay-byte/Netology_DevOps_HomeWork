@@ -98,9 +98,7 @@
 
 Для установки пакетов на Ubuntu используется apt; если бы целевая ОС была RedHat-совместимой, применялся бы yum / dnf.
 
-##Фрагмент playbook с указанными модулями
-
-Установка Nginx и unzip (модуль apt)
+## Установка Nginx и unzip (модуль apt)
 ```yaml
 - name: Install Nginx
   ansible.builtin.apt:
@@ -114,7 +112,7 @@
     state: present
 ```
 
-##Скачивание LightHouse (модуль get_url)
+## Скачивание LightHouse (модуль get_url)
 ```yaml
 - name: Download LightHouse (master branch)
   ansible.builtin.get_url:
@@ -123,7 +121,7 @@
     mode: '0644'
 ```
 
-##Конфигурация Nginx через шаблон (модуль template)
+## Конфигурация Nginx через шаблон (модуль template)
 ```yaml
 - name: Configure Nginx for LightHouse
   ansible.builtin.template:
@@ -151,7 +149,7 @@
 
 Дополнительно используется handler Restart Nginx для перезапуска сервиса при изменении конфигурации.
 
-##Код tasks (фрагмент playbook)
+## Код tasks (фрагмент playbook)
 ```yaml
 - name: Install Nginx
   ansible.builtin.apt:
@@ -229,7 +227,7 @@
 
 Подключение по SSH с пользователем ansible и паролем ansible.
 
-##Код inventory/prod.yml
+## Код inventory/prod.yml
 
 ```yaml
 ---
