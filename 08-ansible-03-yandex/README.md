@@ -96,10 +96,9 @@
 
 3) template – для создания конфигурации Nginx из Jinja2-шаблона.
 
-Ниже показано, как эти модули применены в задачах playbook.
 Для установки пакетов на Ubuntu используется apt; если бы целевая ОС была RedHat-совместимой, применялся бы yum / dnf.
 
-Фрагмент playbook с указанными модулями
+##Фрагмент playbook с указанными модулями
 
 Установка Nginx и unzip (модуль apt)
 ```yaml
@@ -115,7 +114,7 @@
     state: present
 ```
 
-Скачивание LightHouse (модуль get_url)
+##Скачивание LightHouse (модуль get_url)
 ```yaml
 - name: Download LightHouse (master branch)
   ansible.builtin.get_url:
@@ -124,7 +123,7 @@
     mode: '0644'
 ```
 
-Конфигурация Nginx через шаблон (модуль template)
+##Конфигурация Nginx через шаблон (модуль template)
 ```yaml
 - name: Configure Nginx for LightHouse
   ansible.builtin.template:
@@ -138,21 +137,21 @@
 
 В play «Install and configure LightHouse» последовательно выполняются следующие задачи, реализующие все требуемые шаги:
 
-Установка Nginx – модуль apt ставит веб-сервер.
+1) Установка Nginx – модуль apt ставит веб-сервер.
 
-Установка unzip – модуль apt устанавливает утилиту для распаковки ZIP.
+2) Установка unzip – модуль apt устанавливает утилиту для распаковки ZIP.
 
-Скачивание LightHouse – модуль get_url загружает архив master.zip.
+3) Скачивание LightHouse – модуль get_url загружает архив master.zip.
 
-Распаковка и копирование файлов – unarchive извлекает архив во временную папку, затем shell копирует содержимое в /var/www/lighthouse.
+4) Распаковка и копирование файлов – unarchive извлекает архив во временную папку, затем shell копирует содержимое в /var/www/lighthouse.
 
-Настройка конфига – модуль template генерирует конфигурационный файл Nginx из Jinja2-шаблона, определяя порт 8686 и корневую директиву /var/www/lighthouse.
+5) Настройка конфига – модуль template генерирует конфигурационный файл Nginx из Jinja2-шаблона, определяя порт 8686 и корневую директиву /var/www/lighthouse.
 
-Запуск веб-сервера – активация сайта, удаление дефолтного конфига и запуск Nginx с автозагрузкой.
+6) Запуск веб-сервера – активация сайта, удаление дефолтного конфига и запуск Nginx с автозагрузкой.
 
 Дополнительно используется handler Restart Nginx для перезапуска сервиса при изменении конфигурации.
 
-Код tasks (фрагмент playbook)
+##Код tasks (фрагмент playbook)
 ```yaml
 - name: Install Nginx
   ansible.builtin.apt:
@@ -222,15 +221,15 @@
 
 Инвентарный файл inventory/prod.yml содержит три группы хостов, соответствующие сервисам, развёрнутым в Docker-контейнерах на локальной машине:
 
-clickhouse – хост clickhouse-01 (Ubuntu 22.04, порт 2222)
+1) clickhouse – хост clickhouse-01 (Ubuntu 22.04, порт 2222)
 
-vector – хост vector-01 (Ubuntu 22.04, порт 2223)
+2) vector – хост vector-01 (Ubuntu 22.04, порт 2223)
 
-lighthouse – хост lighthouse-01 (Ubuntu 22.04, порт 2224)
+3) lighthouse – хост lighthouse-01 (Ubuntu 22.04, порт 2224)
 
 Подключение по SSH с пользователем ansible и паролем ansible.
 
-Код inventory/prod.yml
+##Код inventory/prod.yml
 
 ```yaml
 ---
@@ -267,7 +266,7 @@ all:
 Для проверки playbook на соответствие стандартам используется ansible-lint.
 Ниже приведен скриншот его запуска.
 
-Запуск ansible-lint
+**Запуск ansible-lint**
 
 <img width="1025" height="100" alt="image" src="https://github.com/user-attachments/assets/308aeddd-f989-45ee-9649-71d687e7ee0d" />
 
