@@ -1,0 +1,157 @@
+---
+- name: Install Clickhouse
+  hosts: clickhouse
+  become: true
+  tasks:
+    - name: Install python3-apt for check mode
+      ansible.builtin.apt:
+        name: python3-apt
+        state: present
+
+    - name: Add ClickHouse repository
+      ansible.builtin.apt_repository:
+        repo: "deb [trusted=yes] https://packages.clickhouse.com/deb stable main"
+        state: present
+        update_cache: true
+
+    - name: Install ClickHouse packages
+      ansible.builtin.apt:
+        name:
+          - clickhouse-server
+          - clickhouse-client
+        state: present
+
+    - name: Start ClickHouse manually (no systemd)
+      ansible.builtin.shell: |
+        nohup clickhouse-server --config-file=/etc/clickhouse-server/config.xml &
+      args:
+        creates: /var/run/clickhouse-server/clickhouse-server.pid
+      changed_when: false
+      failed_when: false
+
+- name: Install and configure Vector
+  hosts: vector
+  become: true
+  vars:
+    vector_version: "0.42.0"
+  handlers:
+    - name: Restart Vector
+      ansible.builtin.shell: |
+        pkill vector || true
+        nohup vector --config /etc/vector/vector.toml &
+      listen: "Restart vector"
+      changed_when: true
+  tasks:
+    - name: Install dependencies
+      ansible.builtin.apt:
+        name: findutils
+        state: present
+    - name: Create Vector config directory
+      ansible.builtin.file:
+        path: /etc/vector
+        state: directory
+        mode: '0755'
+    - name: Download Vector binary archive
+      ansible.builtin.get_url:
+        url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-x86_64-unknown-linux-gnu.tar.gz"
+        dest: /tmp/vector.tar.gz
+        mode: '0644'
+    - name: Extract Vector archive
+      ansible.builtin.unarchive:
+        src: /tmp/vector.tar.gz
+        dest: /tmp
+        remote_src: true
+        creates: /usr/local/bin/vector
+    - name: Find and install Vector binary
+      ansible.builtin.shell: |
+        find /tmp/vector-*/bin -name vector -exec cp {} /usr/local/bin/vector \;
+      args:
+        creates: /usr/local/bin/vector
+      changed_when: false
+      notify: Restart Vector
+    - name: Deploy Vector configuration from template
+      ansible.builtin.template:
+        src: vector.toml.j2
+        dest: /etc/vector/vector.toml
+        mode: '0644'
+      notify: Restart Vector
+    - name: Start Vector (initial run)
+      ansible.builtin.shell: |
+        nohup vector --config /etc/vector/vector.toml &
+      args:
+        creates: /var/run/vector.pid
+      changed_when: false
+      failed_when: false
+
+- name: Install and configure LightHouse
+  hosts: lighthouse
+  become: true
+  handlers:
+    - name: Restart Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+      listen: "Restart nginx"
+  tasks:
+    - name: Install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: true
+
+    - name: Install unzip (required to extract Lighthouse)
+      ansible.builtin.apt:
+        name: unzip
+        state: present
+
+    - name: Download LightHouse (master branch)
+      ansible.builtin.get_url:
+        url: "https://github.com/VKCOM/lighthouse/archive/refs/heads/master.zip"
+        dest: /tmp/lighthouse.zip
+        mode: '0644'
+
+    - name: Create directory for LightHouse
+      ansible.builtin.file:
+        path: /var/www/lighthouse
+        state: directory
+        mode: '0755'
+
+    - name: Extract LightHouse
+      ansible.builtin.unarchive:
+        src: /tmp/lighthouse.zip
+        dest: /tmp
+        remote_src: true
+        creates: /tmp/lighthouse-master/index.html
+
+    - name: Copy Lighthouse files to web root
+      ansible.builtin.shell: |
+        cp -r /tmp/lighthouse-master/* /var/www/lighthouse/
+      args:
+        creates: /var/www/lighthouse/index.html
+      changed_when: false
+
+    - name: Configure Nginx for LightHouse
+      ansible.builtin.template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/sites-available/lighthouse
+        mode: '0644'
+      notify: Restart Nginx
+
+    - name: Enable Nginx site
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/lighthouse
+        dest: /etc/nginx/sites-enabled/lighthouse
+        state: link
+      notify: Restart Nginx
+
+    - name: Remove default Nginx site
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: Restart Nginx
+
+    - name: Start Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true

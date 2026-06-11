@@ -1,0 +1,9 @@
+[sources.logs]
+type = "file"
+include = ["/var/log/clickhouse-server/clickhouse-server.log"]
+read_from = "beginning"
+
+[sinks.console]
+type = "console"
+inputs = ["logs"]
+encoding.codec = "text"
