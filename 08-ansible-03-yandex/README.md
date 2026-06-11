@@ -324,3 +324,9 @@ Playbook автоматизирует развёртывание трёх сер
   tags: clickhouse
 ```
 
+# Задание 10 – Готовый playbook выложите в свой репозиторий, поставьте тег 08-ansible-03-yandex на фиксирующий коммит, в ответ предоставьте ссылку на него.
+
+Playbook закоммичен в ветку `main`, на финальный коммит установлен тег `08-ansible-03-yandex`.  
+Ссылка на тег: [08-ansible-03-yandex](https://github.com/MustWay-byte/Netology_DevOps_HomeWork/releases/tag/08-ansible-03-yandex)
+
+В теге находятся все файлы задания: `site.yml`, `inventory/prod.yml`, шаблоны `nginx.conf.j2` и `vector.toml.j2`, а также `README.md`.
