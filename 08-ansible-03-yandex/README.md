@@ -276,3 +276,12 @@ all:
 
 <img width="1042" height="1005" alt="image" src="https://github.com/user-attachments/assets/d0d196a5-d0cf-4565-8fe9-0110a957f8e2" />
 
+# Задание 7 – Запуск playbook с флагом `--diff`
+
+Флаг `--diff` показывает изменения в конфигурационных файлах при выполнении playbook.  
+При первом запуске (после очистки состояния или на свежих хостах) видны добавленные строки в настройках Nginx и другие правки, вносимые Ansible.
+
+**Первый запуск Playbook с отображением изменений**
+
+<img width="1048" height="1002" alt="image" src="https://github.com/user-attachments/assets/ae44a853-1140-4fc5-9a11-2cd52e8a43ff" />
+
