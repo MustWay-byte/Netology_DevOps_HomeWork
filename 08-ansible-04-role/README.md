@@ -186,4 +186,15 @@ Playbook `site.yml` переписан с применением ролей `cli
 
 <img width="1450" height="439" alt="image" src="https://github.com/user-attachments/assets/fdbd7bf5-bcd8-4e86-9ffd-de0b8b8f9278" />
 
+**Вывод `ansible-playbook --check`**
 
+<img width="1833" height="961" alt="image" src="https://github.com/user-attachments/assets/f026a261-6863-4f01-8c10-9fe7638aec88" />
+
+# Задание 10 – Выкладка playbook в репозиторий
+
+Playbook и все необходимые файлы (роли, `requirements.yml`, `inventory/prod.yml`, `site.yml`) 
+закоммичены в ветку `main` основного репозитория.  
+На финальный коммит установлен тег `08-ansible-04-role`.
+
+Ссылка на репозиторий: [Netology_DevOps_HomeWork](https://github.com/MustWay-byte/Netology_DevOps_HomeWork)  
+Ссылка на тег: [08-ansible-04-role](https://github.com/MustWay-byte/Netology_DevOps_HomeWork/releases/tag/08-ansible-04-role)
