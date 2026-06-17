@@ -1,0 +1,23 @@
+---
+- name: Install ClickHouse
+  hosts: clickhouse
+  become: true
+  roles:
+    - role: clickhouse
+
+- name: Install Vector
+  hosts: vector
+  become: true
+  roles:
+    - role: vector-role
+
+- name: Install LightHouse
+  hosts: lighthouse
+  become: true
+  pre_tasks:
+    - name: Ensure curl is installed (for healthchecks)
+      ansible.builtin.apt:
+        name: curl
+        state: present
+  roles:
+    - role: lighthouse-role
