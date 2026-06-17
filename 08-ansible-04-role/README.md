@@ -11,3 +11,16 @@
   scm: git
   version: "1.13"
   name: clickhouse
+```
+
+# Задание 2 – Загрузка роли ClickHouse через `ansible-galaxy`
+
+Роль ClickHouse, указанная в `requirements.yml`, скачана командой:
+
+```bash
+ansible-galaxy install -r requirements.yml -p roles/
+```
+
+**Загрузка роли ClickHouse**
+<img width="1833" height="170" alt="image" src="https://github.com/user-attachments/assets/eb590769-9d6f-4619-b873-337b85fb1268" />
+
