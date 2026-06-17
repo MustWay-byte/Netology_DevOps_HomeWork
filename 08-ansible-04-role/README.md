@@ -13,6 +13,10 @@
   name: clickhouse
 ```
 
+**Содержимое `requirements.yml`**
+
+<img width="905" height="110" alt="image" src="https://github.com/user-attachments/assets/a2b73d4f-2c53-496e-9f02-f5847eec5fb9" />
+
 # Задание 2 – Загрузка роли ClickHouse через `ansible-galaxy`
 
 Роль ClickHouse, указанная в `requirements.yml`, скачана командой:
