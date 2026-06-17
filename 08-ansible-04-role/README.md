@@ -132,3 +132,15 @@ encoding.codec = "text"
 **Содержимое `templates/nginx.conf.j2`**
 
 <img width="1842" height="222" alt="image" src="https://github.com/user-attachments/assets/980f6a33-88a0-4bed-86fc-e74ec3e78282" />
+
+# Задание 8 – Публикация ролей и обновление `requirements.yml`
+
+Созданные роли `vector-role` и `lighthouse-role` выложены в отдельные публичные репозитории на GitHub.  
+Для каждой роли проставлен тег с семантическим версионированием (`v1.0.0`).
+
+В файле `requirements.yml` добавлены ссылки на новые роли. Теперь playbook можно развернуть командой:
+
+```bash
+ansible-galaxy install -r requirements.yml -p roles/
+```
+
