@@ -144,3 +144,7 @@ encoding.codec = "text"
 ansible-galaxy install -r requirements.yml -p roles/
 ```
 
+**Список тегов в репозиториях и содержимое файла `requirements.yml`**
+
+<img width="1718" height="397" alt="image" src="https://github.com/user-attachments/assets/16cec48e-6661-4677-9ef2-1c6fa4bcac33" />
+
