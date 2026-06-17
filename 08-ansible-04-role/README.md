@@ -57,3 +57,25 @@ ansible-galaxy role init vector-role --init-path roles/
 **Структура роли `vector-role`**
 
 <img width="1406" height="382" alt="image" src="https://github.com/user-attachments/assets/3803b176-5348-40e7-89c8-4a425429bd48" />
+
+# Задание 5 – Перенос шаблонов конфигов в `templates`
+
+В роли `vector-role` создан шаблон конфигурации Vector — `templates/vector.toml.j2`.  
+Он определяет источник логов (файл ClickHouse) и вывод в консоль.
+
+```toml
+[sources.logs]
+type = "file"
+include = ["/var/log/clickhouse-server/clickhouse-server.log"]
+read_from = "beginning"
+
+[sinks.console]
+type = "console"
+inputs = ["logs"]
+encoding.codec = "text"
+```
+
+**Содержимое `templates/vector.toml.j2`**
+
+<img width="1840" height="201" alt="image" src="https://github.com/user-attachments/assets/55e1f479-ccde-4a10-ac85-29d6f2db76e7" />
+
