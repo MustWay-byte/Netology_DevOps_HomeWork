@@ -111,3 +111,24 @@ encoding.codec = "text"
 
 Обе переменные находятся в `defaults/main.yml` и могут быть переопределены.
 
+# Задание 7 – Создание и наполнение роли `lighthouse-role`
+
+Роль `lighthouse-role` создана с помощью `ansible-galaxy init` и наполнена задачами из старого playbook.  
+Она отвечает за установку Nginx, скачивание и развёртывание статики LightHouse, настройку конфигурации Nginx и запуск веб-сервера.
+
+Шаблон конфигурации Nginx (`nginx.conf.j2`) перенесён в `templates/`.  
+Переменные вынесены в `defaults/main.yml` (порт и корневая директория) и `vars/main.yml` (пути, не требующие переопределения).
+
+Описание роли и её параметров уже добавлено в общий README (см. задание 6).
+
+**Создание роли `lighthouse-role`**
+
+<img width="1843" height="94" alt="image" src="https://github.com/user-attachments/assets/af72d905-fc56-4ef1-89c4-067872b09c62" />
+
+**Структура роли `lighthouse-role`**
+
+<img width="1632" height="470" alt="image" src="https://github.com/user-attachments/assets/91a3a173-227c-4e21-93ac-adad2ff185d5" />
+
+**Содержимое `templates/nginx.conf.j2`**
+
+<img width="1842" height="222" alt="image" src="https://github.com/user-attachments/assets/980f6a33-88a0-4bed-86fc-e74ec3e78282" />
