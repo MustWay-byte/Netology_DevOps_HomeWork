@@ -198,3 +198,9 @@ Playbook и все необходимые файлы (роли, `requirements.ym
 
 Ссылка на репозиторий: [Netology_DevOps_HomeWork](https://github.com/MustWay-byte/Netology_DevOps_HomeWork)  
 Ссылка на тег: [08-ansible-04-role](https://github.com/MustWay-byte/Netology_DevOps_HomeWork/releases/tag/08-ansible-04-role)
+
+# Задание 11 – Ссылки на репозитории
+
+- Роль `vector-role`: [https://github.com/MustWay-byte/vector-role](https://github.com/MustWay-byte/vector-role)
+- Роль `lighthouse-role`: [https://github.com/MustWay-byte/lighthouse-role](https://github.com/MustWay-byte/lighthouse-role)
+- Playbook с использованием ролей: [https://github.com/MustWay-byte/Netology_DevOps_HomeWork/releases/tag/08-ansible-04-role](https://github.com/MustWay-byte/Netology_DevOps_HomeWork/releases/tag/08-ansible-04-role)
