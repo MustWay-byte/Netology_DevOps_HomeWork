@@ -21,13 +21,19 @@
           - clickhouse-client
         state: present
 
-    - name: Start ClickHouse manually (no systemd)
+    - name: Ensure clickhouse user owns data directory
+      ansible.builtin.file:
+        path: /var/lib/clickhouse
+        owner: clickhouse
+        group: clickhouse
+        recurse: true
+
+    - name: Start ClickHouse (daemon as clickhouse user)
       ansible.builtin.shell: |
-        nohup clickhouse-server --config-file=/etc/clickhouse-server/config.xml &
-      args:
-        creates: /var/run/clickhouse-server/clickhouse-server.pid
-      changed_when: false
-      failed_when: false
+        sudo -u clickhouse clickhouse-server --config-file=/etc/clickhouse-server/config.xml --daemon
+      register: ch_start
+      changed_when: ch_start.rc == 0
+      failed_when: ch_start.rc != 0
 
 - name: Install and configure Vector
   hosts: vector
@@ -75,13 +81,14 @@
         dest: /etc/vector/vector.toml
         mode: '0644'
       notify: Restart Vector
-    - name: Start Vector (initial run)
+    - name: Start Vector
       ansible.builtin.shell: |
         nohup vector --config /etc/vector/vector.toml &
       args:
         creates: /var/run/vector.pid
-      changed_when: false
-      failed_when: false
+      register: vec_start
+      changed_when: vec_start.rc == 0
+      failed_when: vec_start.rc != 0
 
 - name: Install and configure LightHouse
   hosts: lighthouse
