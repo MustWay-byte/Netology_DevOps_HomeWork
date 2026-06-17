@@ -148,3 +148,42 @@ ansible-galaxy install -r requirements.yml -p roles/
 
 <img width="1718" height="397" alt="image" src="https://github.com/user-attachments/assets/16cec48e-6661-4677-9ef2-1c6fa4bcac33" />
 
+# Задание 9 – Переработка playbook на использование ролей
+
+Playbook `site.yml` переписан с применением ролей `clickhouse`, `vector-role` и `lighthouse-role`.
+Для демонстрации совмещения ролей и задач в начале плейбука LightHouse добавлены `pre_tasks` (установка `curl`), выполняемые до запуска роли.
+
+Зависимости LightHouse от ClickHouse учтены порядком выполнения: сначала устанавливается ClickHouse, затем Vector, затем LightHouse.
+В будущем в `meta/main.yml` роли `lighthouse-role` можно явно прописать зависимость от `clickhouse`.
+
+```yaml
+---
+- name: Install ClickHouse
+  hosts: clickhouse
+  become: true
+  roles:
+    - role: clickhouse
+
+- name: Install Vector
+  hosts: vector
+  become: true
+  roles:
+    - role: vector-role
+
+- name: Install LightHouse
+  hosts: lighthouse
+  become: true
+  pre_tasks:
+    - name: Ensure curl is installed (for healthchecks)
+      ansible.builtin.apt:
+        name: curl
+        state: present
+  roles:
+    - role: lighthouse-role
+```
+
+**Содержимое `site.yml`**
+
+<img width="1450" height="439" alt="image" src="https://github.com/user-attachments/assets/fdbd7bf5-bcd8-4e86-9ffd-de0b8b8f9278" />
+
+
