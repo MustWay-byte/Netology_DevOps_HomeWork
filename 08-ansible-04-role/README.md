@@ -79,3 +79,35 @@ encoding.codec = "text"
 
 <img width="1840" height="201" alt="image" src="https://github.com/user-attachments/assets/55e1f479-ccde-4a10-ac85-29d6f2db76e7" />
 
+# Задание 6 – Описание ролей и их параметров
+
+Ниже представлены описания ролей, созданных для развёртывания Vector и LightHouse.
+
+## Роль `vector-role`
+
+Устанавливает [Vector](https://vector.dev/) — инструмент для сбора, преобразования и маршрутизации логов.
+
+### Параметры
+
+| Переменная          | По умолчанию            | Описание                                      |
+|---------------------|-------------------------|-----------------------------------------------|
+| `vector_version`    | `0.42.0`                | Версия Vector для загрузки                    |
+| `vector_config_dir` | `/etc/vector`           | Каталог конфигурации                          |
+| `vector_binary_path`| `/usr/local/bin/vector` | Путь установки исполняемого файла             |
+
+- `vector_version` и `vector_config_dir` находятся в `defaults/main.yml` (низкий приоритет, переопределяемы).
+- `vector_binary_path` задан в `vars/main.yml` (высокий приоритет).
+
+## Роль `lighthouse-role`
+
+Разворачивает веб-интерфейс [LightHouse](https://github.com/VKCOM/lighthouse) для ClickHouse с помощью Nginx.
+
+### Параметры
+
+| Переменная        | По умолчанию            | Описание                                          |
+|-------------------|-------------------------|---------------------------------------------------|
+| `lighthouse_port` | `8686`                  | Порт, на котором Nginx слушает LightHouse         |
+| `lighthouse_root` | `/var/www/lighthouse`   | Корневая директория статики LightHouse            |
+
+Обе переменные находятся в `defaults/main.yml` и могут быть переопределены.
+
