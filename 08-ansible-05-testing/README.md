@@ -5,7 +5,6 @@
 Был создан и успешно пройден сценарий для `vector_role`:
 
 ```bash
-cd roles/vector_role
 molecule test
 ```
 
@@ -19,7 +18,6 @@ molecule test
 Для этого мы сначала удалили старый каталог `molecule/default`, чтобы избежать конфликтов, а затем выполнили инициализацию.
 
 ```bash
-cd ~/Netology_DevOps_HomeWork/08-ansible-04-role/playbook/roles/vector_role
 rm -rf molecule/default
 molecule init scenario default --driver-name docker
 ```
@@ -94,3 +92,15 @@ molecule init scenario default --driver-name docker
 **Запуск команды `molecule test`**
 
 <img width="1849" height="965" alt="image" src="https://github.com/user-attachments/assets/bc9401a2-16a2-4b39-8dce-8bea01e1c0b1" />
+
+## Задание 5 – Повторное тестирование роли
+
+После внесения всех изменений (универсальный модуль `package`, мультиплатформенный сценарий, `verify.yml` с проверками) было выполнено повторное тестирование роли.
+
+```bash
+molecule test
+```
+
+**Запуск команды `molecule test`**
+
+<img width="1844" height="962" alt="image" src="https://github.com/user-attachments/assets/c2389441-b996-4a26-843c-566eaee3e518" />
