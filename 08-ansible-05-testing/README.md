@@ -225,8 +225,9 @@ commands = molecule test --all
 [testenv:lint]
 deps = -rtox-requirements.txt
 commands = molecule lint
-Таким образом, теперь tox может запускать как полный набор тестов (molecule, lint), так и быстрый прогон в Podman через tox -e podman.
 ```
+
+Таким образом, теперь tox может запускать как полный набор тестов (molecule, lint), так и быстрый прогон в Podman через tox -e podman.
 
 ### Задание 6 – Запуск команды `tox`
 
