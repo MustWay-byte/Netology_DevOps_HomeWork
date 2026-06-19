@@ -278,3 +278,12 @@ git push origin v1.2.0
 
 <img width="1841" height="964" alt="image" src="https://github.com/user-attachments/assets/858d6887-6983-4762-890a-46705053472f" />
 
+### Задание 2 – Сценарий полного стека (`fullstack`)
+
+Внутри роли `vector_role` создан сценарий `fullstack`, который одновременно разворачивает все три сервиса: ClickHouse, Vector и LightHouse.  
+Для этого используются все три роли: `clickhouse`, `vector_role` и `lighthouse_role`.
+
+**Особенности:**
+- Сценарий запускается в Docker-контейнере (образ `geerlingguy/docker-ubuntu2204-ansible`).
+- Роли подключаются через стандартный механизм Ansible (путь к ролям указан через переменную окружения `ANSIBLE_ROLES_PATH`).
+- В `converge.yml` добавлены `pre_tasks` для установки необходимых зависимостей (python3, gpg, curl, unzip).
