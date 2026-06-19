@@ -199,3 +199,37 @@ tox
 **Запуск команды `molecule test -s podman`**
 
 <img width="1842" height="917" alt="image" src="https://github.com/user-attachments/assets/4f6dfa33-03a9-4b54-8fdf-ad2cfabf4c6f" />
+
+## Часть 2 – Tox
+
+### Задание 5 – Настройка `tox.ini` для облегчённого сценария
+
+В файл `tox.ini` внесены изменения, добавляющие отдельное окружение `podman`.  
+Оно использует зависимости из `tox-requirements.txt` и запускает облегчённый сценарий `molecule test -s podman`.
+
+**Изменения в `tox.ini`:**
+
+- В секцию `[tox]` добавлено `podman` в список окружений.
+- Добавлена секция `[testenv:podman]`:
+
+```ini
+[testenv:podman]
+deps = -rtox-requirements.txt
+commands = molecule test -s podman
+```
+
+После правки `tox.ini` окружение `podman` готово к изолированному запуску через `tox -e podman`.
+
+## Часть 2 – Tox
+
+### Задание 6 – Запуск команды `tox`
+
+В контейнере `aragast/netology:latest` с активированным виртуальным окружением `py37-ansible210` была выполнена команда:
+
+```bash
+tox -e podman
+```
+
+**Запуск команды `tox -e podman`**
+
+<img width="1837" height="927" alt="image" src="https://github.com/user-attachments/assets/52958f67-1c9f-4438-8141-1d90230e879e" />
