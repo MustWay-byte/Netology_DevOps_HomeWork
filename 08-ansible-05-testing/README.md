@@ -204,23 +204,29 @@ tox
 
 ### Задание 5 – Настройка `tox.ini` для облегчённого сценария
 
-В файл `tox.ini` внесены изменения, добавляющие отдельное окружение `podman`.  
-Оно использует зависимости из `tox-requirements.txt` и запускает облегчённый сценарий `molecule test -s podman`.
+Файл `tox.ini` в корне роли `vector_role` был модифицирован: в список окружений добавлен `podman`, а также появилась новая секция `[testenv:podman]`, запускающая облегчённый сценарий Molecule.
 
-**Изменения в `tox.ini`:**
-
-- В секцию `[tox]` добавлено `podman` в список окружений.
-- Добавлена секция `[testenv:podman]`:
+Ниже приведён **полный итоговый `tox.ini`** с отражением всех изменений.
 
 ```ini
+[tox]
+minversion = 3.24
+envlist = podman, molecule, lint
+skipsdist = true
+
 [testenv:podman]
 deps = -rtox-requirements.txt
 commands = molecule test -s podman
+
+[testenv:molecule]
+deps = -rtox-requirements.txt
+commands = molecule test --all
+
+[testenv:lint]
+deps = -rtox-requirements.txt
+commands = molecule lint
+Таким образом, теперь tox может запускать как полный набор тестов (molecule, lint), так и быстрый прогон в Podman через tox -e podman.
 ```
-
-После правки `tox.ini` окружение `podman` готово к изолированному запуску через `tox -e podman`.
-
-## Часть 2 – Tox
 
 ### Задание 6 – Запуск команды `tox`
 
