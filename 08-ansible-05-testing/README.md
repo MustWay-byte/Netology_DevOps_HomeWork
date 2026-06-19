@@ -263,3 +263,4 @@ git push origin main
 git push origin v1.2.0
 ```
 
+Тег доступен по ссылке: [v1.2.0](https://github.com/MustWay-byte/vector-role/releases/tag/v1.2.0)
