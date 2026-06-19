@@ -144,3 +144,22 @@ ls -la tox.ini tox-requirements.txt
 **Копирование файлов из папки `example`**
 
 <img width="1812" height="163" alt="image" src="https://github.com/user-attachments/assets/bbf0b83c-e0f2-4a90-a7ea-14dfe16765e0" />
+
+### Задание 2 – Запуск контейнера `aragast/netology:latest` с ролью
+
+Для работы с Tox внутри контейнера используется образ `aragast/netology:latest`.  
+Мы монтируем каталог с ролью `vector_role` внутрь контейнера и запускаем интерактивную оболочку.
+
+#### Команда для выполнения
+
+```bash
+docker run --privileged=True \
+  -v ~/Netology_DevOps_HomeWork/08-ansible-04-role/playbook/roles/vector_role:/opt/vector-role \
+  -w /opt/vector-role \
+  -it aragast/netology:latest /bin/bash
+```
+
+**Запуск контейнера с ролью**
+
+<img width="1286" height="102" alt="image" src="https://github.com/user-attachments/assets/009a13fd-a7b0-47cb-b15a-d668722cdae4" />
+
