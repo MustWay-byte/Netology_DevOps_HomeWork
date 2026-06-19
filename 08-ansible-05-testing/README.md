@@ -177,3 +177,25 @@ tox
 **Запуск команды `tox`**
 
 <img width="1838" height="274" alt="image" src="https://github.com/user-attachments/assets/e43a1ef6-9c25-4809-ab78-5135849fdf8c" />
+
+Наблюдение: для окружений py37-ansible210 и py37-ansible30 тесты завершились с ошибкой, потому что в роли отсутствует сценарий compatibility. Это ожидаемо, так как мы создавали только сценарий default. Остальные окружения ещё не завершились (вывод оборван).
+
+Таким образом, видно что Tox корректно устанавливает зависимости и запускает molecule‑тесты. При необходимости можно расширить tox.ini, указав существующий сценарий, или создать недостающий сценарий compatibility.
+
+### Задание 4 – Создание облегчённого сценария Molecule с драйвером `podman`
+
+Был создан сценарий `podman` для тестирования роли `vector_role` в окружении Podman.  
+Сценарий включает только стадии `create`, `converge` и `destroy`, что ускоряет проверку по сравнению с полным циклом Docker.
+
+**Особенности:**
+- Используется образ `geerlingguy/docker-ubuntu2204-ansible:latest` (совместим с Podman).
+- Роль подключается через `include_role` с полным именем `mustway_byte.vector_role`.
+
+**Результат запуска:**
+- Контейнер Podman успешно создан.
+- Все задачи роли выполнены, обработчик `Restart Vector` отработал.
+- `PLAY RECAP`: `instance : ok=9 changed=6 … failed=0`.
+
+**Запуск команды `molecule test -s podman`**
+
+<img width="1842" height="917" alt="image" src="https://github.com/user-attachments/assets/4f6dfa33-03a9-4b54-8fdf-ad2cfabf4c6f" />
