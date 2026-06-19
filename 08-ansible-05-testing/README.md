@@ -49,3 +49,48 @@ molecule init scenario default --driver-name docker
 **Запуск команды `molecule test`**
 
 <img width="1848" height="985" alt="image" src="https://github.com/user-attachments/assets/7d254d26-e46f-4d4f-baa3-4e743f859482" />
+
+## Задание 4 – Добавление проверок в verify.yml
+
+В сценарий Molecule добавлен файл `molecule/default/verify.yml` с проверками (assertions), которые подтверждают корректную установку и запуск Vector:
+
+- **Файл конфигурации `/etc/vector/vector.toml` существует и не пуст.**
+- **Процесс Vector запущен** (определяется через `pgrep -x vector`).
+
+### Содержимое `verify.yml`
+
+```yaml
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Check Vector config file exists
+      ansible.builtin.stat:
+        path: /etc/vector/vector.toml
+      register: vector_config
+      failed_when: not vector_config.stat.exists
+
+    - name: Assert Vector config is not empty
+      ansible.builtin.assert:
+        that:
+          - vector_config.stat.size > 0
+        fail_msg: "Vector config file is empty"
+        success_msg: "Vector config file is valid"
+
+    - name: Check Vector process is running
+      ansible.builtin.shell: pgrep -x vector
+      register: vector_process
+      changed_when: false
+      failed_when: vector_process.rc != 0
+
+    - name: Assert Vector process is running
+      ansible.builtin.assert:
+        that:
+          - vector_process.rc == 0
+        fail_msg: "Vector process not running"
+        success_msg: "Vector process is running"
+```
+
+**Запуск команды `molecule test`**
+
+<img width="1849" height="965" alt="image" src="https://github.com/user-attachments/assets/bc9401a2-16a2-4b39-8dce-8bea01e1c0b1" />
