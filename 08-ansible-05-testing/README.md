@@ -264,3 +264,17 @@ git push origin v1.2.0
 ```
 
 Тег доступен по ссылке: [v1.2.0](https://github.com/MustWay-byte/vector-role/releases/tag/v1.2.0)
+
+## Часть 3 – Необязательная часть
+
+### Задание 1 – Создание сценариев Molecule для роли LightHouse
+
+Для роли `lighthouse_role` создан сценарий `default` с драйвером Docker.  
+Он проверяет установку Nginx, скачивание и развёртывание LightHouse, а также доступность веб-интерфейса.
+
+**Результат:** тест `molecule test` пройден, все задачи выполнены (`failed=0`), проверки `verify.yml` подтвердили, что LightHouse отдаёт страницу через порт 8686.
+
+**Запуск команды `molecule test`**
+
+<img width="1841" height="964" alt="image" src="https://github.com/user-attachments/assets/858d6887-6983-4762-890a-46705053472f" />
+
