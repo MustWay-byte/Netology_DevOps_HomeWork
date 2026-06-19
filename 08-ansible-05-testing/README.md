@@ -240,3 +240,26 @@ tox -e podman
 **Запуск команды `tox -e podman`**
 
 <img width="1837" height="927" alt="image" src="https://github.com/user-attachments/assets/52958f67-1c9f-4438-8141-1d90230e879e" />
+
+### Задание 7 – Финальный тег `v1.2.0`
+
+Все изменения, связанные с добавлением Molecule-сценариев (`default`, `podman`) и конфигурации Tox, закоммичены в репозиторий `vector-role`.  
+На финальный коммит установлен аннотированный тег `v1.2.0`, соответствующий принципам семантического версионирования (добавление нового функционала тестирования).
+
+**Команды для фиксации и тегирования:**
+
+```bash
+# Добавляем все новые файлы (tox.ini, tox-requirements.txt, молекульные сценарии)
+git add tox.ini tox-requirements.txt molecule/
+
+# Создаём коммит
+git commit -m "Add Molecule scenarios (default + podman) and Tox configuration"
+
+# Ставим тег v1.2.0
+git tag -a v1.2.0 -m "Add Molecule and Tox testing support"
+
+# Отправляем в удалённый репозиторий
+git push origin main
+git push origin v1.2.0
+```
+
