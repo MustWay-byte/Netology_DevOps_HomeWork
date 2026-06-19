@@ -27,3 +27,25 @@ molecule init scenario default --driver-name docker
 **Запуск команды `molecule init scenario default --driver-name docker`**
 
 <img width="1845" height="113" alt="image" src="https://github.com/user-attachments/assets/d84f7485-0b16-48a9-8057-856f2f1bcfb2" />
+
+## Задание 3 – Тестирование роли на нескольких дистрибутивах
+
+В сценарий Molecule добавлены две платформы:
+- **Ubuntu 22.04** (`geerlingguy/docker-ubuntu2204-ansible`)
+- **Rocky Linux 8** (`geerlingguy/docker-rockylinux8-ansible`)
+
+Образ Oracle Linux 8 был заменён на Rocky Linux 8 ввиду его недоступности в Docker Hub. Rocky Linux полностью совместим с RHEL‑семейством и позволяет проверить работу роли на `dnf`.
+
+### Внесённые изменения в роль
+Для корректной работы на разных менеджерах пакетов модуль `apt` заменён на универсальный модуль `package`:
+
+```yaml
+- name: Install dependencies
+  ansible.builtin.package:
+    name: findutils
+    state: present
+```
+
+**Запуск команды `molecule test`**
+
+<img width="1848" height="985" alt="image" src="https://github.com/user-attachments/assets/7d254d26-e46f-4d4f-baa3-4e743f859482" />
