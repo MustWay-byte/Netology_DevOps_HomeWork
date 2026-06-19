@@ -114,3 +114,4 @@ git tag -a v1.1.0 -m "Add molecule tests for vector_role"
 git push origin v1.1.0
 ```
 
+Тег доступен по ссылке: [v1.1.0](https://github.com/MustWay-byte/vector-role/releases/tag/v1.1.0).
