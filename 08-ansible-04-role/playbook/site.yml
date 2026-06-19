@@ -9,7 +9,7 @@
   hosts: vector
   become: true
   roles:
-    - role: vector-role
+    - role: vector_role
 
 - name: Install LightHouse
   hosts: lighthouse

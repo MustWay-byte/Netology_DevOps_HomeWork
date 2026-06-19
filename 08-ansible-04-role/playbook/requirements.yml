@@ -4,10 +4,10 @@
   version: "1.13"
   name: clickhouse
 
-- src: git@github.com:MustWay-byte/vector-role.git
+- src: git@github.com:MustWay-byte/vector_role.git
   scm: git
   version: "v1.0.0"
-  name: vector-role
+  name: vector_role
 
 - src: git@github.com:MustWay-byte/lighthouse-role.git
   scm: git
