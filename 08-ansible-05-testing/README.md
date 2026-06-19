@@ -318,3 +318,12 @@ git tag -a v1.3.0 -m "Fullstack Molecule scenario"
 git push origin main --tags
 ```
 
+- [vector-role](https://github.com/MustWay-byte/vector-role)  
+  Теги:  
+  [v1.1.0](https://github.com/MustWay-byte/vector-role/releases/tag/v1.1.0) – Molecule default  
+  [v1.2.0](https://github.com/MustWay-byte/vector-role/releases/tag/v1.2.0) – Molecule + Tox  
+  [v1.3.0](https://github.com/MustWay-byte/vector-role/releases/tag/v1.3.0) – Fullstack integration
+
+- [lighthouse-role](https://github.com/MustWay-byte/lighthouse-role)  
+  Тег:  
+  [v1.1.0](https://github.com/MustWay-byte/lighthouse-role/releases/tag/v1.1.0) – Molecule default
