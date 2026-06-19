@@ -280,10 +280,18 @@ git push origin v1.2.0
 
 ### Задание 2 – Сценарий полного стека (`fullstack`)
 
-Внутри роли `vector_role` создан сценарий `fullstack`, который одновременно разворачивает все три сервиса: ClickHouse, Vector и LightHouse.  
-Для этого используются все три роли: `clickhouse`, `vector_role` и `lighthouse_role`.
+В роли `vector_role` создан сценарий `fullstack`, который одновременно разворачивает все три сервиса: ClickHouse, Vector и LightHouse в одном Docker‑контейнере.
 
+**Особенности реализации:**
+- **ClickHouse** устанавливается и запускается вручную (без systemd) через `tasks`, что позволяет избежать ошибок, связанных с отсутствием `systemd` в тестовом образе.
+- **Vector** и **LightHouse** подключаются как стандартные роли (`vector_role`, `lighthouse_role`).
+- В `pre_tasks` устанавливаются необходимые зависимости (curl, unzip, apt-transport-https и др.).
+- Использован образ `geerlingguy/docker-ubuntu2204-ansible:latest`, в котором предустановлен Python и базовые утилиты.
 **Особенности:**
 - Сценарий запускается в Docker-контейнере (образ `geerlingguy/docker-ubuntu2204-ansible`).
 - Роли подключаются через стандартный механизм Ansible (путь к ролям указан через переменную окружения `ANSIBLE_ROLES_PATH`).
 - В `converge.yml` добавлены `pre_tasks` для установки необходимых зависимостей (python3, gpg, curl, unzip).
+
+**Запуск команды `molecule test -s fullstack`**
+
+<img width="1843" height="883" alt="image" src="https://github.com/user-attachments/assets/a42524b3-ee1e-42c7-a9be-ab9f342fcd33" />
