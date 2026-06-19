@@ -1,3 +1,5 @@
+## Часть 1 – Molecule
+
 ## Задание 1 – Знакомство с Molecule и успешный прогон vector_role
 
 Был запущен `molecule test` для роли `clickhouse` (взятой из внешнего репозитория).  
@@ -115,3 +117,30 @@ git push origin v1.1.0
 ```
 
 Тег доступен по ссылке: [v1.1.0](https://github.com/MustWay-byte/vector-role/releases/tag/v1.1.0).
+
+## Часть 2 – Tox
+
+### Задание 1 – Добавление файлов конфигурации Tox
+
+В корень роли `vector_role` скопированы файлы `tox.ini` и `tox-requirements.txt` из [примера](https://github.com/netology-code/mnt-homeworks/tree/MNT-video/08-ansible-05-testing/example). Они нужны для запуска тестов и линтеров через Tox.
+
+#### Команды для выполнения
+
+```bash
+# Клонируем репозиторий с примером во временную папку
+git clone --depth 1 https://github.com/netology-code/mnt-homeworks.git /tmp/mnt-homeworks
+
+# Копируем нужные файлы
+cp /tmp/mnt-homeworks/08-ansible-05-testing/example/tox.ini .
+cp /tmp/mnt-homeworks/08-ansible-05-testing/example/tox-requirements.txt .
+
+# Удаляем временный клон
+rm -rf /tmp/mnt-homeworks
+
+# Проверяем наличие
+ls -la tox.ini tox-requirements.txt
+```
+
+**Копирование файлов из папки `example`**
+
+<img width="1812" height="163" alt="image" src="https://github.com/user-attachments/assets/bbf0b83c-e0f2-4a90-a7ea-14dfe16765e0" />
