@@ -163,3 +163,17 @@ docker run --privileged=True \
 
 <img width="1286" height="102" alt="image" src="https://github.com/user-attachments/assets/009a13fd-a7b0-47cb-b15a-d668722cdae4" />
 
+### Задание 3 – Запуск Tox внутри контейнера
+
+После входа в контейнер с примонтированной ролью `vector_role` была выполнена команда `tox`.  
+Tox начал создавать виртуальные окружения (py37‑ansible210, py37‑ansible30, py39‑ansible210 и др.) и запускать тесты в соответствии с `tox.ini`.
+
+**Команда в контейнере:**
+
+```bash
+tox
+```
+
+**Запуск команды `tox`**
+
+<img width="1838" height="274" alt="image" src="https://github.com/user-attachments/assets/e43a1ef6-9c25-4809-ab78-5135849fdf8c" />
