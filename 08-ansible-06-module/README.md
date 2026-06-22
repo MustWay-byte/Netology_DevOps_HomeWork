@@ -35,5 +35,6 @@
 
 **Проверка исполняемости скрипта**
 
-<img width="1838" height="96" alt="image" src="https://github.com/user-attachments/assets/9969d1df-2d7f-40cd-9856-dc556e76b079" />
+<img width="1834" height="115" alt="image" src="https://github.com/user-attachments/assets/a7766ceb-197d-4905-9d0f-bd0d48c52222" />
+
 
