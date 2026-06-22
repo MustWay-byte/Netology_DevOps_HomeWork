@@ -80,3 +80,19 @@ Playbook выполняется локально, путь к коллекции
 **Перенос модуля в новую коллекцию**
 
 <img width="1352" height="100" alt="image" src="https://github.com/user-attachments/assets/98fff39d-c490-46b7-9d8f-787140fa083a" />
+
+## Шаг 10. Single-task role в коллекции
+
+Роль `file_creator`, использующая модуль `my_own_module`, успешно создана и помещена в коллекцию `my_own_namespace.yandex_cloud_elk`.
+
+Структура роли:
+- `tasks/main.yml` – задача вызова модуля с параметрами `file_path`, `file_content` и `file_force`.
+- `defaults/main.yml` – значения по умолчанию для этих параметров.
+
+Теперь коллекция содержит и модуль, и роль, готовую к использованию в playbook.
+
+**Создание роли**
+
+<img width="1143" height="257" alt="image" src="https://github.com/user-attachments/assets/ab210291-2c08-4c5e-add3-e8c11ff8b33c" />
+
+
