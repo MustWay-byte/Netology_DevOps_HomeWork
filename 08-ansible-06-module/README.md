@@ -142,3 +142,11 @@ Playbook выполняется локально, путь к коллекции
 **Создание директории**
 
 <img width="1451" height="169" alt="image" src="https://github.com/user-attachments/assets/a3045f37-dc97-483c-9ff8-fcf2e8d199b2" />
+
+## Шаг 15. Установка коллекции из локального архива
+
+Коллекция, собранная в предыдущем шаге, установлена локально из архива `my_own_namespace-yandex_cloud_elk-1.0.0.tar.gz` с помощью `ansible-galaxy`.
+
+**Установка коллекции из архива**
+
+<img width="1840" height="165" alt="image" src="https://github.com/user-attachments/assets/520d2362-b548-449f-a69b-9459b4261b5e" />
