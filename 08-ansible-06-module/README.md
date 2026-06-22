@@ -1,4 +1,4 @@
-# Часть 1 — Основрная часть
+# Часть 1 — Основная часть
 
 ## Шаг 1. Создание модуля `my_own_module.py`
 
@@ -150,3 +150,11 @@ Playbook выполняется локально, путь к коллекции
 **Установка коллекции из архива**
 
 <img width="1840" height="165" alt="image" src="https://github.com/user-attachments/assets/520d2362-b548-449f-a69b-9459b4261b5e" />
+
+## Шаг 16. Проверка работоспособности playbook с установленной коллекцией
+
+Playbook успешно выполнен, модуль отработал и создал файл `/tmp/hello_from_playbook.txt`.
+
+**Запуск playbook**
+
+<img width="1843" height="292" alt="image" src="https://github.com/user-attachments/assets/a6d8e0e9-0432-4764-8d0d-e61825f4a843" />
