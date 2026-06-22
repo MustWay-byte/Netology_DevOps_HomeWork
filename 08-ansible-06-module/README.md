@@ -37,4 +37,12 @@
 
 <img width="1834" height="115" alt="image" src="https://github.com/user-attachments/assets/a7766ceb-197d-4905-9d0f-bd0d48c52222" />
 
+## Шаг 5. Single-task playbook с использованием модуля
+
+Создан playbook из одной задачи, которая применяет модуль `my_own_module` для создания текстового файла.  
+Playbook выполняется локально, путь к коллекции указан через переменную окружения.
+
+**Запуск playbook**
+
+<img width="1853" height="362" alt="image" src="https://github.com/user-attachments/assets/b7e1fed0-8343-4db7-98f2-ebdc528467f3" />
 
