@@ -104,3 +104,16 @@ Playbook выполняется локально, путь к коллекции
 
 <img width="1833" height="366" alt="image" src="https://github.com/user-attachments/assets/01b94790-c436-47b8-8893-b5037d9a78ef" />
 
+### Шаг 12. Заполнение документации и публикация с тегом `1.0.0`
+
+Для коллекции `my_own_namespace.yandex_cloud_elk` подготовлена полная документация:
+
+- В корне репозитория размещён `README.md` с описанием проекта, установки, ссылками.
+- В каталоге коллекции `ansible_collections/my_own_namespace/yandex_cloud_elk/README.md` приведено подробное описание модуля `my_own_module`, роли `file_creator`, параметров, примеров использования и лицензии.
+- Плагины задокументированы в `plugins/README.md`.
+
+Все файлы закоммичены в ветку `main`, на финальный коммит установлен аннотированный тег `1.0.0`. Репозиторий опубликован на GitHub.
+
+**Ссылки:**
+- Репозиторий: [https://github.com/MustWay-byte/my_own_collection](https://github.com/MustWay-byte/my_own_collection)
+- Тег `1.0.0`: [https://github.com/MustWay-byte/my_own_collection/releases/tag/1.0.0](https://github.com/MustWay-byte/my_own_collection/releases/tag/1.0.0)
