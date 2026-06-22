@@ -104,7 +104,7 @@ Playbook выполняется локально, путь к коллекции
 
 <img width="1833" height="366" alt="image" src="https://github.com/user-attachments/assets/01b94790-c436-47b8-8893-b5037d9a78ef" />
 
-### Шаг 12. Заполнение документации и публикация с тегом `1.0.0`
+## Шаг 12. Заполнение документации и публикация с тегом `1.0.0`
 
 Для коллекции `my_own_namespace.yandex_cloud_elk` подготовлена полная документация:
 
@@ -117,3 +117,13 @@ Playbook выполняется локально, путь к коллекции
 **Ссылки:**
 - Репозиторий: [https://github.com/MustWay-byte/my_own_collection](https://github.com/MustWay-byte/my_own_collection)
 - Тег `1.0.0`: [https://github.com/MustWay-byte/my_own_collection/releases/tag/1.0.0](https://github.com/MustWay-byte/my_own_collection/releases/tag/1.0.0)
+
+## Шаг 13. Сборка коллекции в `.tar.gz`
+
+В корневом каталоге коллекции `ansible_collections/my_own_namespace/yandex_cloud_elk` выполнена команда `ansible-galaxy collection build`.  
+Она создаёт архив `my_own_namespace-yandex_cloud_elk-1.0.0.tar.gz`, который можно использовать для установки коллекции на других системах.
+
+**Создание архива**
+
+<img width="1833" height="114" alt="image" src="https://github.com/user-attachments/assets/ad3af514-d0e3-446c-8c12-d4e5d111bacb" />
+
