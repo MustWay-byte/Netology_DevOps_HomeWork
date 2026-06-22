@@ -308,3 +308,31 @@ Playbook `deploy_stack.yml` был доработан и теперь выпол
 
 <img width="1844" height="992" alt="image" src="https://github.com/user-attachments/assets/eefc9951-f24c-4483-b7dd-be6ba3738345" />
 
+## Шаг 6. Итоговый состав коллекции и playbook
+
+Коллекция `my_own_namespace.yandex_cloud_elk` теперь включает все необходимые компоненты:
+
+### Роли
+- **clickhouse** – установка и настройка ClickHouse (используется внешняя роль AlexeySetevoi).
+- **vector_role** – установка и настройка Vector.
+- **lighthouse_role** – установка LightHouse (веб-интерфейс ClickHouse) с Nginx.
+
+Все роли протестированы в составе playbook и успешно отработали на виртуальных машинах Yandex Cloud.
+
+### Модули
+- **my_own_module** – создаёт текстовый файл с заданным содержимым (демонстрационный модуль).
+- **yc_compute_instance** – управляет виртуальными машинами Yandex Cloud: создание, проверка существования, получение динамического inventory.
+
+Оба модуля находятся в `plugins/modules/` коллекции.
+
+### Playbook `deploy_stack.yml`
+Демонстрирует полный цикл:
+1. Создание трёх ВМ в Yandex Cloud (clickhouse, vector, lighthouse).
+2. Автоматическое формирование инвентарного файла `inventory.yml`.
+3. Развёртывание и настройку всего стека Observability (ClickHouse, Vector, LightHouse) на созданных хостах с использованием ролей из коллекции.
+
+Playbook успешно выполнен, все сервисы работают. LightHouse доступен по адресу `http://<lighthouse_ip>:8686`.
+
+### Финальные ссылки
+- **Репозиторий:** [https://github.com/MustWay-byte/my_own_collection](https://github.com/MustWay-byte/my_own_collection)
+- **Архив коллекции:** [my_own_namespace-yandex_cloud_elk-1.0.0.tar.gz](https://github.com/MustWay-byte/my_own_collection/raw/main/dist/my_own_namespace-yandex_cloud_elk-1.0.0.tar.gz)
