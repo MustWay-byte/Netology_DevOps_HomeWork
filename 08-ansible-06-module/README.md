@@ -72,3 +72,11 @@ Playbook выполняется локально, путь к коллекции
 **Инициализация новой коллекции**
 
 <img width="1842" height="79" alt="image" src="https://github.com/user-attachments/assets/1d709bb8-8249-4074-b74f-20ed8ed95316" />
+
+## Шаг 9. Перенос модуля в новую коллекцию
+
+Готовый модуль `my_own_module.py` перемещён из старой коллекции `my_org.my_collection` в соответствующую директорию новой коллекции `my_own_namespace.yandex_cloud_elk`, чтобы его можно было использовать вместе с ней.
+
+**Перенос модуля в новую коллекцию**
+
+<img width="1352" height="100" alt="image" src="https://github.com/user-attachments/assets/98fff39d-c490-46b7-9d8f-787140fa083a" />
