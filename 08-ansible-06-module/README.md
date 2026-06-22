@@ -64,3 +64,11 @@ Playbook выполняется локально, путь к коллекции
 **Завершение работы с виртуальным окружением**
 
 <img width="564" height="43" alt="image" src="https://github.com/user-attachments/assets/4bb65ba3-294a-467c-98de-0e5c1b38a37e" />
+
+## Шаг 8. Инициализация новой коллекции
+
+Для создания структуры коллекции использовалась команда `ansible-galaxy collection init`, запущенная в виртуальном окружении разработки Ansible (Python 3.13). Это позволило избежать ошибок, связанных с устаревшим системным pip.
+
+**Инициализация новой коллекции**
+
+<img width="1842" height="79" alt="image" src="https://github.com/user-attachments/assets/1d709bb8-8249-4074-b74f-20ed8ed95316" />
