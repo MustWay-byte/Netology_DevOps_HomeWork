@@ -1,4 +1,4 @@
-## Часть 1 – Molecule
+# Часть 1 – Molecule
 
 ## Задание 1 – Знакомство с Molecule и успешный прогон vector_role
 
@@ -118,7 +118,7 @@ git push origin v1.1.0
 
 Тег доступен по ссылке: [v1.1.0](https://github.com/MustWay-byte/vector-role/releases/tag/v1.1.0).
 
-## Часть 2 – Tox
+# Часть 2 – Tox
 
 ### Задание 1 – Добавление файлов конфигурации Tox
 
@@ -265,7 +265,7 @@ git push origin v1.2.0
 
 Тег доступен по ссылке: [v1.2.0](https://github.com/MustWay-byte/vector-role/releases/tag/v1.2.0)
 
-## Часть 3 – Необязательная часть
+# Часть 3 – Необязательная часть
 
 ### Задание 1 – Создание сценариев Molecule для роли LightHouse
 
