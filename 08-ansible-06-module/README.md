@@ -95,4 +95,12 @@ Playbook выполняется локально, путь к коллекции
 
 <img width="1143" height="257" alt="image" src="https://github.com/user-attachments/assets/ab210291-2c08-4c5e-add3-e8c11ff8b33c" />
 
+## Шаг 11. Playbook для использования роли `file_creator`
+
+Создан playbook, который применяет роль `file_creator` из коллекции `my_own_namespace.yandex_cloud_elk`.  
+Роль использует модуль `my_own_module` с переопределёнными параметрами.
+
+**Запуск playbook**
+
+<img width="1833" height="366" alt="image" src="https://github.com/user-attachments/assets/01b94790-c436-47b8-8893-b5037d9a78ef" />
 
