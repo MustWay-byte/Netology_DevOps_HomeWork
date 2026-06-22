@@ -1,3 +1,5 @@
+# Часть 1 — Основрная часть
+
 ## Шаг 1. Создание модуля `my_own_module.py`
 
 В каталоге коллекции `my_org.my_collection` создан файл модуля `my_own_module.py`.  
@@ -127,3 +129,16 @@ Playbook выполняется локально, путь к коллекции
 
 <img width="1833" height="114" alt="image" src="https://github.com/user-attachments/assets/ad3af514-d0e3-446c-8c12-d4e5d111bacb" />
 
+## Шаг 14. Создание директории `dist` с playbook и архивом коллекции
+
+Для финального удобства все артефакты проекта были собраны в отдельную директорию `dist`.  
+В неё помещены:
+
+- Архив коллекции `my_own_namespace-yandex_cloud_elk-1.0.0.tar.gz`
+- Single-task playbook `test_module.yml`, который демонстрирует использование модуля `my_own_module`.
+
+Эти файлы можно передать другому пользователю или использовать для установки коллекции.
+
+**Создание директории**
+
+<img width="1451" height="169" alt="image" src="https://github.com/user-attachments/assets/a3045f37-dc97-483c-9ff8-fcf2e8d199b2" />
