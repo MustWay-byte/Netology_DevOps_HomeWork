@@ -77,7 +77,7 @@ Maven использует креды из `settings.xml` при деплое а
 
 *Скриншот загруженного `settings.xml`:*  
 
-<img width="1889" height="944" alt="image" src="https://github.com/user-attachments/assets/88b18fb9-76d4-4475-a11a-ea5cc5ab5f02" />
+<img width="1880" height="929" alt="image" src="https://github.com/user-attachments/assets/a7523f08-70df-4234-8472-57a2ad92428c" />
 
 ## Задание 6 – Изменение ссылок на репозиторий и Nexus в pom.xml
 
