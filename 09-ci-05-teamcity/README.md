@@ -218,3 +218,17 @@ public void testGetHunterMessage() {
 
 <img width="835" height="254" alt="image" src="https://github.com/user-attachments/assets/e31c9a88-90bb-40e7-9a88-651b874c0c2a" />
 
+## Задание 13 – Проверка автоматического запуска сборки и успешного прохождения тестов
+
+После пуша изменений в ветку `feature/add_reply` TeamCity автоматически запустил сборку, так как в VCS-триггере настроено отслеживание изменений. Сборка выполнена успешно, все тесты (включая новый тест для метода `getHunterMessage()`) пройдены.
+
+### Результат
+
+- В TeamCity отображается автоматически запущенная сборка для ветки `feature/add_reply`.
+- Статус сборки: **Success**.
+- Количество пройденных тестов: **6** (включая `testGetHunterMessage()`).
+- Шаг `clean test` выполнен в соответствии с условной конфигурацией (задание 4).
+
+*Скриншот страницы сборки TeamCity с видимой веткой `feature/add_reply`, статусом `Success` и блоком `Tests passed: 6`.
+
+<img width="1842" height="459" alt="image" src="https://github.com/user-attachments/assets/e2199df1-b50d-47cd-9066-0c193624ac0d" />
