@@ -195,3 +195,26 @@ public void testGetHunterMessage() {
 *Скриншот дополнения теста для метода*
 
 <img width="597" height="158" alt="image" src="https://github.com/user-attachments/assets/90adbcc3-2368-4fec-a0bd-ce71ec413577" />
+
+## Задание 12 – Push всех изменений в ветку `feature/add_reply`
+
+После добавления нового метода `getHunterMessage()` и соответствующего теста все изменения были зафиксированы и отправлены в удалённый репозиторий.  
+Ветка `feature/add_reply` теперь содержит актуальный код с новым функционалом и тестами.
+
+### Выполненные действия
+
+- Локальные коммиты:
+  - `Add getHunterMessage() method` – добавление метода в `Welcomer.java`.
+  - `Add test for getHunterMessage()` – добавление теста в `WelcomerTest.java`.
+- Оба коммита отправлены в ветку `feature/add_reply` командой `git push origin feature/add_reply`.
+- TeamCity автоматически запустил сборку на этой ветке, все тесты пройдены успешно.
+
+### Результат
+
+- Ветка `feature/add_reply` в репозитории [example-teamcity](https://github.com/MustWay-byte/example-teamcity/tree/feature/add_reply) содержит полный набор изменений.
+- Сборка CI/CD (TeamCity) для этой ветки завершена успешно, что подтверждает корректность кода.
+
+*Скриншот коммита в ветке `feature/add_reply` на GitHub*
+
+<img width="835" height="254" alt="image" src="https://github.com/user-attachments/assets/e31c9a88-90bb-40e7-9a88-651b874c0c2a" />
+
