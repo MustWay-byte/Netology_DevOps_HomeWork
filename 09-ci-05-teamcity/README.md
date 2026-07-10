@@ -108,4 +108,31 @@ Maven использует креды из `settings.xml` при деплое а
   
 <img width="1832" height="937" alt="image" src="https://github.com/user-attachments/assets/74124ee4-f1af-41d3-8aff-8b37f5a6ac40" />
 
+## Задание 8 – Миграция build configuration в репозиторий
+
+Настройки сборки проекта `example-teamcity` были перенесены в VCS (Git) с помощью механизма **Versioned Settings** TeamCity.  
+Теперь конфигурация хранится в репозитории и может быть воспроизведена на любом сервере TeamCity.
+
+### Что было сделано
+
+1. В проекте `example-teamcity` включены Versioned Settings.
+2. Выбран формат **XML**.
+3. Настроен VCS Root на ваш форк: `https://github.com/MustWay-byte/example-teamcity`.
+4. Параметры синхронизации:
+   - **Default branch:** `master`
+   - **Push mode:** автоматический коммит и пуш изменений.
+5. После первой синхронизации в репозиторий был добавлен каталог `.teamcity`, содержащий все настройки сборки.
+
+Синхронизация прошла успешно – изменения из репозитория применены к проекту.
+
+### Результат
+
+- В форке `example-teamcity` в ветке `master` появилась папка `.teamcity` с XML-файлами конфигурации.
+- При изменении настроек в TeamCity они автоматически коммитятся в репозиторий.
+- Сборка может быть развёрнута на другом сервере TeamCity простым клонированием репозитория и включением Versioned Settings.
+
+### Скриншот
+
+- Страница Versioned Settings после успешной синхронизации.
+
 <img width="1576" height="894" alt="image" src="https://github.com/user-attachments/assets/07a9bed2-242e-4b4e-b02a-a694cce6eba8" />
