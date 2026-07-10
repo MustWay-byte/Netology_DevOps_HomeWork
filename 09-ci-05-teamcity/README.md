@@ -321,3 +321,25 @@ public void testGetHunterMessage() {
 *Скриншот вкладки Artifacts со сборкой и файлом `plaindoll-0.0.3.jar`* 
 
 <img width="512" height="472" alt="image" src="https://github.com/user-attachments/assets/2f518ad3-9256-42a8-b39a-7f6ba671419a" />
+
+## Задание 18 – Проверка конфигурации в репозитории
+
+После синхронизации Versioned Settings все настройки проекта TeamCity сохранены в репозиторий `example-teamcity`.  
+В папке `.teamcity` содержатся XML‑файлы с полным описанием конфигурации сборки, шагов, VCS‑корней и параметров.
+
+### Что проверено
+
+- В репозитории присутствуют:
+  - `project-config.xml` – описание проекта,
+  - `Build/buildTypeConfig.xml` – конфигурация сборки с двумя шагами Maven и условиями по веткам,
+  - `vcsRoots/ExampleTeamcity.xml` – VCS‑корень с корректным URL,
+  - `pluginData/_Self/mavenSettings/settings.xml` – настройки Maven (креды Nexus).
+- Статус в TeamCity: **Synchronized** – локальные настройки полностью соответствуют репозиторию.
+
+### Результат
+
+Конфигурация проекта полностью версионирована и может быть воспроизведена на любом сервере TeamCity.
+
+*Скриншот содержимого папки `.teamcity` в репозитории*
+
+<img width="1877" height="446" alt="image" src="https://github.com/user-attachments/assets/1bb4ab77-a651-4cf9-87ed-c409ffa60ed6" />
