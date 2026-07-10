@@ -78,3 +78,12 @@ Maven использует креды из `settings.xml` при деплое а
 *Скриншот загруженного `settings.xml`:*  
 
 <img width="1889" height="944" alt="image" src="https://github.com/user-attachments/assets/88b18fb9-76d4-4475-a11a-ea5cc5ab5f02" />
+
+## Задание 6 – Изменение ссылок на репозиторий и Nexus в pom.xml
+
+Файл `pom.xml` обновлён: URL репозитория Nexus заменён на `http://158.160.227.188:8081/repository/maven-releases` (IP-адрес моего TeamCity-сервера).  
+Изменения закоммичены в ветку `master`, после чего сборка в TeamCity выполнила шаг `clean deploy`.
+
+*Скриншот обновлённого pom.xml:*
+
+<img width="1886" height="882" alt="image" src="https://github.com/user-attachments/assets/e9314a98-27db-4acd-8c90-41b6ff6d2685" />
