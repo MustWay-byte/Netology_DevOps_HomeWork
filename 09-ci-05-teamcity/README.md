@@ -107,3 +107,5 @@ Maven использует креды из `settings.xml` при деплое а
 *Скриншот артефакта в Nexus:*
   
 <img width="1832" height="937" alt="image" src="https://github.com/user-attachments/assets/74124ee4-f1af-41d3-8aff-8b37f5a6ac40" />
+
+<img width="1576" height="894" alt="image" src="https://github.com/user-attachments/assets/07a9bed2-242e-4b4e-b02a-a694cce6eba8" />
