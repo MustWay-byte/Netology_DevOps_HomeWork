@@ -268,7 +268,7 @@ public void testGetHunterMessage() {
 
 Настройки CI/CD корректны: артефакт не остаётся в сборке TeamCity, а публикуется только во внешний репозиторий Nexus, что соответствует ожидаемому поведению.
 
-*Скриншот пустой вкладки Artifacts сборки master в TeamCity.
+*Скриншот пустой вкладки Artifacts сборки master в TeamCity*
 
 <img width="1084" height="286" alt="image" src="https://github.com/user-attachments/assets/c7db84f0-f401-4d62-9569-2569da4c302c" />
 
