@@ -66,3 +66,15 @@ TeamCity автоматически обнаружил систему сборк
 *Скриншот настроенных шагов с условиями:*
 
 <img width="1889" height="922" alt="image" src="https://github.com/user-attachments/assets/9f2d9a84-7711-45bc-9994-2992cdbe5a0b" />
+
+## Задание 5 – Загрузка settings.xml с кредами Nexus
+
+Файл `settings.xml` (содержит логин/пароль `admin/admin123` и URL Nexus) загружен в **Maven Settings** проекта `example-teamcity`.  
+В шаге `clean deploy` выбран этот файл через параметр **User settings selection**.
+
+**Результат:**  
+Maven использует креды из `settings.xml` при деплое артефактов в Nexus.
+
+*Скриншот загруженного `settings.xml`:*  
+
+<img width="1889" height="944" alt="image" src="https://github.com/user-attachments/assets/88b18fb9-76d4-4475-a11a-ea5cc5ab5f02" />
