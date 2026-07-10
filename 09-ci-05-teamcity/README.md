@@ -131,9 +131,7 @@ Maven использует креды из `settings.xml` при деплое а
 - При изменении настроек в TeamCity они автоматически коммитятся в репозиторий.
 - Сборка может быть развёрнута на другом сервере TeamCity простым клонированием репозитория и включением Versioned Settings.
 
-### Скриншот
-
-- Страница Versioned Settings после успешной синхронизации.
+*Скриншот страницы после успешной синхронизации*
 
 <img width="1576" height="894" alt="image" src="https://github.com/user-attachments/assets/07a9bed2-242e-4b4e-b02a-a694cce6eba8" />
 
@@ -153,9 +151,7 @@ Maven использует креды из `settings.xml` при деплое а
   [https://github.com/MustWay-byte/example-teamcity/tree/feature/add_reply](https://github.com/MustWay-byte/example-teamcity/tree/feature/add_reply)
 - При необходимости можно запустить сборку на этой ветке в TeamCity и убедиться, что выполняется только `clean test`.
 
-### Скриншот
-
-- Список веток репозитория с выделенной `feature/add_reply`.
+*Скриншот списка веток репозитория с выделенной `feature/add_reply`.*
 
 <img width="1656" height="717" alt="image" src="https://github.com/user-attachments/assets/33a299c6-7a4e-40ab-b0ac-3325f2807437" />
 
