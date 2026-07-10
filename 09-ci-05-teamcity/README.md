@@ -343,3 +343,15 @@ public void testGetHunterMessage() {
 *Скриншот содержимого папки `.teamcity` в репозитории*
 
 <img width="1877" height="446" alt="image" src="https://github.com/user-attachments/assets/1bb4ab77-a651-4cf9-87ed-c409ffa60ed6" />
+
+## Задание 19 – Ссылка на репозиторий
+
+Готовый проект с настроенным CI/CD, конфигурацией TeamCity и кодом приложения доступен в репозитории:
+
+🔗 [https://github.com/MustWay-byte/example-teamcity](https://github.com/MustWay-byte/example-teamcity)
+
+В репозитории находятся:
+- Исходный код приложения (`src/`, `pom.xml`)
+- Настройки сборки TeamCity в папке `.teamcity` (Versioned Settings)
+- Файл `settings.xml` с конфигурацией Maven для деплоя в Nexus
+- Ветки `master` и `feature/add_reply` с историей изменений
