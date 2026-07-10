@@ -232,3 +232,24 @@ public void testGetHunterMessage() {
 *Скриншот страницы сборки TeamCity с видимой веткой `feature/add_reply`, статусом `Success` и блоком `Tests passed: 6`.
 
 <img width="1842" height="459" alt="image" src="https://github.com/user-attachments/assets/e2199df1-b50d-47cd-9066-0c193624ac0d" />
+
+## Задание 14 – Merge ветки `feature/add_reply` в `master`
+
+Изменения из ветки `feature/add_reply` (новый метод `getHunterMessage()` и тест для него) были перенесены в основную ветку `master` с помощью Pull Request на GitHub. После слияния TeamCity автоматически запустил сборку для `master` с шагом `clean deploy`, который успешно загрузил обновлённый артефакт в Nexus.
+
+### Выполненные действия
+
+1. На GitHub в репозитории `example-teamcity` создан Pull Request из `feature/add_reply` в `master`.
+2. Pull Request принят и выполнен merge. Ветка `master` получила все коммиты с новым функционалом.
+3. TeamCity обнаружил изменения в `master` и автоматически запустил сборку согласно настройкам триггера.
+4. Для ветки `master` настроен условный шаг `clean deploy` (задание 4), поэтому после успешного прохождения тестов артефакт был опубликован в Nexus.
+
+### Результат
+
+- Ветка `master` теперь содержит актуальный код с методом `getHunterMessage()` и тестом.
+- Сборка `master` прошла успешно (статус `Success`), тесты пройдены.
+- В Nexus (репозиторий `maven-releases`) появился обновлённый артефакт `plaindoll-0.0.2.jar` с новой версией.
+
+*Скриншот Pull Request на GitHub*
+
+<img width="1228" height="829" alt="image" src="https://github.com/user-attachments/assets/27f16f88-ab3e-494e-822c-800e4dd25019" />
