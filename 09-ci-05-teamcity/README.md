@@ -136,3 +136,25 @@ Maven использует креды из `settings.xml` при деплое а
 - Страница Versioned Settings после успешной синхронизации.
 
 <img width="1576" height="894" alt="image" src="https://github.com/user-attachments/assets/07a9bed2-242e-4b4e-b02a-a694cce6eba8" />
+
+## Задание 9 – Создание feature-ветки `feature/add_reply`
+
+Для демонстрации работы CI/CD на feature-ветках в репозитории `example-teamcity` создана новая ветка `feature/add_reply` из `master`.
+
+### Что было сделано
+
+- Ветка создана через веб-интерфейс GitHub от ветки `master`.
+- В TeamCity настроены условные шаги сборки (задание 4), поэтому при запуске сборки на `feature/add_reply` будет выполнен шаг `clean test`, а `clean deploy` — пропущен.
+- Это подтверждает корректную работу условий по веткам.
+
+### Результат
+
+- Ветка `feature/add_reply` доступна в репозитории:  
+  [https://github.com/MustWay-byte/example-teamcity/tree/feature/add_reply](https://github.com/MustWay-byte/example-teamcity/tree/feature/add_reply)
+- При необходимости можно запустить сборку на этой ветке в TeamCity и убедиться, что выполняется только `clean test`.
+
+### Скриншот
+
+- Список веток репозитория с выделенной `feature/add_reply`.
+- 
+<img width="1656" height="717" alt="image" src="https://github.com/user-attachments/assets/33a299c6-7a4e-40ab-b0ac-3325f2807437" />
