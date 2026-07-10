@@ -253,3 +253,21 @@ public void testGetHunterMessage() {
 *Скриншот Pull Request на GitHub*
 
 <img width="1228" height="829" alt="image" src="https://github.com/user-attachments/assets/27f16f88-ab3e-494e-822c-800e4dd25019" />
+
+## Задание 15 – Проверка отсутствия собранного артефакта в сборке по ветке master
+
+В результате успешного выполнения сборки ветки `master` с шагом `clean deploy` артефакт `plaindoll-0.0.2.jar` был опубликован в Nexus, но **не сохранён как артефакт самой сборки в TeamCity**. Это подтверждается пустым списком на вкладке **Artifacts** на странице сборки.
+
+### Что было проверено
+
+- В TeamCity открыта последняя успешная сборка ветки `master` проекта `example-teamcity`.
+- На вкладке **Artifacts** отсутствуют какие-либо файлы (нет `.jar`, `.pom` и т.д.).
+- При этом в Nexus (репозиторий `maven-releases`) артефакт присутствует и доступен для загрузки.
+
+### Вывод
+
+Настройки CI/CD корректны: артефакт не остаётся в сборке TeamCity, а публикуется только во внешний репозиторий Nexus, что соответствует ожидаемому поведению.
+
+*Скриншот пустой вкладки Artifacts сборки master в TeamCity.
+
+<img width="1084" height="286" alt="image" src="https://github.com/user-attachments/assets/c7db84f0-f401-4d62-9569-2569da4c302c" />
