@@ -177,3 +177,25 @@ public String getHunterMessage() {
 *Скриншот добавления нового метода*
 
 <img width="716" height="365" alt="image" src="https://github.com/user-attachments/assets/fc8f5ba5-db9e-46c3-80e7-167acbe46dc1" />
+
+## Задание 11 – Дополнение теста для метода `getHunterMessage()`
+
+Для нового метода `getHunterMessage()` класса `Welcomer` добавлен модульный тест, проверяющий, что возвращаемая строка содержит слово **hunter**. Тест написан с использованием JUnit и находится в файле `WelcomerTest.java`.
+
+### Внесённые изменения
+
+В класс `WelcomerTest` добавлен следующий метод:
+
+```java
+@Test
+public void testGetHunterMessage() {
+    Welcomer welcomer = new Welcomer();
+    String message = welcomer.getHunterMessage();
+    assertTrue("The message should contain 'hunter'",
+               message.toLowerCase().contains("hunter"));
+}
+```
+
+*Скриншот дополнения теста для метода*
+
+<img width="597" height="158" alt="image" src="https://github.com/user-attachments/assets/90adbcc3-2368-4fec-a0bd-ce71ec413577" />
