@@ -156,5 +156,24 @@ Maven использует креды из `settings.xml` при деплое а
 ### Скриншот
 
 - Список веток репозитория с выделенной `feature/add_reply`.
-- 
+
 <img width="1656" height="717" alt="image" src="https://github.com/user-attachments/assets/33a299c6-7a4e-40ab-b0ac-3325f2807437" />
+
+## Задание 10 – Добавление метода `getHunterMessage()` в класс `Welcomer`
+
+В ветке `feature/add_reply` репозитория `example-teamcity` реализован новый метод в классе `Welcomer`.  
+Метод `getHunterMessage()` возвращает строку, содержащую слово **hunter**, как того требует условие.
+
+### Внесённые изменения
+
+В файл `src/main/java/plaindoll/Welcomer.java` добавлен следующий фрагмент:
+
+```java
+public String getHunterMessage() {
+    return "The hunter is ready!";
+}
+```
+
+*Скриншот добавления нового метода*
+
+<img width="716" height="365" alt="image" src="https://github.com/user-attachments/assets/fc8f5ba5-db9e-46c3-80e7-167acbe46dc1" />
