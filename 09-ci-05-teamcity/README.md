@@ -87,3 +87,23 @@ Maven использует креды из `settings.xml` при деплое а
 *Скриншот обновлённого pom.xml:*
 
 <img width="1886" height="882" alt="image" src="https://github.com/user-attachments/assets/e9314a98-27db-4acd-8c90-41b6ff6d2685" />
+
+## Задание 7 – Запуск сборки master и проверка артефакта в Nexus
+
+После исправления URL деплоя в `pom.xml` (`localhost` заменён на `nexus`) сборка ветки `master` успешно выполнена.  
+Шаг `clean deploy` отработал без ошибок: Maven загрузил артефакт `plaindoll-0.0.2.jar` в локальный Nexus.
+
+### Ключевые действия
+- В `pom.xml` форка `example-teamcity` указан корректный URL распространения:  
+  `http://nexus:8081/repository/maven-releases`.
+- TeamCity, агент и Nexus объединены в общую Docker-сеть `teamcity-net`, что позволяет агенту обращаться к Nexus по имени контейнера `nexus`.
+- В настройках шага `clean deploy` используется файл `nexus-settings` с кредами `admin` / `admin123`.
+
+### Результат
+- Сборка master завершена со статусом `Success`.
+- В логах шага `clean deploy` видна успешная загрузка артефакта в Nexus.
+- В репозитории `maven-releases` (http://localhost:8081) появились файлы `plaindoll-0.0.2.pom` и `plaindoll-0.0.2.jar`.
+
+*Скриншот артефакта в Nexus:*
+  
+<img width="1832" height="937" alt="image" src="https://github.com/user-attachments/assets/74124ee4-f1af-41d3-8aff-8b37f5a6ac40" />
