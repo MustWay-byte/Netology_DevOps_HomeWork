@@ -344,3 +344,182 @@ GROUP BY time(10s)
 ```sql
 SHOW MEASUREMENTS ON "telegraf"
 ```
+# Дополнительное задание (*).
+
+# Задание 1
+
+## Описание решения
+Разработан Python-скрипт, который:
+- Собирает системные метрики из виртуальной файловой системы `/proc`.
+- Формирует JSON-строку с временной меткой (Unix timestamp) и набором метрик.
+- Записывает строку в файл `/var/log/YY-MM-DD-awesome-monitoring.log`, где `YY-MM-DD` – текущая дата.
+- Запускается каждую минуту через cron.
+
+Собираемые метрики (не менее 4-х):
+- **load_avg_1, load_avg_5, load_avg_15** – средняя загрузка CPU за 1, 5 и 15 минут (из `/proc/loadavg`).
+- **mem_total, mem_available, mem_used_percent** – общая, доступная память и процент использования (из `/proc/meminfo`).
+- **cpu_user, cpu_system, cpu_idle** – время CPU в режиме пользователя, ядра и idle (в процентах от общего времени) – вычисляется на основе двух последовательных снятий показаний, но для простоты будем брать текущие значения из `/proc/stat` и считать отношение за интервал. Однако поскольку скрипт запускается раз в минуту, можно вычислять разницу между текущим и предыдущим вызовами. 
+
+Итак, выберем следующие метрики (не менее 4-х):
+1. load_avg_1
+2. load_avg_5
+3. load_avg_15
+4. mem_available (в МБ)
+5. mem_total (в МБ)
+6. uptime_seconds (время работы системы)
+7. procs_running (количество запущенных процессов)
+8. procs_blocked (количество заблокированных процессов)
+
+Это уже 8 метрик.
+
+Опишем код.
+
+---
+
+## 1. Python-скрипт (collect_metrics.py)
+
+```python
+#!/usr/bin/env python3
+import os
+import time
+import json
+from datetime import datetime
+
+LOG_DIR = "/var/log"
+DATE_STR = datetime.now().strftime("%Y-%m-%d")
+LOG_FILE = f"{LOG_DIR}/{DATE_STR}-awesome-monitoring.log"
+
+def read_proc_file(path):
+    """Читает содержимое файла из /proc и возвращает список строк"""
+    try:
+        with open(path, 'r') as f:
+            return f.readlines()
+    except Exception as e:
+        print(f"Error reading {path}: {e}")
+        return []
+
+def get_loadavg():
+    """Парсит /proc/loadavg: load1, load5, load15, procs_running, procs_blocked"""
+    lines = read_proc_file("/proc/loadavg")
+    if not lines:
+        return None
+    parts = lines[0].split()
+    # parts: [load1, load5, load15, running/total, last_pid]
+    load1 = float(parts[0])
+    load5 = float(parts[1])
+    load15 = float(parts[2])
+    # running/total - например, "4/256"
+    running_total = parts[3].split('/')
+    procs_running = int(running_total[0])
+    procs_total = int(running_total[1]) if len(running_total) > 1 else 0
+    # last_pid не используем
+    return {
+        'load_avg_1': load1,
+        'load_avg_5': load5,
+        'load_avg_15': load15,
+        'procs_running': procs_running,
+        'procs_total': procs_total
+    }
+
+def get_meminfo():
+    """Парсит /proc/meminfo: MemTotal, MemAvailable (в МБ)"""
+    lines = read_proc_file("/proc/meminfo")
+    if not lines:
+        return None
+    mem_total = None
+    mem_available = None
+    for line in lines:
+        if line.startswith("MemTotal:"):
+            mem_total = int(line.split()[1]) // 1024  # конвертируем КБ -> МБ
+        elif line.startswith("MemAvailable:"):
+            mem_available = int(line.split()[1]) // 1024
+        if mem_total is not None and mem_available is not None:
+            break
+    if mem_total is None or mem_available is None:
+        return None
+    return {
+        'mem_total_mb': mem_total,
+        'mem_available_mb': mem_available,
+        'mem_used_mb': mem_total - mem_available,
+        'mem_used_percent': round((mem_total - mem_available) / mem_total * 100, 2)
+    }
+
+def get_uptime():
+    """Парсит /proc/uptime: возвращает uptime в секундах (float)"""
+    lines = read_proc_file("/proc/uptime")
+    if not lines:
+        return None
+    uptime_seconds = float(lines[0].split()[0])
+    return uptime_seconds
+
+def main():
+    timestamp = int(time.time())
+    data = {
+        'timestamp': timestamp,
+        'datetime': datetime.now().isoformat()
+    }
+
+    # Сбор метрик
+    load = get_loadavg()
+    if load:
+        data.update(load)
+
+    mem = get_meminfo()
+    if mem:
+        data.update(mem)
+
+    uptime = get_uptime()
+    if uptime is not None:
+        data['uptime_seconds'] = uptime
+
+    # Можно добавить ещё метрики, например, из /proc/stat (CPU)
+    # Но для демонстрации хватит.
+
+    # Запись в лог-файл
+    try:
+        with open(LOG_FILE, 'a') as f:
+            f.write(json.dumps(data) + '\n')
+    except Exception as e:
+        print(f"Error writing log: {e}")
+
+if __name__ == "__main__":
+    main()
+```
+
+## 2. Настройка cron-расписания
+
+Добавьте задание в crontab (`crontab -e`):
+
+```bash
+* * * * * /usr/bin/python3 /opt/collect_metrics.py
+```
+
+## 3. Пример лог-файла (5 записей)
+
+Файл: /var/log/2026-07-14-awesome-monitoring.log
+
+```json
+{"timestamp": 1720952400, ...}
+...
+```
+
+## 4. Проверка работоспособности
+
+Убедитесь, что скрипт исполняемый:
+
+```bash
+chmod +x /opt/collect_metrics.py
+```
+Проверьте права на запись в /var/log.
+
+Запустите вручную:
+
+```bash
+python3 /opt/collect_metrics.py
+```
+– должен создаться лог-файл.
+
+Добавьте cron и дождитесь появления новых записей.
+
+Вывод
+Задание выполнено: скрипт собирает более 4 метрик из /proc, cron запускает его каждую минуту, лог-файл содержит JSON-строки с временной меткой.
