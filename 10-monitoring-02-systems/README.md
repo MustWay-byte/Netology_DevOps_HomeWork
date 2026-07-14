@@ -597,3 +597,13 @@ FROM "telegraf"."autogen"."docker_container_net"
 WHERE time > :dashboardTime: AND time < :upperDashboardTime: 
 GROUP BY time(:interval:) FILL(null)
 ```
+
+## Скриншот готового дашборда
+
+Ниже представлен созданный дашборд «System Overview» с отображением всех перечисленных метрик:
+
+<img width="1817" height="940" alt="3" src="https://github.com/user-attachments/assets/c8df2015-0da7-40e7-b8e9-109a175fdba4" />
+
+**Вывод**
+
+Дашборд успешно создан. Все метрики отображаются корректно, данные поступают из InfluxDB через Telegraf. Задание выполнено.
