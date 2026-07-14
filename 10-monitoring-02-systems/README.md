@@ -529,3 +529,71 @@ python3 /opt/collect_metrics.py
 
 Вывод
 Задание выполнено: скрипт собирает более 4 метрик из /proc, cron запускает его каждую минуту, лог-файл содержит JSON-строки с временной меткой.
+
+# Задание 2
+
+# Задание 2: Создание дашборда в Chronograf
+
+## Цель
+Создать в Chronograf пользовательский дашборд для визуализации системных метрик: утилизация CPU, использование RAM, заполнение дисков, количество запущенных Docker-контейнеров, сетевой трафик и аптайм.
+
+---
+
+## Выполненные шаги
+
+### 1. Подготовка метрик
+- Убедились, что в `telegraf.conf` включены необходимые плагины:
+  - `cpu`, `mem`, `disk`, `docker`, `net`, `system`
+- Перезапустили Telegraf и дождались поступления данных.
+- Проверили наличие измерений через `SHOW MEASUREMENTS` – все нужные появились.
+
+### 2. Создание дашборда
+В Chronograf (http://localhost:8888) перешли в **Dashboards** → **Create Dashboard**, задали имя `System Overview`.
+
+### 3. Добавление ячеек с запросами
+Для каждой метрики создана отдельная ячейка. Использованы полные имена базы и измерения, макросы времени (`:dashboardTime:`, `:upperDashboardTime:`, `:interval:`).
+
+#### CPU (утилизация в системном режиме)
+```sql
+SELECT mean("usage_system") AS "CPU System %" 
+FROM "telegraf"."autogen"."cpu" 
+WHERE time > :dashboardTime: AND time < :upperDashboardTime: 
+AND "host" = 'telegraf-getting-started' 
+GROUP BY time(:interval:) FILL(null)
+```
+
+#### RAM (процент использованной памяти)
+```sql
+SELECT mean("usage") AS "mean_usage", mean("usage_percent") AS "mean_usage_percent"
+FROM "telegraf"."autogen"."docker_container_mem"
+WHERE time > :dashboardTime: AND time < :upperDashboardTime:
+GROUP BY time(:interval:) FILL(null)
+```
+#### Диск (процент занятого места на корневом разделе)
+```sql
+SELECT mean("used") AS "mean_disk_used", mean("used_percent") AS "mean_disk_used_percent" 
+FROM "telegraf"."autogen"."disk" 
+WHERE time > :dashboardTime: AND time < :upperDashboardTime: 
+GROUP BY time(:interval:) FILL(null)
+```
+#### Количество запущенных контейнеров
+```sql
+SELECT last("n_running") AS "Containers Running", mean("n_containers") AS "mean_n_containers", mean("n_containers_running") AS "mean_n_containers_running"
+FROM "telegraf"."autogen"."docker"
+WHERE time > :dashboardTime: AND time < :upperDashboardTime:
+GROUP BY time(:interval:) FILL(null)
+```
+#### Аптайм системы (в часах)
+```sql
+SELECT last(uptime) / 3600 AS "Uptime (hours)" 
+FROM "telegraf"."autogen"."system" 
+WHERE time > now() - 24h 
+GROUP BY time(1h) fill(null)
+```
+#### Сетевой трафик (входящий/исходящий, КБ/с)
+```sql
+SELECT mean("rx_bytes") AS "mean_rx_bytes", mean("tx_bytes") AS "mean_tx_bytes" 
+FROM "telegraf"."autogen"."docker_container_net" 
+WHERE time > :dashboardTime: AND time < :upperDashboardTime: 
+GROUP BY time(:interval:) FILL(null)
+```
