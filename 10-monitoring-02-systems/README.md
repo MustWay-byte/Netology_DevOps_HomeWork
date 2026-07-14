@@ -528,7 +528,6 @@ python3 /opt/collect_metrics.py
 
 <img width="1832" height="937" alt="123" src="https://github.com/user-attachments/assets/94cdb023-bf25-407a-a045-927d4513a9ff" />
 
-Вывод
 Задание выполнено: скрипт собирает более 4 метрик из /proc, cron запускает его каждую минуту, лог-файл содержит JSON-строки с временной меткой.
 
 # Задание 2
