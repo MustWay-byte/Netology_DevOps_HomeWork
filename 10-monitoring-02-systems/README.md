@@ -315,3 +315,32 @@ GROUP BY time(10s)
 
 ## Вывод
 Задание выполнено: график утилизации CPU успешно построен, эксперименты с группировкой и интервалами проведены. Результат задокументирован скриншотом.
+
+# Задание 9
+
+# Список измерений в Chronograf (база telegraf.autogen)
+
+## Выполненные действия
+1. Добавлен плагин `[[inputs.docker]]` в конфигурацию Telegraf.
+2. В `docker-compose.yml` добавлен проброс сокета `/var/run/docker.sock:/var/run/docker.sock`.
+3. Telegraf перезапущен командой `docker-compose restart telegraf`.
+4. В логах ошибок нет, плагин `docker` успешно загружен.
+5. В Chronograf открыт Data Explorer, выбрана база `telegraf.autogen`, выполнен запрос `SHOW MEASUREMENTS`.
+
+## Результат
+В списке измерений появились метрики, связанные с Docker:
+- `docker`
+- `docker_container_cpu`
+- `docker_container_mem`
+- `docker_container_net`
+- другие (в зависимости от активности контейнеров).
+
+## Скриншот
+Ниже представлен скриншот веб-интерфейса Chronograf с отображением списка измерений в базе `telegraf.autogen`:
+
+<img width="1848" height="1027" alt="image" src="https://github.com/user-attachments/assets/88a5e67c-292a-41c6-9810-89252c6cf435" />
+
+## Использованный InfluxQL-запрос
+```sql
+SHOW MEASUREMENTS ON "telegraf"
+```
