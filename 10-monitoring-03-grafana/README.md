@@ -12,4 +12,6 @@
 
 Скриншот веб-интерфейса Grafana демонстрирует список подключённых источников данных (Data Sources). В списке присутствует **Prometheus** с отметкой об успешном подключении.
 
-![Data Sources в Grafana](<img width="1415" height="518" alt="image" src="https://github.com/user-attachments/assets/fe5fd1e4-f657-41a4-a038-6dbaf463d51b" />)
+Data Sources в Grafana
+
+<img width="1415" height="518" alt="image" src="https://github.com/user-attachments/assets/fe5fd1e4-f657-41a4-a038-6dbaf463d51b" />)
