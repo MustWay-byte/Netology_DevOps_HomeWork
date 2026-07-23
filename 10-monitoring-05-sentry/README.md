@@ -1,4 +1,6 @@
-<img width="3770" height="1758" alt="image" src="https://github.com/user-attachments/assets/ce01173f-deb0-4974-b566-d753727e026b" /># Задание 1: Sentry (Free Cloud account)
+# Задание 1: Sentry (Free Cloud account)
+
+<img width="3770" height="1758" alt="image" src="https://github.com/user-attachments/assets/ce01173f-deb0-4974-b566-d753727e026b" />
 
 Зарегистрирован бесплатный облачный аккаунт на [sentry.io](https://sentry.io) с использованием авторизации через GitHub.  
 Создан тестовый проект. На скриншоте показан список проектов в интерфейсе Sentry (меню **Projects**).
