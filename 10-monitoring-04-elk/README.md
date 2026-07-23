@@ -25,3 +25,15 @@ Kibana доступна по адресу `http://localhost:5601`.
 ### Интерфейс Kibana
 
 <img width="1648" height="1082" alt="image" src="https://github.com/user-attachments/assets/145334e9-c78e-4776-acb2-60c8015b9fe4" />
+
+# Задание 2: Создание index‑patterns и просмотр логов в Kibana
+
+В Kibana создан Data View `logstash-*` с временным полем `@timestamp`. Логи от `some_app` через Filebeat и Logstash поступают в Elasticsearch.
+
+В разделе Discover выполнены поисковые запросы, настроен временной диапазон, изучена структура логов.
+
+## Скриншоты
+
+### Просмотр логов в Discover
+
+<img width="3768" height="1801" alt="image" src="https://github.com/user-attachments/assets/6fbe7a27-c869-47fb-abf1-32092fa63aa5" />
