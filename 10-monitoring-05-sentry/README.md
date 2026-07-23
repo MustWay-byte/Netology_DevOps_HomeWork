@@ -48,7 +48,7 @@
 
 ## Код подключения SDK и отправки событий
 
-\`\`\`python
+```python
 import sentry_sdk
 import logging
 
@@ -83,9 +83,9 @@ with sentry_sdk.push_scope() as scope:
 # Ошибка через логгер
 logger = logging.getLogger("sentry_demo")
 logger.error("Ошибка с логгером, отправленная в Sentry")
-\`\`\`
+```
 
-## Скриншот
+## Скриншоты
 
 ### Список Issues после отправки событий
 
