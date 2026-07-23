@@ -8,3 +8,19 @@
 ### Меню Projects
 
 <img width="3792" height="1774" alt="image" src="https://github.com/user-attachments/assets/7242566f-2302-4a51-8953-ba4606496bfb" />
+
+# Задание 2: Генерация тестового события и работа с ним
+
+В проекте Sentry сгенерировано тестовое событие «ZeroDivisionError».  
+Изучена вкладка **Stack trace** с трассировкой ошибки.  
+Событие переведено в статус **Resolved** через список Issues.
+
+## Скриншоты
+
+### Stack trace тестового события
+
+<img width="3731" height="1771" alt="image" src="https://github.com/user-attachments/assets/3597319e-d61e-4ab4-aa98-74de44d83410" />
+
+### Список событий после нажатия Resolved
+
+<img width="3520" height="1756" alt="image" src="https://github.com/user-attachments/assets/87447ee2-8137-4ee6-9eba-a64e35a2ad5d" />
