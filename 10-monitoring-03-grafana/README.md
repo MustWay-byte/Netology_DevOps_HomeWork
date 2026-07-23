@@ -49,3 +49,21 @@ Data Sources в Grafana
 Node Exporter Dashboard
 
 <img width="1784" height="1559" alt="image" src="https://github.com/user-attachments/assets/822f4cbd-aa13-49aa-9c76-a157e82b6b3b" />
+
+# Задание 3: Настройка канала нотификаций и создание алертов
+
+В качестве канала уведомлений использован локальный почтовый сервер **MailHog**, который перехватывает все отправляемые Grafana письма.  
+
+В Grafana созданы четыре правила алертов для метрик CPU, Load Average, свободной памяти и дискового пространства. Все алерты связаны с контактной точкой Email (MailHog), что позволяет видеть тестовые и боевые уведомления в веб-интерфейсе MailHog.  
+
+На дашборд добавлена панель **Alert list**, отображающая текущее состояние всех алертов.
+
+## Скриншоты
+
+### Правило алерта для CPU
+
+<img width="1789" height="1689" alt="image" src="https://github.com/user-attachments/assets/843ba148-e1e4-4b9a-a735-3240169ac141" />
+
+### Почтовый ящик
+
+<img width="1514" height="845" alt="image" src="https://github.com/user-attachments/assets/d4f5a02c-b507-4bb5-808d-5f9cc0d67dca" />
