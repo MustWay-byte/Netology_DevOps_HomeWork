@@ -1,0 +1,22 @@
+sources:
+  docker_logs:
+    type: docker_logs
+    docker_host: unix:///var/run/docker.sock
+
+transforms:
+  flatten_label:
+    type: remap
+    inputs: ["docker_logs"]
+    source: |
+      if exists(.label) {
+        .label = encode_json(.label)
+      }
+
+sinks:
+  elasticsearch:
+    type: elasticsearch
+    inputs: ["flatten_label"]
+    endpoints: ["http://elasticsearch:9200"]
+    bulk:
+      action: index
+      index: "logs-%Y.%m.%d"
