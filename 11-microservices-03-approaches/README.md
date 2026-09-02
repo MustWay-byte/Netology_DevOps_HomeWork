@@ -163,3 +163,36 @@ Kibana доступна по адресу `http://localhost:8081`, аутент�
 **Логи в Kibana**
 
 <img width="1849" height="1810" alt="image" src="https://github.com/user-attachments/assets/40fc3f8c-0f8d-4fb1-882b-5333300c6a8a" />
+
+## Задача 5: Мониторинг (необязательная)
+
+### Реализация
+
+В существующее окружение API Gateway добавлен стек мониторинга:
+
+- **Prometheus** – сбор метрик со всех сервисов (`security`, `uploader`, `minio`).
+- **Grafana** – визуализация метрик.
+
+Grafana доступна по адресу `http://localhost:8081`, аутентификация: `admin / qwerty123456`.  
+Для сбора метрик сервисы `security` и `uploader` были доработаны – добавлен эндпоинт `/metrics` на основе `prometheus_client`. Minio предоставляет метрики по адресу `/minio/v2/metrics/cluster`.
+
+### Дашборд
+
+Создан дашборд **«API Gateway Requests Overview»**, отображающий:
+- Rate запросов по сервисам (`sum by (service) (rate(http_requests_total[5m]))`)
+- Общее количество запросов за час (`sum by (service) (increase(http_requests_total[1h]))`)
+
+### Проверка
+
+Выполнены тестовые запросы, метрики успешно отобразились в Grafana.
+
+### Файлы
+
+- `docker-compose.yml` – полный стек
+- `prometheus.yml` – конфигурация Prometheus
+- `grafana/provisioning/` – автоматическая настройка Grafana
+- `security.py`, `uploader.py` – сервисы с экспортом метрик
+
+**Дашборд Grafana**
+
+<img width="1840" height="1778" alt="image" src="https://github.com/user-attachments/assets/c6238127-9b8e-4238-9887-5835ddcfa5c5" />
