@@ -8,6 +8,10 @@
 
 Манифест применён командой `kubectl apply -f hello-world-pod.yaml`. Pod успешно создан и перешёл в состояние `Running`.
 
+**Проверка статуса Pod**
+
+<img width="482" height="74" alt="image" src="https://github.com/user-attachments/assets/a7e14bf8-c425-41a0-83d5-c7a81e94112c" />
+
 ## 3. Подключение к Pod через kubectl port-forward
 
 Для доступа к приложению внутри Pod выполнен проброс порта:
