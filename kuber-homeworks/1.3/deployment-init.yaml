@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netology-init
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netology-init
+  template:
+    metadata:
+      labels:
+        app: netology-init
+    spec:
+      initContainers:
+      - name: init-check
+        image: busybox:1.36
+        command: ['sh', '-c', 'until nslookup netology-svc.default.svc.cluster.local; do echo waiting for service; sleep 2; done;']
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
