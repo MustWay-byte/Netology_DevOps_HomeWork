@@ -18,6 +18,5 @@ spec:
         backend:
           service:
             name: web-app-svc
-
             port:
               number: 80
