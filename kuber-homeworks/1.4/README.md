@@ -35,3 +35,39 @@
 
 - ClusterIP: успешно получены ответы от обоих контейнеров.
 - NodePort: успешно получена страница nginx.
+
+# Задание 2. Настройка Ingress
+
+## Выполненные шаги
+
+1. Включён Ingress-контроллер MicroK8S (`microk8s enable ingress`).
+2. Созданы два Deployment:
+   - `frontend` (образ nginx, порт 80)
+   - `backend` (образ wbitt/network-multitool, порт 80)
+3. Созданы два Service:
+   - `frontend-svc` (направлен на frontend, порт 80)
+   - `backend-svc` (направлен на backend, порт 80 после исправления targetPort)
+4. Создан Ingress `example-ingress`, который маршрутизирует:
+   - `/` → frontend-svc
+   - `/api` → backend-svc
+
+## Проверка доступа
+
+- `curl http://192.168.3.28/` – получена стандартная страница nginx.
+- `curl http://192.168.3.28/api` – получен ответ от multitool с информацией о поде.
+
+**Проверка доступности кластера**
+
+<img width="1272" height="559" alt="image" src="https://github.com/user-attachments/assets/a9fc0118-44f9-4919-a15f-041d293b2c19" />
+
+## Манифесты
+
+- `deployment-frontend.yaml`
+- `deployment-backend.yaml`
+- `service-frontend.yaml`
+- `service-backend.yaml`
+- `ingress.yaml`
+
+## Итог
+
+Ingress корректно маршрутизирует трафик по разным путям. Оба приложения доступны.
