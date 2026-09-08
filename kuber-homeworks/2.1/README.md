@@ -67,8 +67,6 @@ Deployment и PVC были удалены. При проверке PV (`kubectl 
 
 <img width="1433" height="1679" alt="image" src="https://github.com/user-attachments/assets/807c74b4-4449-4d0b-bd84-484639a03bb0" />
 
-**Вывод команд**
-
 <img width="728" height="945" alt="image" src="https://github.com/user-attachments/assets/cf5cb936-2932-4d60-ac2a-c77d363c4d5d" />
 
 Пояснение: PV переходит в статус Released. PV не удаляется, потому что reclaimPolicy: Retain сохраняет данные и требует ручного вмешательства. Файл остаётся на локальном диске после удаления PV, так как PV типа hostPath лишь указывает на директорию, а не управляет её содержимым. Удаление PV не затрагивает данные на ноде.
