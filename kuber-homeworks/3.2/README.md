@@ -1,4 +1,4 @@
-#Задание 1. Установка кластера Kubernetes с 1 master node
+# Задание 1. Установка кластера Kubernetes с 1 master node
 
 ## Цель
 
