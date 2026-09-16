@@ -13,7 +13,7 @@
 
 **Правила трафика**
 
-<img width="721" height="399" alt="image" src="https://github.com/user-attachments/assets/977572b5-164e-4885-a527-ac5efeba8f0d" />
+<img width="736" height="455" alt="image" src="https://github.com/user-attachments/assets/13fc8126-2c4e-4bee-99f3-dd11ca41f79a" />
 
 ## Вывод
 Сетевые политики успешно ограничивают трафик: разрешена только цепочка frontend → backend → cache, всё остальное блокируется. Требование задания выполнено.
