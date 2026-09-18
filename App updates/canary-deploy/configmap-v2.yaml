@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-v2-content
+  namespace: canary-demo
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+      <head><title>NGINX v2</title></head>
+      <body>
+        <h1>NGINX v2 - CANARY</h1>
+      </body>
+    </html>
