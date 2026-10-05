@@ -27,3 +27,19 @@
 **Доступность веб-страницы**
 
 <img width="735" height="504" alt="image" src="https://github.com/user-attachments/assets/96f81f10-9bb0-4a06-a8d4-224c63ad6a3c" />
+
+Через Terraform создан Network Load Balancer `lamp-nlb` (L4, порт 80) с публичным IP `84.201.145.238`.
+
+Целевая группа `lamp-tg` создаётся автоматически самой Instance Group при добавлении блока `load_balancer { target_group_name = "lamp-tg" }` в шаблон группы. Балансировщик подключается к этой группе по её ID (`target_group_id`).
+
+Во время непрерывной нагрузки через NLB (цикл `curl` в фоне) была удалена одна из ВМ Instance Group командой `yc compute instance delete`.
+
+**Результат:** запросы через балансировщик продолжали получать `HTTP 200` без единой ошибки — балансировщик автоматически исключил удалённую ВМ из ротации.
+
+**Удаление одной из ВМ**
+
+<img width="875" height="114" alt="image" src="https://github.com/user-attachments/assets/574d8307-3fb2-4bb7-9cdb-15b6538a6e12" />
+
+**Непрерывный поток запросов при удалении ВМ**
+
+<img width="876" height="143" alt="image" src="https://github.com/user-attachments/assets/0893f9b6-31ca-4343-b2b9-9c825fff3942" />
