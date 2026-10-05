@@ -25,4 +25,5 @@
 Страница доступна по публичным IP каждой ВМ — все отвечают `HTTP 200`:
 
 **Доступность веб-страницы**
+
 <img width="735" height="504" alt="image" src="https://github.com/user-attachments/assets/96f81f10-9bb0-4a06-a8d4-224c63ad6a3c" />
