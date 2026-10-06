@@ -19,6 +19,7 @@
 
 **Объект.** В бакет загружена картинка `images.jpeg` с типом содержимого `image/jpeg` и `acl = "public-read"`.
 
-**Проверка шифрования**
+**Проверка шифрования и доступности**
 
-<img width="728" height="550" alt="image" src="https://github.com/user-attachments/assets/4e5ae76c-53fc-4eab-87a1-d50ae799d3f4" />
+<img width="727" height="551" alt="image" src="https://github.com/user-attachments/assets/e295e2dd-7598-48f4-9bf3-b5c92e213217" />
+
