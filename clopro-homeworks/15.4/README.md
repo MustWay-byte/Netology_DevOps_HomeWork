@@ -39,3 +39,10 @@
 **Веб-интерфейс кластера**
 
 <img width="1135" height="209" alt="image" src="https://github.com/user-attachments/assets/e95f260e-9fc5-40f8-a055-ea15a8575ef6" />
+
+**Поды и ноды**
+
+<img width="969" height="475" alt="image" src="https://github.com/user-attachments/assets/26bdf84d-e10f-41f5-80d9-6fb10ba43c90" />
+
+**Подключение к phpMyAdmin**
+<img width="1842" height="666" alt="image" src="https://github.com/user-attachments/assets/2b64ba47-6cdf-4637-a3b9-ec8c864d60b2" />
