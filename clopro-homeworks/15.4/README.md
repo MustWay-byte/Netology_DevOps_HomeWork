@@ -35,3 +35,7 @@
 <img width="1122" height="590" alt="image" src="https://github.com/user-attachments/assets/089d18f3-119c-4934-b1e3-8c0c232f2ac2" />
 
 <img width="267" height="133" alt="image" src="https://github.com/user-attachments/assets/0996a036-fd46-4db6-ad1c-133246276967" />
+
+**Веб-интерфейс кластера**
+
+<img width="1135" height="209" alt="image" src="https://github.com/user-attachments/assets/e95f260e-9fc5-40f8-a055-ea15a8575ef6" />
