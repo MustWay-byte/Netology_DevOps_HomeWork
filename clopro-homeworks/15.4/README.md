@@ -40,6 +40,61 @@
 
 <img width="1135" height="209" alt="image" src="https://github.com/user-attachments/assets/e95f260e-9fc5-40f8-a055-ea15a8575ef6" />
 
+Создана сеть `k8s-network` и три подсети в разных зонах доступности:
+
+- `k8s-subnet-a` — 10.20.1.0/24, зона `ru-central1-a`;
+- `k8s-subnet-b` — 10.20.2.0/24, зона `ru-central1-b`;
+- `k8s-subnet-d` — 10.20.3.0/24, зона `ru-central1-d`.
+
+Размещение подсетей в трёх зонах обеспечивает отказоустойчивость кластера.
+
+### Сервисный аккаунт
+
+Создан сервисный аккаунт `k8s-cluster-sa` с ролями:
+
+- `k8s.clusters.agent` — управление кластером;
+- `vpc.publicAdmin` — работа с публичными IP;
+- `logging.writer` — отправка логов;
+- `kms.keys.encrypterDecrypter` — использование KMS-ключа для шифрования секретов;
+- `load-balancer.admin` — создание Network Load Balancer для сервисов типа LoadBalancer.
+
+### KMS-шифрование секретов
+
+Создан симметричный KMS-ключ `k8s-secrets-key` с алгоритмом `AES_256` и периодом ротации 1 год. Ключ подключён к кластеру через блок `kms_provider` — все секреты Kubernetes автоматически шифруются этим ключом.
+
+### Региональный мастер
+
+Мастер развёрнут в трёх зонах доступности (`ru-central1-a`, `ru-central1-b`, `ru-central1-d`) с публичным endpoint. Версия Kubernetes 1.33, release channel STABLE.
+
+### Группа узлов
+
+Создана группа узлов `k8s-node-group` с автомасштабированием:
+
+- min: 3
+- max: 6
+- initial: 3
+
+Все узлы в зоне `ru-central1-a` (ограничение Yandex Cloud: `auto_scale` работает только в одной зоне). Платформа `standard-v3`, 2 vCPU, 4 ГБ RAM, диск 30 ГБ SSD.
+
+## MySQL и phpMyAdmin
+
+MySQL-кластер `netology-mysql-cluster` из предыдущего задания получил публичный доступ на всех хостах. Публичный IP мастера: `158.160.47.84`.
+
+В Kubernetes развёрнут phpMyAdmin через Deployment с образом `phpmyadmin/phpmyadmin` и следующими переменными окружения:
+
+| Переменная | Значение |
+|---|---|
+| `PMA_HOST` | `158.160.47.84` (публичный IP мастера MySQL) |
+| `PMA_PORT` | `3306` |
+
+Service типа `LoadBalancer` получил публичный IP `158.160.240.232`.
+
+## Проверка
+
+Три ноды кластера Kubernetes находятся в статусе `Ready`. Публичный IP сервиса phpMyAdmin — `158.160.240.232`, под phpMyAdmin работает в статусе `Running`.
+
+Браузер открывает `http://158.160.240.232` — форма входа phpMyAdmin. После входа в левой панели отображается БД `netology_db`.
+
 **Поды и ноды**
 
 <img width="969" height="475" alt="image" src="https://github.com/user-attachments/assets/26bdf84d-e10f-41f5-80d9-6fb10ba43c90" />
