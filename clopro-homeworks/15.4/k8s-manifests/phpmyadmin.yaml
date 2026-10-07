@@ -21,13 +21,13 @@ spec:
             - containerPort: 80
           env:
             - name: PMA_HOST
-              value: "158.160.47.84"
+              value: "<MySQL_MASTER_PUBLIC_IP>"
             - name: PMA_PORT
               value: "3306"
             - name: MYSQL_USER
               value: "netology_user"
             - name: MYSQL_PASSWORD
-              value: "Netology123!"
+              value: "<YOUR_PASSWORD>"
 ---
 apiVersion: v1
 kind: Service
