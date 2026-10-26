@@ -7,3 +7,15 @@
 **Список API-ключей**
 
 <img width="1873" height="593" alt="image" src="https://github.com/user-attachments/assets/afadbe36-c756-4c93-8ebc-659aaa53fe09" />
+
+# Задание 1. Установка и настройка клиента
+
+В рамках этого шага было выполнено подключение к LLM API.
+
+### Что сделано:
+1. **Установлены зависимости:** Библиотеки `openai` и `python-dotenv` (вместо `groq`, так как используется OpenRouter).
+2. **Настроен клиент:** Загружен API-ключ из файла `.env` и инициализирован клиент `OpenAI` с переопределенным `base_url="https://openrouter.ai/api/v1"`.
+3. **Проведена проверка:** Сделан тестовый запрос к бесплатной модели (`openrouter/free`), который успешно вернул ответ, подтвердив работоспособность связки «код — OpenRouter — LLM».
+
+**Загрузка ключа**
+<img width="1262" height="786" alt="image" src="https://github.com/user-attachments/assets/bbd38fe9-df94-4f68-a7f1-b31e48015079" />
