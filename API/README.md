@@ -18,4 +18,6 @@
 3. **Проведена проверка:** Сделан тестовый запрос к бесплатной модели (`openrouter/free`), который успешно вернул ответ, подтвердив работоспособность связки «код — OpenRouter — LLM».
 
 **Загрузка ключа**
-<img width="1262" height="786" alt="image" src="https://github.com/user-attachments/assets/bbd38fe9-df94-4f68-a7f1-b31e48015079" />
+
+<img width="1248" height="500" alt="image" src="https://github.com/user-attachments/assets/d9e71549-f224-4283-9015-308e1ea87091" />
+
