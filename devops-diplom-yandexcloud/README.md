@@ -251,3 +251,7 @@ output "registry_id" {
 **Список образов**
 
 <img width="1839" height="295" alt="image" src="https://github.com/user-attachments/assets/eddefb0c-285c-4007-b3ca-94681a009826" />
+
+
+---
+<img width="1847" height="867" alt="image" src="https://github.com/user-attachments/assets/3bf5571c-5af6-460f-9fee-d8869fa7fc54" />
