@@ -35,52 +35,6 @@ yc-k8s-project/
     └── key.json                # (не коммитится!)
 ```
 
-### Сервисный аккаунт и бакет (`bootstrap/main.tf`)
-
-```hcl
-resource "yandex_iam_service_account" "bucket_sa" {
-  name        = "bucket-sa"
-  description = "Service account for S3 backend (Terraform state)"
-}
-
-resource "yandex_resourcemanager_folder_iam_member" "bucket_sa_role" {
-  folder_id = var.folder_id
-  role      = "storage.admin"          # достаточные права, без суперпользователя
-  member    = "serviceAccount:${yandex_iam_service_account.bucket_sa.id}"
-}
-
-resource "yandex_iam_service_account_static_access_key" "bucket_sa_key" {
-  service_account_id = yandex_iam_service_account.bucket_sa.id
-  description        = "Static access key for bucket-sa"
-  depends_on         = [yandex_resourcemanager_folder_iam_member.bucket_sa_role]
-}
-
-resource "yandex_storage_bucket" "tfstate" {
-  bucket     = "mustway-tfstate-bucket-2026"   # глобально уникальное имя
-  access_key = yandex_iam_service_account_static_access_key.bucket_sa_key.access_key
-  secret_key = yandex_iam_service_account_static_access_key.bucket_sa_key.secret_key
-  max_size   = 1073741824                      # 1 GB
-}
-```
-
-### S3-backend (`infra/providers.tf`)
-
-```hcl
-terraform {
-  backend "s3" {
-    endpoint = "https://storage.yandexcloud.net"
-    bucket   = "mustway-tfstate-bucket-2026"
-    region   = "ru-central1"
-    key      = "infra/terraform.tfstate"
-
-    skip_region_validation      = true
-    skip_credentials_validation = true
-    skip_requesting_account_id  = true
-    skip_s3_checksum            = true
-  }
-}
-```
-
 Ключи доступа к бакету передаются через переменные окружения
 `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` (из outputs bootstrap), поэтому в коде секретов нет.
 
@@ -92,8 +46,6 @@ terraform {
 | `yandex_vpc_subnet.subnet_a` | `k8s-subnet-a` | `ru-central1-a` | `10.20.1.0/24` |
 | `yandex_vpc_subnet.subnet_b` | `k8s-subnet-b` | `ru-central1-b` | `10.20.2.0/24` |
 | `yandex_vpc_subnet.subnet_d` | `k8s-subnet-d` | `ru-central1-d` | `10.20.3.0/24` |
-
----
 
 ## Порядок запуска (с нуля)
 
@@ -237,6 +189,19 @@ resource "yandex_vpc_security_group" "k8s_sg" {
 }
 ```
 
+## Результаты
+
+| Требование | Статус |
+|---|---|
+| Минимум 3 ВМ через Terraform (1 master + 2 worker) | 3 ВМ созданы: `k8s-master-1`, `k8s-worker-1`, `k8s-worker-2` |
+| ВМ размещены в разных зонах доступности | `ru-central1-a`, `ru-central1-d`, `ru-central1-e` |
+| Возможность смены типа инстанса через Terraform | Параметр `allow_stopping_for_update = true` позволяет менять конфигурацию без ручных действий |
+| Ansible-конфигурация (Kubespray) | v2.32.0, inventory генерируется автоматически из `terraform output` |
+| Работоспособный Kubernetes-кластер | v1.36.4, containerd 2.3.5, сеть Calico (VXLAN) |
+| Файл `~/.kube/config` с доступом к кластеру | `admin.conf` скопирован, публичный IP мастера добавлен в SAN сертификата API |
+| Команда `kubectl get pods --all-namespaces` без ошибок | Все системные поды (`calico`, `coredns`, `etcd` и др.) в статусе `Running` |
+| Доступ к ресурсам кластера из Интернета | Проверено через NodePort: `curl -I` вернул `HTTP/1.1 200 OK` |
+| Решение проблем с квотами и блокировками IP | Выявлены через serial-консоль и ping, решены перевыпуском IP через `terraform apply -replace` |
 ## Скриншоты
 
 **Виртуальные машины**
