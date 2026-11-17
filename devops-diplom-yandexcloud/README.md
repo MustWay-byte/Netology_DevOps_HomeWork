@@ -265,15 +265,6 @@ output "registry_id" {
 | **Test App** | Deployment + Service + ExternalName | `default` / `monitoring` | Тестовое приложение (Nginx + статика) |
 | **Ingress Controller** | Helm chart `ingress-nginx` (DaemonSet) | `ingress-nginx` | Маршрутизация внешнего трафика на 80 порт на всех нодах |
 
-### Доступ к сервисам
-
-| Сервис | URL | Учетные данные |
-|---|---|---|
-| **Тестовое приложение** | `http://<EXTERNAL-IP>/` | — |
-| **Grafana** | `http://<EXTERNAL-IP>/grafana` | Логин: `admin`<br>Пароль: `netology-diplom-2026` |
-
-**Примечание по безопасности:** Пароль указан в открытом виде исключительно для удобства проверки дипломной работы. В реальной production-среде учетные данные никогда не хранятся в коде репозитория, а управляются через Kubernetes Secrets и внешние менеджеры секретов (например, Yandex Lockbox или HashiCorp Vault).
-
 ### Результаты
 
 | Требование задания | Статус выполнения |
