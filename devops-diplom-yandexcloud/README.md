@@ -95,7 +95,7 @@ terraform {
 
 ---
 
-## 🚀 Порядок запуска (с нуля)
+## Порядок запуска (с нуля)
 
 ### 1. Bootstrap — создаём SA, ключи и бакет
 
@@ -141,20 +141,20 @@ terraform plan                    # No changes. Your infrastructure matches the 
 
 ---
 
-## ✅ Результаты
+## Результаты
 
 | Требование | Статус |
 |---|---|
-| Сервисный аккаунт с достаточными правами (не суперпользователь) | ✅ `bucket-sa`, роль `storage.admin` на каталог |
-| Backend — S3-бакет, созданный через Terraform | ✅ `mustway-tfstate-bucket-2026` |
-| Разные папки для bootstrap и основной конфигурации | ✅ `bootstrap/` и `infra/` |
-| VPC с подсетями в разных зонах доступности | ✅ 3 подсети: `ru-central1-a/b/d` |
-| State основной конфигурации в бакете | ✅ `s3://mustway-tfstate-bucket-2026/infra/terraform.tfstate` |
-| `destroy` / `apply` без ручных действий | ✅ проверено циклом destroy → apply → plan (no changes) |
+| Сервисный аккаунт с достаточными правами (не суперпользователь) |  `bucket-sa`, роль `storage.admin` на каталог |
+| Backend — S3-бакет, созданный через Terraform |  `mustway-tfstate-bucket-2026` |
+| Разные папки для bootstrap и основной конфигурации |  `bootstrap/` и `infra/` |
+| VPC с подсетями в разных зонах доступности |  3 подсети: `ru-central1-a/b/d` |
+| State основной конфигурации в бакете |  `s3://mustway-tfstate-bucket-2026/infra/terraform.tfstate` |
+| `destroy` / `apply` без ручных действий |  проверено циклом destroy → apply → plan (no changes) |
 
 Конфигурация предварительная и будет расширяться на следующих шагах (Kubernetes-кластер).
 
-## 🔒 Безопасность: что НЕ коммитить
+## Безопасность: что НЕ коммитить
 
 В репозиторий не должны попасть:
 
