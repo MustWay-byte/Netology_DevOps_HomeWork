@@ -254,16 +254,35 @@ output "registry_id" {
 
 # Подготовка системы мониторинга и деплой приложения
 
-Развертывание стека мониторинга и тестового приложения в Kubernetes-кластере с использованием Helm и Nginx Ingress Controller (DaemonSet) для обеспечения HTTP-доступа по 80 порту.
+Развертывание стека мониторинга и тестового приложения в Kubernetes-кластере с использованием Helm и Nginx Ingress Controller (DaemonSet) для обеспечения HTTP-доступа по 80 порту. Автоматизация управления инфраструктурой реализована через CI/CD пайплайн.
 
 ### Архитектура и компоненты
 
-| Компонент | Технология | Namespace | Описание |
+| Компонент | Технология | Namespace / Среда | Описание |
 |---|---|---|---|
 | **Prometheus + Grafana + Alertmanager** | Helm chart `kube-prometheus-stack` | `monitoring` | Полный стек мониторинга и визуализации метрик |
 | **Node Exporter** | В составе `kube-prometheus-stack` | `monitoring` | Сбор метрик нод (CPU, RAM, Disk, Network) |
-| **Test App** | Deployment + Service + ExternalName | `default` / `monitoring` | Тестовое приложение (Nginx + статика) |
-| **Ingress Controller** | Helm chart `ingress-nginx` (DaemonSet) | `ingress-nginx` | Маршрутизация внешнего трафика на 80 порт на всех нодах |
+| **Test App** | Deployment + Service + ExternalName | `default` / `monitoring` | Тестовое приложение (Nginx + статика), образ из Yandex Container Registry |
+| **Ingress Controller** | Helm chart `ingress-nginx` (DaemonSet) | `ingress-nginx` | Маршрутизация внешнего трафика на 80 порт на всех нодах кластера |
+| **CI/CD Pipeline** | **GitHub Actions** | **Внешняя среда** | **Автоматический запуск `terraform init`, `plan`, `validate`, `apply` при пуше в ветку `main`. Аутентификация через защищенные GitHub Secrets.** |
+
+### CI/CD для инфраструктуры (GitHub Actions)
+
+Для автоматизации развертывания облачной инфраструктуры настроен пайплайн (`.github/workflows/terraform.yml`).
+
+**Триггеры запуска:**
+- Push в ветку `main` при изменении файлов в директориях `devops-diplom-yandexcloud/infra/**` или `devops-diplom-yandexcloud/bootstrap/**`.
+- Ручной запуск через `workflow_dispatch`.
+
+**Этапы выполнения пайплайна:**
+1. **Checkout & Setup:** Получение кода и установка Terraform (v1.9.8).
+2. **YC CLI Authorization:** Ручная установка Yandex Cloud CLI и авторизация через сервисный аккаунт (ключ берется из секрета `YC_SA_JSON`).
+3. **Terraform Init:** Инициализация бэкенда в Yandex Object Storage с использованием секретов `AWS_ACCESS_KEY_ID` и `AWS_SECRET_ACCESS_KEY`.
+4. **Static Analysis:** Проверка форматирования (`terraform fmt -check`) и валидация синтаксиса (`terraform validate`).
+5. **Plan & Apply:** Генерация плана изменений и автоматическое применение конфигурации (`terraform apply -auto-approve`).
+
+**Безопасность:**
+Все чувствительные данные (JSON-ключ сервисного аккаунта, токены S3-бэкенда, ID облака/каталога, публичные SSH-ключи) хранятся исключительно в защищенном хранилище **GitHub Secrets** и передаются в Terraform через переменные окружения (`TF_VAR_*`). Пароли и приватные ключи отсутствуют в истории коммитов.
 
 ### Результаты
 
@@ -271,10 +290,11 @@ output "registry_id" {
 |---|---|
 | Задеплоить prometheus, grafana, alertmanager, node_exporter | Все компоненты развернуты через Helm в namespace `monitoring` |
 | Задеплоить тестовое приложение (nginx сервер) | Deployment `test-app` с 2 репликами, образ из Yandex Container Registry |
-| Git репозиторий с конфигурационными файлами K8s | Файлы `k8s/monitoring/values.yaml`, `k8s/test-app/deployment.yaml`, `k8s/ingress.yaml` |
-| HTTP доступ на 80 порту к web интерфейсу grafana | Доступен по `http://<IP>/grafana` через единый Ingress с `serve_from_sub_path` |
-| Дашборды в grafana отображающие состояние кластера | Встроенные дашборды `Kubernetes / Compute Resources / Cluster` активны |
-| HTTP доступ на 80 порту к тестовому приложению | Доступен по `http://<IP>/` через Ingress |
+| Git репозиторий с конфигурационными файлами K8s | Файлы `k8s/monitoring/values.yaml`, `k8s/test-app/deployment.yaml`, `k8s/ingress.yaml` добавлены в репозиторий |
+| HTTP доступ на 80 порту к web интерфейсу grafana | Доступен по `http://<Public-IP>/grafana` через единый Ingress с настройкой `serve_from_sub_path` |
+| Дашборды в grafana отображающие состояние кластера | Встроенные дашборды `Kubernetes / Compute Resources / Cluster` активны и собирают данные |
+| HTTP доступ на 80 порту к тестовому приложению | Доступен по `http://<Public-IP>/` через Ingress |
+| **Деплой инфраструктуры в terraform pipeline (CI/CD)** | **Настроен workflow в GitHub Actions. Автоматическое применение конфигурации при коммите в `main`. Секреты (ключи YC, S3, SSH) не хранятся в коде, а передаются через переменные окружения.** |
 
 ## Скриншоты
 
@@ -290,3 +310,6 @@ output "registry_id" {
 
 <img width="983" height="569" alt="image" src="https://github.com/user-attachments/assets/84639077-32f3-4cc6-ab6d-053e042f3916" />
 
+**Работа пайплайна**
+
+<img width="1872" height="705" alt="image" src="https://github.com/user-attachments/assets/98e92920-1201-412a-a304-7dbda9db83f9" />
