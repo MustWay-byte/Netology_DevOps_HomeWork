@@ -106,34 +106,6 @@ terraform plan                    # No changes. Your infrastructure matches the 
 
 Конфигурация предварительная и будет расширяться на следующих шагах (Kubernetes-кластер).
 
-## Безопасность: что НЕ коммитить
-
-В репозиторий не должны попасть:
-
-- `key.json` — авторизованный ключ сервисного аккаунта;
-- `*.tfstate*` — state содержит секреты (в т.ч. `secret_key` в открытом виде);
-- `terraform.tfvars` — значения переменных окружения пользователя;
-- `.terraform/` — скачанные провайдеры;
-- `/tmp/tfstate-backend.json` — выгруженные outputs с ключами (вне репозитория, но не публикуем).
-
-`.gitignore` для корня репозитория:
-
-```gitignore
-.terraform/
-*.tfstate
-*.tfstate.*
-crash.log
-crash.*.log
-key.json
-*.key.json
-terraform.tfvars
-*.auto.tfvars
-override.tf
-override.tf.json
-*_override.tf
-tfstate-backend.json
-```
-
 ## Скриншоты
 
 **Сервисные аккаунты**
