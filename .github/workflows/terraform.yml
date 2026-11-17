@@ -7,7 +7,7 @@ on:
     paths:
       - 'devops-diplom-yandexcloud/infra/**'
       - 'devops-diplom-yandexcloud/bootstrap/**'
-  workflow_dispatch: # Позволяет запустить вручную для проверки
+  workflow_dispatch:
 
 jobs:
   terraform:
@@ -26,10 +26,19 @@ jobs:
         with:
           terraform_version: 1.5.7
 
-      - name: Configure Yandex Cloud CLI
-        uses: yandex-cloud/yc-setup@v1
-        with:
-          sa-json-credentials: ${{ secrets.YC_SA_JSON }}
+      - name: Install Yandex Cloud CLI
+        run: |
+          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+          echo "$HOME/yandex-cloud/bin" >> $GITHUB_PATH
+
+      - name: Authorize YC CLI
+        run: |
+          echo '${{ secrets.YC_SA_JSON }}' > /tmp/sa-key.json
+          yc config profile create terraform-ci
+          yc config set service-account-key /tmp/sa-key.json
+          yc config set cloud-id $(echo '${{ secrets.YC_SA_JSON }}' | jq -r '.cloud_id')
+          yc config set folder-id $(echo '${{ secrets.YC_SA_JSON }}' | jq -r '.folder_id')
+          rm /tmp/sa-key.json
 
       - name: Terraform Init
         env:
