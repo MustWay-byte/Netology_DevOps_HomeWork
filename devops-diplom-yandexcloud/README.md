@@ -174,6 +174,7 @@ resource "yandex_vpc_security_group" "k8s_sg" {
 | Команда `kubectl get pods --all-namespaces` без ошибок | Все системные поды (`calico`, `coredns`, `etcd` и др.) в статусе `Running` |
 | Доступ к ресурсам кластера из Интернета | Проверено через NodePort: `curl -I` вернул `HTTP/1.1 200 OK` |
 | Решение проблем с квотами и блокировками IP | Выявлены через serial-консоль и ping, решены перевыпуском IP через `terraform apply -replace` |
+
 ## Скриншоты
 
 **Виртуальные машины**
@@ -192,14 +193,61 @@ resource "yandex_vpc_security_group" "k8s_sg" {
 
 <img width="407" height="200" alt="image" src="https://github.com/user-attachments/assets/85d80ee7-becd-430c-84c7-cd3dc50dc07e" />
 
-# Тестовое приложение и Container Registry
+# Создание тестового приложения и Container Registry
 
-Для эмуляции разрабатываемого приложения создан отдельный репозиторий с простым веб-сервером на базе Nginx, отдающим статическую HTML-страницу.
+Подготовка тестового приложения, эмулирующего основной продукт компании, для последующего развертывания в Kubernetes. Приложение представляет собой легкий веб-сервер, упакованный в Docker-образ и размещенный в приватном реестре Yandex Cloud, который управляется через Terraform.
 
-- **Репозиторий приложения:** [Netology_Diplom_TestApp](https://github.com/MustWay-byte/Netology_Diplom_TestApp)
-- **Dockerfile:** находится в папке `app/`, собирает минималистичный образ на базе `nginx:1.25-alpine`
-- **Container Registry:** Yandex Container Registry (`test-app-registry`), управляемый через Terraform (`infra/registry.tf`)
-- **ID реестра:** `crpudopro8jpj70h8dn0`
-- **Собранные образы:** 
-  - `cr.yandex/crpudopro8jpj70h8dn0/test-app:v1`
-  - `cr.yandex/crpudopro8jpj70h8dn0/test-app:latest`
+## Архитектура и ресурсы
+
+| Компонент | Описание | Значение / Ссылка |
+|---|---|---|
+| **Репозиторий приложения** | Отдельный Git-репозиторий с исходным кодом тестового приложения | [Netology_Diplom_TestApp](https://github.com/MustWay-byte/Netology_Diplom_TestApp) |
+| **Dockerfile** | Минималистичный образ на базе `nginx:1.25-alpine` с кастомным конфигом | `app/Dockerfile` |
+| **Container Registry** | Приватный реестр образов Yandex Cloud, управляемый через Terraform | ID: `crpudopro8jpj70h8dn0` |
+| **Собранные образы** | Тестовые теги для последующего деплоя | `cr.yandex/crpudopro8jpj70h8dn0/test-app:v1`<br>`cr.yandex/crpudopro8jpj70h8dn0/test-app:latest` |
+
+---
+
+## Ключевые конфигурации
+
+### Dockerfile (`app/Dockerfile`)
+Самостоятельно написанный файл для сборки образа. Удаляет дефолтный конфиг Nginx, добавляет кастомный `nginx.conf` и статическую страницу `index.html`.
+```dockerfile
+FROM nginx:1.25-alpine
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY index.html /usr/share/nginx/html/index.html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+### Управление реестром через Terraform (infra/registry.tf)
+Ресурс реестра описан в коде и импортирован в состояние Terraform, что гарантирует идемпотентность и соответствие требованиям инфраструктуры как кода (IaC).
+
+```hcl
+resource "yandex_container_registry" "test_app_registry" {
+  name      = "test-app-registry"
+  folder_id = var.folder_id
+}
+
+output "registry_id" {
+  description = "ID реестра контейнеров"
+  value       = yandex_container_registry.test_app_registry.id
+}
+```
+
+## Результаты
+
+| Требование задания | Статус выполнения |
+| :--- | :--- |
+| **Отдельный git репозиторий с тестовым приложением** | Создан репозиторий [Netology_Diplom_TestApp](https://github.com/MustWay-byte/Netology_Diplom_TestApp) |
+| **Простой nginx конфиг, отдающий статические данные** | Файлы `index.html` и `nginx.conf` присутствуют в репозитории |
+| **Самостоятельно созданный Dockerfile** | Файл `app/Dockerfile` написан с нуля |
+| **Registry с собранным docker image** | Образы `v1` и `latest` успешно собраны и отправлены (`docker push`) |
+| **Registry создан/управляется с помощью Terraform** | Ресурс описан в `infra/registry.tf` и импортирован в state (`terraform import`) |
+
+## Скриншоты
+
+**Список образов**
+
+<img width="1839" height="295" alt="image" src="https://github.com/user-attachments/assets/eddefb0c-285c-4007-b3ca-94681a009826" />
