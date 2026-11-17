@@ -34,20 +34,27 @@ jobs:
 
       - name: Authorize YC CLI
         run: |
+          # Создаем файл с ключом из GitHub Secret
           cat << 'SECRETEOF' > /tmp/sa-key.json
           ${{ secrets.YC_SA_JSON }}
           SECRETEOF
+          
+          # Проверяем, что JSON валиден
           jq empty /tmp/sa-key.json
+          
+          # Настраиваем yc CLI
           yc config profile create terraform-ci
           yc config set service-account-key /tmp/sa-key.json
           yc config set cloud-id $(jq -r '.cloud_id' /tmp/sa-key.json)
           yc config set folder-id $(jq -r '.folder_id' /tmp/sa-key.json)
-          rm /tmp/sa-key.json
+          
+          # ВАЖНО: Мы НЕ удаляем файл /tmp/sa-key.json, он нужен для Terraform!
 
       - name: Terraform Init
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          YC_SERVICE_ACCOUNT_KEY_FILE: /tmp/sa-key.json
         run: terraform init
 
       - name: Terraform Format
@@ -60,10 +67,12 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          YC_SERVICE_ACCOUNT_KEY_FILE: /tmp/sa-key.json
         run: terraform plan -no-color
 
       - name: Terraform Apply
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          YC_SERVICE_ACCOUNT_KEY_FILE: /tmp/sa-key.json
         run: terraform apply -auto-approve -no-color
