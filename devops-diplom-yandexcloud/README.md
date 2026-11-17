@@ -254,4 +254,16 @@ output "registry_id" {
 
 
 ---
+
+**Тестовое приложение**
+
 <img width="1847" height="867" alt="image" src="https://github.com/user-attachments/assets/3bf5571c-5af6-460f-9fee-d8869fa7fc54" />
+
+**Дашборды Grafana**
+
+<img width="1852" height="841" alt="image" src="https://github.com/user-attachments/assets/30407365-2c1c-48e8-9c0b-cd0853b59e8f" />
+
+**Статус подов в кластере**
+
+<img width="983" height="569" alt="image" src="https://github.com/user-attachments/assets/84639077-32f3-4cc6-ab6d-053e042f3916" />
+
