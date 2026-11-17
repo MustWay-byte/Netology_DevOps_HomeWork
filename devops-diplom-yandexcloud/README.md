@@ -284,7 +284,7 @@ output "registry_id" {
 
 **Дашборды Grafana**
 
-<img width="1852" height="841" alt="image" src="https://github.com/user-attachments/assets/30407365-2c1c-48e8-9c0b-cd0853b59e8f" />
+<img width="1446" height="733" alt="image" src="https://github.com/user-attachments/assets/7f2cac08-68a7-4c0a-a009-13dac4266fa0" />
 
 **Статус подов в кластере**
 
