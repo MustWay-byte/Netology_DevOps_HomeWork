@@ -7,10 +7,10 @@ terraform {
   }
 
   backend "s3" {
-    endpoint   = "https://storage.yandexcloud.net"
-    bucket     = "mustway-tfstate-bucket-2026" # значение output bucket_name из bootstrap
-    region     = "ru-central1"
-    key        = "infra/terraform.tfstate"
+    endpoint = "https://storage.yandexcloud.net"
+    bucket   = "mustway-tfstate-bucket-2026" # значение output bucket_name из bootstrap
+    region   = "ru-central1"
+    key      = "infra/terraform.tfstate"
 
     skip_region_validation      = true
     skip_credentials_validation = true
