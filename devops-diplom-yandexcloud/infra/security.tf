@@ -13,7 +13,7 @@ resource "yandex_vpc_security_group" "k8s_sg" {
     description    = "Kubernetes API"
     protocol       = "TCP"
     port           = 6443
-    v4_cidr_blocks = ["0.0.0.0/0"] # для продакшена сузить до своего IP
+    v4_cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
