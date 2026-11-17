@@ -51,7 +51,7 @@ resource "yandex_compute_instance" "master" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file(var.ssh_public_key_path)}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 }
 
@@ -88,6 +88,6 @@ resource "yandex_compute_instance" "worker" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file(var.ssh_public_key_path)}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 }
