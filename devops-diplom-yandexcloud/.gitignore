@@ -1,0 +1,26 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+crash.log
+crash.*.log
+
+# Секреты Yandex Cloud (КАТЕГОРИЧЕСКИ НЕ КОММИТИТЬ)
+key.json
+*.key.json
+authorized_key
+yc-config.yaml
+
+# Kubespray внутренности
+kubespray/.git/
+kubespray/venv/
+kubespray/__pycache__/
+*.pyc
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
