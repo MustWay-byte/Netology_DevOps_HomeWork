@@ -1,0 +1,26 @@
+grafana:
+  service:
+    type: ClusterIP
+    port: 80
+  ingress:
+    enabled: false # Мы управляем ingress через наш главный main-ingress
+  grafana.ini:
+    server:
+      root_url: "%(protocol)s://%(domain)s/grafana/"
+      serve_from_sub_path: true
+  readinessProbe:
+    httpGet:
+      path: /grafana/api/health
+      port: 3000
+  livenessProbe:
+    httpGet:
+      path: /grafana/api/health
+      port: 3000
+  # === БЕЗОПАСНОСТЬ: Ссылаемся на секрет, а не храним пароль в коде ===
+  admin:
+    existingSecret: grafana-admin-credentials
+    userKey: admin-user
+    passwordKey: admin-password
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false

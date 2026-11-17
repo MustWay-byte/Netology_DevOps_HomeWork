@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: main-ingress
+  namespace: monitoring
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      # Тестовое приложение на корневом пути
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: test-app-external
+            port:
+              number: 80
+      # Grafana на пути /grafana (serve_from_sub_path уже включён)
+      - path: /grafana
+        pathType: Prefix
+        backend:
+          service:
+            name: monitoring-grafana
+            port:
+              number: 80
