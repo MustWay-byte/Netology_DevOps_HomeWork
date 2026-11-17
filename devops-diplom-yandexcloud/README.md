@@ -203,3 +203,54 @@ tfstate-backend.json
 **Создание облачной инфраструктуры**
 
 <img width="735" height="847" alt="image" src="https://github.com/user-attachments/assets/cb452b44-68e9-4642-9e87-c3e3436c898d" />
+
+# Создание Kubernetes кластера (Kubespray)
+
+Развёртывание production-ready Kubernetes-кластера (v1.36.x) на базе инфраструктуры Yandex Cloud с использованием Kubespray v2.32.0. Кластер состоит из 3 узлов (1 control-plane + 2 worker), размещённых в разных зонах доступности.
+
+## Архитектура и ресурсы
+
+| Нода | Зона | vCPU / RAM | Диск | Внутренний IP | Публичный IP |
+|---|---|---|---|---|---|
+| `k8s-master-1` | `ru-central1-a` | 2 / 4 GB | 20 GB HDD | `10.20.1.14` | `84.201.173.154` |
+| `k8s-worker-1` | `ru-central1-d` | 2 / 4 GB | 20 GB HDD | `10.20.3.33` | `153.51.161.212` |
+| `k8s-worker-2` | `ru-central1-e` | 2 / 4 GB | 20 GB HDD | `10.20.4.10` | *(динамический)* |
+
+> **Примечание:** Использованы диски `network-hdd` и зоны `d`/`e` из-за исчерпания квот на `network-ssd` и временной недоступности зоны `ru-central1-b` для новых ресурсов в данном аккаунте. Параметр `allow_stopping_for_update = true` позволяет менять тип инстанса через Terraform без ручных действий.
+
+---
+
+## Ключевые конфигурации Terraform
+
+### Security Group (`security.tf`)
+Обеспечивает доступ к API, SSH, NodePort и разрешает весь внутренний трафик между нодами кластера:
+```hcl
+resource "yandex_vpc_security_group" "k8s_sg" {
+  name       = "k8s-sg"
+  network_id = yandex_vpc_network.k8s_net.id
+
+  ingress { protocol = "TCP"; port = 22; v4_cidr_blocks = ["0.0.0.0/0"] }
+  ingress { protocol = "TCP"; port = 6443; v4_cidr_blocks = ["0.0.0.0/0"] }
+  ingress { protocol = "TCP"; from_port = 30000; to_port = 32767; v4_cidr_blocks = ["0.0.0.0/0"] }
+  ingress { protocol = "ANY"; from_port = 0; to_port = 65535; predefined_target = "self_security_group" }
+  egress  { protocol = "ANY"; from_port = 0; to_port = 65535; v4_cidr_blocks = ["0.0.0.0/0"] }
+}
+```
+
+## Скриншоты
+
+**Виртуальные машины**
+
+<img width="1822" height="299" alt="image" src="https://github.com/user-attachments/assets/2c8a1f7a-8557-4bc2-bb16-f40ccc7a62d1" />
+
+**Статус нод кластера**
+
+<img width="1371" height="95" alt="image" src="https://github.com/user-attachments/assets/85c20eee-6ede-44b7-a285-a90283a53ed7" />
+
+**Статус системных подов**
+
+<img width="870" height="330" alt="image" src="https://github.com/user-attachments/assets/8d2dcbeb-76b7-4f58-b3a3-fcd67893d6ee" />
+
+**Доступ к ресурсам из Интернета**
+
+<img width="407" height="200" alt="image" src="https://github.com/user-attachments/assets/85d80ee7-becd-430c-84c7-cd3dc50dc07e" />
