@@ -6,7 +6,8 @@ on:
       - main
     paths:
       - 'devops-diplom-yandexcloud/infra/**'
-  workflow_dispatch: # Позволяет запустить пайплайн вручную для проверки
+      - 'devops-diplom-yandexcloud/bootstrap/**'
+  workflow_dispatch: # Позволяет запустить вручную для проверки
 
 jobs:
   terraform:
