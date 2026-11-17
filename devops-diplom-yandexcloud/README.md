@@ -191,3 +191,15 @@ resource "yandex_vpc_security_group" "k8s_sg" {
 **Доступ к ресурсам из Интернета**
 
 <img width="407" height="200" alt="image" src="https://github.com/user-attachments/assets/85d80ee7-becd-430c-84c7-cd3dc50dc07e" />
+
+# Тестовое приложение и Container Registry
+
+Для эмуляции разрабатываемого приложения создан отдельный репозиторий с простым веб-сервером на базе Nginx, отдающим статическую HTML-страницу.
+
+- **Репозиторий приложения:** [Netology_Diplom_TestApp](https://github.com/MustWay-byte/Netology_Diplom_TestApp)
+- **Dockerfile:** находится в папке `app/`, собирает минималистичный образ на базе `nginx:1.25-alpine`
+- **Container Registry:** Yandex Container Registry (`test-app-registry`), управляемый через Terraform (`infra/registry.tf`)
+- **ID реестра:** `crpudopro8jpj70h8dn0`
+- **Собранные образы:** 
+  - `cr.yandex/crpudopro8jpj70h8dn0/test-app:v1`
+  - `cr.yandex/crpudopro8jpj70h8dn0/test-app:latest`
