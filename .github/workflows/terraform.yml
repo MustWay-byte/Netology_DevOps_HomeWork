@@ -50,6 +50,7 @@ jobs:
           YC_SERVICE_ACCOUNT_KEY_FILE: /tmp/sa-key.json
           TF_VAR_cloud_id: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_folder_id: ${{ secrets.YC_FOLDER_ID }}
+          TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
         run: terraform init
 
       - name: Terraform Format
@@ -65,6 +66,7 @@ jobs:
           YC_SERVICE_ACCOUNT_KEY_FILE: /tmp/sa-key.json
           TF_VAR_cloud_id: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_folder_id: ${{ secrets.YC_FOLDER_ID }}
+          TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
         run: terraform plan -no-color
 
       - name: Terraform Apply
@@ -74,4 +76,5 @@ jobs:
           YC_SERVICE_ACCOUNT_KEY_FILE: /tmp/sa-key.json
           TF_VAR_cloud_id: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_folder_id: ${{ secrets.YC_FOLDER_ID }}
+          TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
         run: terraform apply -auto-approve -no-color
