@@ -252,8 +252,40 @@ output "registry_id" {
 
 <img width="1839" height="295" alt="image" src="https://github.com/user-attachments/assets/eddefb0c-285c-4007-b3ca-94681a009826" />
 
+# Подготовка системы мониторинга и деплой приложения
 
----
+Развертывание стека мониторинга и тестового приложения в Kubernetes-кластере с использованием Helm и Nginx Ingress Controller (DaemonSet) для обеспечения HTTP-доступа по 80 порту.
+
+### Архитектура и компоненты
+
+| Компонент | Технология | Namespace | Описание |
+|---|---|---|---|
+| **Prometheus + Grafana + Alertmanager** | Helm chart `kube-prometheus-stack` | `monitoring` | Полный стек мониторинга и визуализации метрик |
+| **Node Exporter** | В составе `kube-prometheus-stack` | `monitoring` | Сбор метрик нод (CPU, RAM, Disk, Network) |
+| **Test App** | Deployment + Service + ExternalName | `default` / `monitoring` | Тестовое приложение (Nginx + статика) |
+| **Ingress Controller** | Helm chart `ingress-nginx` (DaemonSet) | `ingress-nginx` | Маршрутизация внешнего трафика на 80 порт на всех нодах |
+
+### Доступ к сервисам
+
+| Сервис | URL | Учетные данные |
+|---|---|---|
+| **Тестовое приложение** | `http://<EXTERNAL-IP>/` | — |
+| **Grafana** | `http://<EXTERNAL-IP>/grafana` | Логин: `admin`<br>Пароль: `netology-diplom-2026` |
+
+**Примечание по безопасности:** Пароль указан в открытом виде исключительно для удобства проверки дипломной работы. В реальной production-среде учетные данные никогда не хранятся в коде репозитория, а управляются через Kubernetes Secrets и внешние менеджеры секретов (например, Yandex Lockbox или HashiCorp Vault).
+
+### Результаты
+
+| Требование задания | Статус выполнения |
+|---|---|
+| Задеплоить prometheus, grafana, alertmanager, node_exporter | Все компоненты развернуты через Helm в namespace `monitoring` |
+| Задеплоить тестовое приложение (nginx сервер) | Deployment `test-app` с 2 репликами, образ из Yandex Container Registry |
+| Git репозиторий с конфигурационными файлами K8s | Файлы `k8s/monitoring/values.yaml`, `k8s/test-app/deployment.yaml`, `k8s/ingress.yaml` |
+| HTTP доступ на 80 порту к web интерфейсу grafana | Доступен по `http://<IP>/grafana` через единый Ingress с `serve_from_sub_path` |
+| Дашборды в grafana отображающие состояние кластера | Встроенные дашборды `Kubernetes / Compute Resources / Cluster` активны |
+| HTTP доступ на 80 порту к тестовому приложению | Доступен по `http://<IP>/` через Ingress |
+
+## Скриншоты
 
 **Тестовое приложение**
 
