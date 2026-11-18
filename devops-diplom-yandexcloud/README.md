@@ -1,25 +1,136 @@
-# Дипломная работа
+# Дипломный практикум в Yandex Cloud
 
-# Kubernetes в Yandex Cloud — Подготовка инфраструктуры через Terraform
+**Профессия «DevOps-инженер» · Netology**
 
-Предварительная подготовка к установке и запуску Kubernetes-кластера в Yandex Cloud:
-сервисный аккаунт для Terraform, S3-backend для state-файла и базовая сеть (VPC + подсети в трёх зонах доступности).
+Подготовка облачной инфраструктуры, развёртывание Kubernetes-кластера, тестового приложения,
+системы мониторинга и полностью автоматизированных CI/CD-пайплайнов — всё в Yandex Cloud,
+всё через код (Terraform + Ansible + Helm + GitHub Actions).
 
-1. **`bootstrap/`** — «стартовая» конфигурация. Создаёт сервисный аккаунт `bucket-sa`
-   с ролью `storage.admin` на каталог (минимально достаточные права для работы с Object Storage,
-   **не** `admin`/`editor` на облако), статический ключ доступа для него и S3-бакет
-   `mustway-tfstate-bucket-2026` для хранения state-файла. State самой bootstrap-конфигурации
-   хранится локально (бакет для state создаётся этой же конфигурацией).
-2. **`infra/`** — основная конфигурация. Использует созданный бакет как `backend "s3"`,
-   создаёт VPC-сеть `k8s-network` и три подсети в зонах `ru-central1-a`, `ru-central1-b`, `ru-central1-d`.
+![Terraform](https://img.shields.io/badge/Terraform-IaC-7B42BC?logo=terraform&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-v1.36.4-326CE5?logo=kubernetes&logoColor=white)
+![Kubespray](https://img.shields.io/badge/Kubespray-v2.32.0-EE0000?logo=ansible&logoColor=white)
+![Yandex Cloud](https://img.shields.io/badge/Yandex-Cloud-5282FF?logo=yandex&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub-Actions-2088FF?logo=githubactions&logoColor=white)
 
-Аутентификация провайдера Yandex Cloud в обеих конфигурациях — по авторизованному ключу
-`key.json` существующего сервисного аккаунта `terraform-sa` (ключ **не** попадает в репозиторий).
+---
 
-### Структура проекта
+## Содержание
+
+1. [О проекте: цели, стек, репозитории](#о-проекте)
+2. [Этап 1. Создание облачной инфраструктуры](#этап-1-создание-облачной-инфраструктуры)
+3. [Этап 2. Создание Kubernetes-кластера](#этап-2-создание-kubernetes-кластера)
+4. [Этап 3. Создание тестового приложения](#этап-3-создание-тестового-приложения)
+5. [Этап 4. Мониторинг и деплой приложения](#этап-4-подготовка-системы-мониторинга-и-деплой-приложения)
+6. [Этап 5. Установка и настройка CI/CD](#этап-5-установка-и-настройка-cicd)
+7. [Сводное соответствие заданию](#сводное-соответствие-заданию)
+8. [Экономия ресурсов и безопасность](#экономия-ресурсов-и-безопасность)
+9. [Воспроизведение с нуля](#воспроизведение-с-нуля)
+
+---
+
+## О проекте
+
+### Цели
+
+- Подготовить облачную инфраструктуру в Яндекс.Облаке при помощи Terraform.
+- Запустить и сконфигурировать Kubernetes-кластер (self-hosted, Kubespray).
+- Установить и настроить систему мониторинга (kube-prometheus-stack).
+- Автоматизировать сборку тестового приложения в Docker-образ.
+- Настроить CI (сборка при коммите) и CD (деплой при создании тега).
+- Автоматизировать применение самой инфраструктуры через Terraform-пайплайн.
+
+### Итоговая архитектура
 
 ```
-yc-k8s-project/
+                        Интернет
+                           │
+        ┌──────────────────┼──────────────────────┐
+        │ :80 (Ingress)    │ :6443 (API)          │ :22 (SSH)
+        ▼                  ▼                      ▼
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+│  k8s-master-1   │ │  k8s-worker-1   │ │  k8s-worker-2   │
+│  ru-central1-a  │ │  ru-central1-d  │ │  ru-central1-e  │
+│  10.20.1.14     │ │  10.20.3.33     │ │  10.20.4.24     │
+│  control-plane  │ │  worker         │ │  worker         │
+│  + etcd         │ │                 │ │                 │
+└────────┬────────┘ └────────┬────────┘ └────────┬────────┘
+         └───────────────────┼───────────────────┘
+                    VPC k8s-network (Calico VXLAN)
+         подсети: a 10.20.1.0/24 · b 10.20.2.0/24 · d 10.20.3.0/24 · e 10.20.4.0/24
+                           │
+              ┌────────────┴─────────────┐
+              ▼                          ▼
+   S3: mustway-tfstate-bucket-2026   cr.yandex/crpudopro8jpj70h8dn0
+   (state Terraform)                 (Container Registry, образы test-app)
+
+   GitHub Actions: terraform.yml (инфраструктура) · cd-app.yml (приложение)
+```
+
+### Технологический стек
+
+| Слой | Технология | Версия / детали |
+|---|---|---|
+| Облако | Yandex Cloud | Compute Cloud, VPC, Object Storage, Container Registry, IAM |
+| IaC | Terraform + провайдер `yandex-cloud/yandex` | backend S3 (Object Storage), state в бакете |
+| Kubernetes | Kubespray (Ansible) | v2.32.0 → Kubernetes **v1.36.4**, containerd **2.3.5**, CNI Calico (VXLAN) |
+| ОС нод | Ubuntu | 24.04.5 LTS |
+| Мониторинг | Helm chart `kube-prometheus-stack` | Prometheus, Grafana, Alertmanager, node-exporter, kube-state-metrics |
+| Ingress | Helm chart `ingress-nginx` | DaemonSet + `hostNetwork: true` (порт 80 прямо на нодах, без LoadBalancer) |
+| Приложение | nginx + статика | образ `nginx:1.25-alpine`, ~19.5 MB |
+| CI/CD | GitHub Actions | `terraform.yml` (инфраструктура), `cd-app.yml` (приложение) |
+
+### Репозитории
+
+| Репозиторий | Содержимое |
+|---|---|
+| [Netology_DevOps_HomeWork](https://github.com/MustWay-byte/Netology_DevOps_HomeWork/tree/main/devops-diplom-yandexcloud) | Terraform (`bootstrap/`, `infra/`), Ansible/Kubespray, манифесты `k8s/`, скрипты, workflow `terraform.yml` |
+| [Netology_Diplom_TestApp](https://github.com/MustWay-byte/Netology_Diplom_TestApp) | Тестовое приложение (`app/`: Dockerfile, nginx.conf, index.html), workflow `cd-app.yml` |
+
+### Доступ к сервисам (учебный стенд)
+
+| Сервис | URL | Учётные данные |
+|---|---|---|
+| Тестовое приложение | http://84.201.173.154/ | — |
+| Grafana | http://84.201.173.154/grafana/ | логин `admin`, пароль `netology-diplom-2026` |
+| Kubernetes API | `https://84.201.173.154:6443` | kubeconfig `~/.kube/config` |
+
+> [!NOTE]
+> Grafana и приложение доступны по HTTP на **80 порту** через единый Ingress на публичных IP нод.
+> Пароль Grafana опубликован намеренно — этого требует задание (ссылка + данные доступа).
+> В рабочей среде пароль хранится только в Kubernetes Secret (см. [этап 4](#этап-4-подготовка-системы-мониторинга-и-деплой-приложения)).
+
+---
+
+## Этап 1. Создание облачной инфраструктуры
+
+### Задача
+
+- Сервисный аккаунт для Terraform с необходимыми и достаточными правами (без суперпользователя).
+- Backend для Terraform: S3-бакет в Yandex Object Storage, **созданный через Terraform**.
+- Конфигурации SA/бакета и основной инфраструктуры — в разных папках.
+- VPC с подсетями в разных зонах доступности.
+- `terraform destroy` и `terraform apply` — без дополнительных ручных действий.
+
+### Реализация
+
+Проект разделён на две независимые конфигурации:
+
+1. **`bootstrap/`** — «стартовая» конфигурация. Создаёт сервисный аккаунт `bucket-sa`
+   с ролью `storage.admin` на каталог (минимально достаточные права для Object Storage,
+   **не** `admin`/`editor` на облако), статический ключ доступа и S3-бакет
+   `mustway-tfstate-bucket-2026` для state-файлов. State самой bootstrap-конфигурации
+   хранится локально — классическая проблема «курицы и яйца»: бакет для state создаётся этой же конфигурацией.
+2. **`infra/`** — основная конфигурация. Использует бакет как `backend "s3"`, создаёт VPC,
+   подсети, security group, ВМ кластера и Container Registry. State — в бакете.
+
+Аутентификация провайдера — по авторизованному ключу `key.json` сервисного аккаунта
+`terraform-sa` (ключ **не** попадает в репозиторий). Ключи доступа к бакету передаются через
+переменные окружения `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` (из outputs bootstrap) — в коде секретов нет.
+
+#### Структура проекта
+
+```
+devops-diplom-yandexcloud/
 ├── bootstrap/                  # сервисный аккаунт, статический ключ, S3-бакет
 │   ├── providers.tf            # провайдер yandex-cloud/yandex (>= 0.131.0)
 │   ├── variables.tf            # cloud_id, folder_id
@@ -27,18 +138,73 @@ yc-k8s-project/
 │   ├── main.tf                 # SA + роль storage.admin + static key + bucket
 │   ├── outputs.tf              # bucket_name, access_key, secret_key (sensitive)
 │   └── key.json                # ключ terraform-sa (не коммитится!)
-└── infra/                      # основная инфраструктура, state в S3
-    ├── providers.tf            # провайдер + backend "s3"
-    ├── variables.tf
-    ├── terraform.tfvars        # (не коммитится)
-    ├── main.tf                 # VPC + 3 подсети
-    └── key.json                # (не коммитится!)
+├── infra/                      # основная инфраструктура, state в S3
+│   ├── providers.tf            # провайдер + backend "s3"
+│   ├── variables.tf            # cloud_id, folder_id, ssh_public_key, preemptible
+│   ├── main.tf                 # VPC + подсети a/b/d
+│   ├── subnet_e.tf             # подсети зоны e (добавлена на этапе 2)
+│   ├── security.tf             # security group кластера
+│   ├── compute.tf              # 3 ВМ Kubernetes
+│   ├── registry.tf             # Container Registry
+│   ├── outputs.tf              # IP нод, registry_id
+│   └── key.json                # (не коммитится!)
+├── k8s/                        # манифесты Kubernetes (этапы 4–5)
+│   ├── monitoring/values.yaml
+│   ├── test-app/deployment.yaml
+│   └── ingress.yaml
+├── scripts/make_inventory.sh   # генерация inventory Kubespray из terraform output
+└── .github/workflows/terraform.yml
 ```
 
-Ключи доступа к бакету передаются через переменные окружения
-`AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` (из outputs bootstrap), поэтому в коде секретов нет.
+#### Сервисный аккаунт и бакет (`bootstrap/main.tf`)
 
-### Сеть (`infra/main.tf`)
+```hcl
+resource "yandex_iam_service_account" "bucket_sa" {
+  name        = "bucket-sa"
+  description = "Service account for S3 backend (Terraform state)"
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "bucket_sa_role" {
+  folder_id = var.folder_id
+  role      = "storage.admin"          # достаточные права, без суперпользователя
+  member    = "serviceAccount:${yandex_iam_service_account.bucket_sa.id}"
+}
+
+resource "yandex_iam_service_account_static_access_key" "bucket_sa_key" {
+  service_account_id = yandex_iam_service_account.bucket_sa.id
+  depends_on         = [yandex_resourcemanager_folder_iam_member.bucket_sa_role]
+}
+
+resource "yandex_storage_bucket" "tfstate" {
+  bucket     = "mustway-tfstate-bucket-2026"
+  access_key = yandex_iam_service_account_static_access_key.bucket_sa_key.access_key
+  secret_key = yandex_iam_service_account_static_access_key.bucket_sa_key.secret_key
+  max_size   = 1073741824              # 1 GB — state занимает килобайты
+}
+```
+
+#### S3-backend (`infra/providers.tf`)
+
+```hcl
+terraform {
+  backend "s3" {
+    endpoints = {
+      s3 = "https://storage.yandexcloud.net"
+    }
+    bucket         = "mustway-tfstate-bucket-2026"
+    region         = "ru-central1"
+    key            = "infra/terraform.tfstate"
+    use_path_style = true
+
+    skip_region_validation      = true
+    skip_credentials_validation = true
+    skip_requesting_account_id  = true
+    skip_s3_checksum            = true
+  }
+}
+```
+
+#### Сеть
 
 | Ресурс | Имя | Зона доступности | CIDR |
 |---|---|---|---|
@@ -46,67 +212,50 @@ yc-k8s-project/
 | `yandex_vpc_subnet.subnet_a` | `k8s-subnet-a` | `ru-central1-a` | `10.20.1.0/24` |
 | `yandex_vpc_subnet.subnet_b` | `k8s-subnet-b` | `ru-central1-b` | `10.20.2.0/24` |
 | `yandex_vpc_subnet.subnet_d` | `k8s-subnet-d` | `ru-central1-d` | `10.20.3.0/24` |
+| `yandex_vpc_subnet.subnet_e` | `k8s-subnet-e` | `ru-central1-e` | `10.20.4.0/24` |
 
-## Порядок запуска (с нуля)
-
-### 1. Bootstrap — создаём SA, ключи и бакет
+### Порядок запуска
 
 ```bash
-cd ~/yc-k8s-project/bootstrap
+# 1. Bootstrap — SA, ключи, бакет
+cd bootstrap
 terraform init
-terraform apply -auto-approve
-# Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
-
-# сохраняем outputs для настройки backend
+terraform apply -auto-approve          # Apply complete! Resources: 4 added
 terraform output -json > /tmp/tfstate-backend.json
-```
 
-### 2. Infra — инициализируем S3-backend и создаём сеть
-
-```bash
-cd ~/yc-k8s-project/infra
-
+# 2. Infra — backend + сеть
+cd ../infra
 export AWS_ACCESS_KEY_ID=$(jq -r .access_key.value /tmp/tfstate-backend.json)
 export AWS_SECRET_ACCESS_KEY=$(jq -r .secret_key.value /tmp/tfstate-backend.json)
-
-terraform init      # Successfully configured the backend "s3"!
-terraform plan
+terraform init                         # Successfully configured the backend "s3"!
 terraform apply -auto-approve
-# Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
+
+# 3. Проверка воспроизводимости
+terraform destroy -auto-approve        # Destroy complete! Resources: 4 destroyed
+terraform apply   -auto-approve        # Apply complete! Resources: 4 added
+terraform plan                       # No changes. Infrastructure matches configuration.
 ```
 
-### 3. Проверка воспроизводимости (требование задания)
+Обе команды проходят **без ручных действий**: ключи backend — из окружения, ключ провайдера —
+из `key.json`, state автоматически читается/пишется в `s3://mustway-tfstate-bucket-2026/infra/terraform.tfstate`.
 
-```bash
-terraform destroy -auto-approve   # Destroy complete! Resources: 4 destroyed.
-terraform apply   -auto-approve   # Apply complete! Resources: 4 added.
-terraform plan                    # No changes. Your infrastructure matches the configuration.
-```
+> [!NOTE]
+> `terraform destroy` в `infra/` удаляет только ресурсы основной конфигурации — бакет со state
+> остаётся, т.к. управляется отдельной конфигурацией `bootstrap/`.
+> Полная очистка: сначала `destroy` в `infra/`, затем в `bootstrap/`.
 
-Обе команды проходят **без ручных действий**: ключи backend берутся из окружения,
-ключ провайдера — из `key.json`, state автоматически читается/пишется в бакет
-`mustway-tfstate-bucket-2026/infra/terraform.tfstate`.
-
-> `terraform destroy` в `infra/` удаляет только сеть и подсети — бакет со state остаётся,
-> т.к. управляется отдельной конфигурацией `bootstrap/`. Полная очистка: сначала
-> `destroy` в `infra/`, затем `destroy` в `bootstrap/`.
-
----
-
-## Результаты
+### Результаты
 
 | Требование | Статус |
 |---|---|
-| Сервисный аккаунт с достаточными правами (не суперпользователь) |  `bucket-sa`, роль `storage.admin` на каталог |
-| Backend — S3-бакет, созданный через Terraform |  `mustway-tfstate-bucket-2026` |
-| Разные папки для bootstrap и основной конфигурации |  `bootstrap/` и `infra/` |
-| VPC с подсетями в разных зонах доступности |  3 подсети: `ru-central1-a/b/d` |
-| State основной конфигурации в бакете |  `s3://mustway-tfstate-bucket-2026/infra/terraform.tfstate` |
-| `destroy` / `apply` без ручных действий |  проверено циклом destroy → apply → plan (no changes) |
+| Сервисный аккаунт с достаточными правами (не суперпользователь) | ✅ `bucket-sa`, роль `storage.admin` на каталог |
+| Backend — S3-бакет, созданный через Terraform | ✅ `mustway-tfstate-bucket-2026` |
+| Разные папки для bootstrap и основной конфигурации | ✅ `bootstrap/` и `infra/` |
+| VPC с подсетями в разных зонах доступности | ✅ 4 подсети: `ru-central1-a/b/d/e` |
+| State основной конфигурации в бакете | ✅ `s3://mustway-tfstate-bucket-2026/infra/terraform.tfstate` |
+| `destroy` / `apply` без ручных действий | ✅ проверено циклом destroy → apply → plan (no changes) |
 
-Конфигурация предварительная и будет расширяться на следующих шагах (Kubernetes-кластер).
-
-## Скриншоты
+### Скриншоты
 
 **Сервисные аккаунты**
 
@@ -128,54 +277,163 @@ terraform plan                    # No changes. Your infrastructure matches the 
 
 <img width="735" height="847" alt="image" src="https://github.com/user-attachments/assets/cb452b44-68e9-4642-9e87-c3e3436c898d" />
 
-# Создание Kubernetes кластера (Kubespray)
-
-Развёртывание production-ready Kubernetes-кластера (v1.36.x) на базе инфраструктуры Yandex Cloud с использованием Kubespray v2.32.0. Кластер состоит из 3 узлов (1 control-plane + 2 worker), размещённых в разных зонах доступности.
-
-## Архитектура и ресурсы
-
-| Нода | Зона | vCPU / RAM | Диск | Внутренний IP | Публичный IP |
-|---|---|---|---|---|---|
-| `k8s-master-1` | `ru-central1-a` | 2 / 4 GB | 20 GB HDD | `10.20.1.14` | `84.201.173.154` |
-| `k8s-worker-1` | `ru-central1-d` | 2 / 4 GB | 20 GB HDD | `10.20.3.33` | `153.51.161.212` |
-| `k8s-worker-2` | `ru-central1-e` | 2 / 4 GB | 20 GB HDD | `10.20.4.24` | `93.77.161.235`  |
-
-> **Примечание:** Использованы диски `network-hdd` и зоны `d`/`e` из-за исчерпания квот на `network-ssd` и временной недоступности зоны `ru-central1-b` для новых ресурсов в данном аккаунте. Параметр `allow_stopping_for_update = true` позволяет менять тип инстанса через Terraform без ручных действий.
-
 ---
 
-## Ключевые конфигурации Terraform
+## Этап 2. Создание Kubernetes-кластера
 
-### Security Group (`security.tf`)
-Обеспечивает доступ к API, SSH, NodePort и разрешает весь внутренний трафик между нодами кластера:
+### Задача
+
+- Минимум 3 ВМ Compute Cloud через Terraform; тип — с учётом производительности и стоимости;
+  смена типа инстанса — через Terraform.
+- Ansible-конфигурация (Kubespray) и деплой Kubernetes на подготовленные инстансы.
+- Доступ к ресурсам из Интернета.
+- Работоспособный кластер, `~/.kube/config`, `kubectl get pods --all-namespaces` без ошибок.
+
+Выбран **рекомендуемый вариант — самостоятельная установка** (Kubespray), т.к. он даёт полный
+контроль над кластером и не требует оплаты managed-мастера.
+
+### Архитектура и ресурсы
+
+| Нода | Зона | Подсеть | vCPU / RAM | Диск | Внутренний IP | Публичный IP |
+|---|---|---|---|---|---|---|
+| `k8s-master-1` | `ru-central1-a` | `k8s-subnet-a` | 2 / 4 GB, 100% | 20 GB HDD | `10.20.1.14` | `84.201.173.154` |
+| `k8s-worker-1` | `ru-central1-d` | `k8s-subnet-d` | 2 / 4 GB, 100% | 20 GB HDD | `10.20.3.33` | `153.51.161.212` |
+| `k8s-worker-2` | `ru-central1-e` | `k8s-subnet-e` | 2 / 4 GB, 100% | 20 GB HDD | `10.20.4.24` | `93.77.161.235` |
+
+**Обоснование конфигурации:**
+
+- **2 vCPU / 4 GB** — минимум kubeadm для control-plane (2 CPU / 2 GB); 4 GB дают запас для etcd и системных подов.
+- **`core_fraction = 100`** на мастере — etcd чувствителен к гарантированной доле CPU.
+- **`network-hdd`** — квоты аккаунта на `network-ssd` исчерпаны (см. troubleshooting); для учебного стенда HDD достаточно.
+- **Зоны `a` / `d` / `e`** — зона `ru-central1-b` закрыта для новых ВМ в этом аккаунте; подсеть в `b` при этом существует (требование этапа 1 выполнено).
+- **`allow_stopping_for_update = true`** — смена типа инстанса/диска выполняется через `terraform apply` без ручных действий.
+- **`nat = true`** — публичный IP на каждой ноде: доступ из Интернета к API/NodePort/Ingress и выход нод в Интернет за образами.
+- Переменная **`preemptible`** вынесена в `variables.tf` — прерываемые ВМ включаются одним `terraform apply` (см. [экономию ресурсов](#экономия-ресурсов-и-безопасность)).
+
+Версии: **Kubernetes v1.36.4**, **containerd 2.3.5**, **Calico (VXLAN)**, Ubuntu 24.04.5 LTS, Kubespray **v2.32.0**.
+
+### Security Group (`infra/security.tf`)
+
 ```hcl
 resource "yandex_vpc_security_group" "k8s_sg" {
   name       = "k8s-sg"
   network_id = yandex_vpc_network.k8s_net.id
 
-  ingress { protocol = "TCP"; port = 22; v4_cidr_blocks = ["0.0.0.0/0"] }
-  ingress { protocol = "TCP"; port = 6443; v4_cidr_blocks = ["0.0.0.0/0"] }
-  ingress { protocol = "TCP"; from_port = 30000; to_port = 32767; v4_cidr_blocks = ["0.0.0.0/0"] }
-  ingress { protocol = "ANY"; from_port = 0; to_port = 65535; predefined_target = "self_security_group" }
-  egress  { protocol = "ANY"; from_port = 0; to_port = 65535; v4_cidr_blocks = ["0.0.0.0/0"] }
+  ingress { description = "SSH";              protocol = "TCP"; port = 22;    v4_cidr_blocks = ["0.0.0.0/0"] }
+  ingress { description = "Kubernetes API";   protocol = "TCP"; port = 6443;  v4_cidr_blocks = ["0.0.0.0/0"] }
+  ingress { description = "HTTP (Ingress)";   protocol = "TCP"; port = 80;    v4_cidr_blocks = ["0.0.0.0/0"] }
+  ingress { description = "NodePort services"; protocol = "TCP"; from_port = 30000; to_port = 32767; v4_cidr_blocks = ["0.0.0.0/0"] }
+  ingress { description = "Internal cluster traffic"; protocol = "ANY"; from_port = 0; to_port = 65535; predefined_target = "self_security_group" }
+  ingress { description = "ICMP (debug)";     protocol = "ICMP"; v4_cidr_blocks = ["0.0.0.0/0"] }
+  egress  { description = "Allow all outbound"; protocol = "ANY"; from_port = 0; to_port = 65535; v4_cidr_blocks = ["0.0.0.0/0"] }
 }
 ```
 
-## Результаты
+Правило `self_security_group` разрешает весь внутренний трафик между нодами (Calico VXLAN, etcd, kubelet),
+egress ANY обеспечивает выход в Интернет. Порт 80 добавлен на этапе 4 для Ingress — тоже через Terraform.
+
+### Kubespray: inventory и ключевые настройки
+
+Inventory **генерируется автоматически** из `terraform output` скриптом `scripts/make_inventory.sh`
+(никаких IP, вписанных руками): `ansible_host` — публичные IP (SSH), `ip` — внутренние (трафик нод внутри VPC).
+
+```ini
+[all]
+k8s-master-1 ansible_host=<public> ip=10.20.1.14 etcd_member_name=etcd1
+k8s-worker-1 ansible_host=<public> ip=10.20.3.33
+k8s-worker-2 ansible_host=<public> ip=10.20.4.24
+
+[kube_control_plane]
+k8s-master-1
+[etcd]
+k8s-master-1
+[kube_node]
+k8s-worker-1
+k8s-worker-2
+[k8s_cluster:children]
+kube_control_plane
+kube_node
+```
+
+Override-файлы `group_vars/*/yc-overrides.yml`, адаптирующие Kubespray под Yandex Cloud:
+
+```yaml
+# group_vars/k8s_cluster/yc-overrides.yml
+supplementary_addresses_in_ssl_keys: ["84.201.173.154"]  # публичный IP в SAN сертификата API
+calico_ipip_mode: "Never"        # Yandex VPC не пропускает IPIP (IP proto 4)
+calico_vxlan_mode: "Always"      # работает VXLAN (UDP 4789)
+kubeconfig_localhost: true       # admin.conf -> inventory/mycluster/artifacts/
+kubectl_localhost: true          # бинарь kubectl той же версии -> artifacts/
+```
+
+```yaml
+# group_vars/all/yc-overrides.yml — зеркало Docker Hub (docker.io отдаёт 403 с российских IP)
+containerd_registries_mirrors:
+  - prefix: "docker.io"
+    mirrors:
+      - host: "https://mirror.gcr.io"
+        capabilities: ["pull", "resolve"]
+```
+
+### Деплой и настройка доступа
+
+```bash
+# Подготовка (Ubuntu 22.04: ansible-core 2.19 требует Python >= 3.11)
+sudo add-apt-repository -y ppa:deadsnakes/ppa && sudo apt-get install -y python3.11 python3.11-venv
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/k8s_rsa -N ""
+
+# Terraform: SG + 3 ВМ
+cd infra && terraform apply -auto-approve
+
+# Kubespray
+git clone --branch v2.32.0 --depth 1 https://github.com/kubernetes-sigs/kubespray.git
+cd kubespray && python3.11 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp -rfp inventory/sample inventory/mycluster
+../scripts/make_inventory.sh
+ansible -i inventory/mycluster/inventory.ini all -m ping          # 3x "pong"
+ansible-playbook -i inventory/mycluster/inventory.ini cluster.yml -b -v   # failed=0
+
+# kubeconfig
+mkdir -p ~/.kube
+cp inventory/mycluster/artifacts/admin.conf ~/.kube/config
+sed -i "s|server: https://.*:6443|server: https://84.201.173.154:6443|" ~/.kube/config
+chmod 600 ~/.kube/config
+sudo install -m 0755 inventory/mycluster/artifacts/kubectl /usr/local/bin/kubectl
+
+# Проверка
+kubectl get nodes -o wide                 # 3 ноды Ready, v1.36.4
+kubectl get pods --all-namespaces         # все Running / Completed
+```
+
+Доступ из Интернета проверен тестовым nginx через NodePort: `curl -I http://<worker_public>:<nodeport>` → `HTTP/1.1 200 OK`.
+
+### Проблемы и решения (troubleshooting)
+
+| Симптом | Диагностика | Решение |
+|---|---|---|
+| `ResourceExhausted: limit on total size of network-ssd disks exceeded` | Консоль → IAM → Квоты: SSD 10 ГБ/зона, HDD 20 ГБ/зона, 2 vCPU/зона | Переход на `network-hdd`, диски 20 ГБ, по 1 ноде на зону; заявка на увеличение квот |
+| `FailedPrecondition: Zone ru-central1-b is not available` | Зона закрыта для новых ВМ в аккаунте | Worker'ы перенесены в `d` и `e`, добавлена `subnet_e`; подсеть `b` сохранена |
+| SSH к master/worker-2: `Connection timed out`, при этом worker-1 работает | Serial-консоль: загрузка OK, ключи на месте; ping: master IP мёртв целиком, у worker-2 проходит ICMP, но не TCP 22; изнутри VPC обе ноды отвечают → фильтрация на пути провайдера, а не проблема облака | Перевыпуск публичных IP: `terraform apply -replace=yandex_compute_instance.master -replace='yandex_compute_instance.worker[1]'` |
+| Kubespray v2.32 не ставится на Python 3.10 | ansible-core 2.19 требует Python ≥ 3.11 | `python3.11` из deadsnakes PPA, venv на его основе |
+
+Эпизод с блокировками IP — пример системной диагностики: serial-консоль → ping vs TCP → проверка
+изнутри VPC через рабочий узел → локализованная причина → исправление через Terraform, без ручных действий в облаке.
+
+### Результаты
 
 | Требование | Статус |
 |---|---|
-| Минимум 3 ВМ через Terraform (1 master + 2 worker) | 3 ВМ созданы: `k8s-master-1`, `k8s-worker-1`, `k8s-worker-2` |
-| ВМ размещены в разных зонах доступности | `ru-central1-a`, `ru-central1-d`, `ru-central1-e` |
-| Возможность смены типа инстанса через Terraform | Параметр `allow_stopping_for_update = true` позволяет менять конфигурацию без ручных действий |
-| Ansible-конфигурация (Kubespray) | v2.32.0, inventory генерируется автоматически из `terraform output` |
-| Работоспособный Kubernetes-кластер | v1.36.4, containerd 2.3.5, сеть Calico (VXLAN) |
-| Файл `~/.kube/config` с доступом к кластеру | `admin.conf` скопирован, публичный IP мастера добавлен в SAN сертификата API |
-| Команда `kubectl get pods --all-namespaces` без ошибок | Все системные поды (`calico`, `coredns`, `etcd` и др.) в статусе `Running` |
-| Доступ к ресурсам кластера из Интернета | Проверено через NodePort: `curl -I` вернул `HTTP/1.1 200 OK` |
-| Решение проблем с квотами и блокировками IP | Выявлены через serial-консоль и ping, решены перевыпуском IP через `terraform apply -replace` |
+| Минимум 3 ВМ через Terraform (1 master + 2 worker) | ✅ `k8s-master-1`, `k8s-worker-1`, `k8s-worker-2` |
+| ВМ в разных зонах доступности | ✅ `ru-central1-a`, `ru-central1-d`, `ru-central1-e` |
+| Смена типа инстанса через Terraform | ✅ `allow_stopping_for_update = true`, проверено перевыпуском ВМ |
+| Ansible-конфигурация (Kubespray) | ✅ v2.32.0, inventory генерируется из `terraform output` |
+| Работоспособный кластер | ✅ v1.36.4, containerd 2.3.5, Calico VXLAN |
+| `~/.kube/config` с доступом к кластеру | ✅ `admin.conf`, публичный IP мастера в SAN сертификата |
+| `kubectl get pods --all-namespaces` без ошибок | ✅ все системные поды `Running` |
+| Доступ к ресурсам из Интернета | ✅ NodePort: `curl -I` → `HTTP/1.1 200 OK` |
 
-## Скриншоты
+### Скриншоты
 
 **Виртуальные машины**
 
@@ -193,25 +451,34 @@ resource "yandex_vpc_security_group" "k8s_sg" {
 
 <img width="407" height="200" alt="image" src="https://github.com/user-attachments/assets/85d80ee7-becd-430c-84c7-cd3dc50dc07e" />
 
-# Создание тестового приложения и Container Registry
-
-Подготовка тестового приложения, эмулирующего основной продукт компании, для последующего развертывания в Kubernetes. Приложение представляет собой легкий веб-сервер, упакованный в Docker-образ и размещенный в приватном реестре Yandex Cloud, который управляется через Terraform.
-
-## Архитектура и ресурсы
-
-| Компонент | Описание | Значение / Ссылка |
-|---|---|---|
-| **Репозиторий приложения** | Отдельный Git-репозиторий с исходным кодом тестового приложения | [Netology_Diplom_TestApp](https://github.com/MustWay-byte/Netology_Diplom_TestApp) |
-| **Dockerfile** | Минималистичный образ на базе `nginx:1.25-alpine` с кастомным конфигом | `app/Dockerfile` |
-| **Container Registry** | Приватный реестр образов Yandex Cloud, управляемый через Terraform | ID: `crpudopro8jpj70h8dn0` |
-| **Собранные образы** | Тестовые теги для последующего деплоя | `cr.yandex/crpudopro8jpj70h8dn0/test-app:v1`<br>`cr.yandex/crpudopro8jpj70h8dn0/test-app:latest` |
-
 ---
 
-## Ключевые конфигурации
+## Этап 3. Создание тестового приложения
 
-### Dockerfile (`app/Dockerfile`)
-Самостоятельно написанный файл для сборки образа. Удаляет дефолтный конфиг Nginx, добавляет кастомный `nginx.conf` и статическую страницу `index.html`.
+### Задача
+
+- Отдельный git-репозиторий с простым nginx-конфигом, отдающим статику.
+- Самостоятельно созданный Dockerfile.
+- Registry с собранным образом (Yandex Container Registry, управляемый через Terraform).
+
+### Реализация
+
+Приложение — лёгкий веб-сервер на nginx, эмулирующий основной продукт компании:
+отдаёт статическую страницу, упакован в Docker-образ и размещён в приватном реестре Yandex Cloud.
+
+**Репозиторий:** [Netology_Diplom_TestApp](https://github.com/MustWay-byte/Netology_Diplom_TestApp)
+
+```
+Netology_Diplom_TestApp/
+├── app/
+│   ├── Dockerfile        # самостоятельно написанный файл сборки
+│   ├── nginx.conf        # кастомный конфиг nginx
+│   └── index.html        # статическая страница
+└── .github/workflows/cd-app.yml
+```
+
+#### Dockerfile (`app/Dockerfile`)
+
 ```dockerfile
 FROM nginx:1.25-alpine
 RUN rm /etc/nginx/conf.d/default.conf
@@ -221,8 +488,10 @@ EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 ```
 
-### Управление реестром через Terraform (infra/registry.tf)
-Ресурс реестра описан в коде и импортирован в состояние Terraform, что гарантирует идемпотентность и соответствие требованиям инфраструктуры как кода (IaC).
+#### Container Registry через Terraform (`infra/registry.tf`)
+
+Реестр создан в Yandex Cloud и взят под управление Terraform через `terraform import` —
+ресурс описан в коде, идемпотентен и воспроизводим (IaC):
 
 ```hcl
 resource "yandex_container_registry" "test_app_registry" {
@@ -236,74 +505,214 @@ output "registry_id" {
 }
 ```
 
-## Результаты
+```bash
+terraform import yandex_container_registry.test_app_registry crpudopro8jpj70h8dn0
+```
 
-| Требование задания | Статус выполнения |
-| :--- | :--- |
-| **Отдельный git репозиторий с тестовым приложением** | Создан репозиторий [Netology_Diplom_TestApp](https://github.com/MustWay-byte/Netology_Diplom_TestApp) |
-| **Простой nginx конфиг, отдающий статические данные** | Файлы `index.html` и `nginx.conf` присутствуют в репозитории |
-| **Самостоятельно созданный Dockerfile** | Файл `app/Dockerfile` написан с нуля |
-| **Registry с собранным docker image** | Образы `v1` и `latest` успешно собраны и отправлены (`docker push`) |
-| **Registry создан/управляется с помощью Terraform** | Ресурс описан в `infra/registry.tf` и импортирован в state (`terraform import`) |
+#### Сборка и публикация образов
 
-## Скриншоты
+```bash
+yc container registry configure-docker        # авторизация docker в cr.yandex через yc CLI
+export REGISTRY_ID="crpudopro8jpj70h8dn0"
+
+cd app
+docker build -t cr.yandex/${REGISTRY_ID}/test-app:v1 .
+docker push  cr.yandex/${REGISTRY_ID}/test-app:v1
+docker tag   cr.yandex/${REGISTRY_ID}/test-app:v1 cr.yandex/${REGISTRY_ID}/test-app:latest
+docker push  cr.yandex/${REGISTRY_ID}/test-app:latest
+```
+
+| Параметр | Значение |
+|---|---|
+| Registry ID | `crpudopro8jpj70h8dn0` |
+| Образы | `cr.yandex/crpudopro8jpj70h8dn0/test-app:v1`, `:latest` (далее — теги `v1.0.x` из CI/CD) |
+| Размер образа | ~19.5 MB (alpine-база) |
+
+### Результаты
+
+| Требование | Статус |
+|---|---|
+| Отдельный git-репозиторий с тестовым приложением | ✅ [Netology_Diplom_TestApp](https://github.com/MustWay-byte/Netology_Diplom_TestApp) |
+| Простой nginx-конфиг, отдающий статику | ✅ `index.html` + `nginx.conf` в репозитории |
+| Самостоятельно созданный Dockerfile | ✅ `app/Dockerfile` написан с нуля |
+| Registry с собранным docker image | ✅ образы `v1` и `latest` собраны и отправлены (`docker push`) |
+| Registry создан/управляется через Terraform | ✅ `infra/registry.tf`, ресурс в state (`terraform import`) |
+
+### Скриншоты
 
 **Список образов**
 
 <img width="1839" height="295" alt="image" src="https://github.com/user-attachments/assets/eddefb0c-285c-4007-b3ca-94681a009826" />
 
-# Подготовка системы мониторинга и деплой приложения
+---
 
-Развертывание стека мониторинга и тестового приложения в Kubernetes-кластере с использованием Helm и Nginx Ingress Controller (DaemonSet) для обеспечения HTTP-доступа по 80 порту. Автоматизация управления инфраструктурой реализована через CI/CD пайплайн.
+## Этап 4. Подготовка системы мониторинга и деплой приложения
+
+### Задача
+
+- Задеплоить prometheus, grafana, alertmanager, экспортёр основных метрик Kubernetes (kube-prometheus).
+- Задеплоить тестовое приложение.
+- HTTP-доступ на **80 порту** к Grafana и к приложению; дашборды состояния кластера.
+- Git-репозиторий с конфигурационными файлами Kubernetes.
+- Деплой инфраструктуры в terraform pipeline (CI/CD вместо Atlantis/Terraform Cloud).
 
 ### Архитектура и компоненты
 
-| Компонент | Технология | Namespace / Среда | Описание |
+| Компонент | Технология | Namespace | Описание |
 |---|---|---|---|
-| **Prometheus + Grafana + Alertmanager** | Helm chart `kube-prometheus-stack` | `monitoring` | Полный стек мониторинга и визуализации метрик |
-| **Node Exporter** | В составе `kube-prometheus-stack` | `monitoring` | Сбор метрик нод (CPU, RAM, Disk, Network) |
-| **Test App** | Deployment + Service + ExternalName | `default` / `monitoring` | Тестовое приложение (Nginx + статика), образ из Yandex Container Registry |
-| **Ingress Controller** | Helm chart `ingress-nginx` (DaemonSet) | `ingress-nginx` | Маршрутизация внешнего трафика на 80 порт на всех нодах кластера |
-| **CI/CD Pipeline** | **GitHub Actions** | **Внешняя среда** | **Автоматический запуск `terraform init`, `plan`, `validate`, `apply` при пуше в ветку `main`. Аутентификация через защищенные GitHub Secrets.** |
+| Prometheus + Grafana + Alertmanager | Helm chart `kube-prometheus-stack` | `monitoring` | полный стек мониторинга и визуализации |
+| Node Exporter + kube-state-metrics | в составе `kube-prometheus-stack` | `monitoring` | метрики нод (CPU, RAM, Disk, Network) и объектов K8s |
+| Test App | Deployment (2 реплики) + Service | `default` | nginx + статика, образ из Yandex Container Registry |
+| Ingress Controller | Helm chart `ingress-nginx`, **DaemonSet + hostNetwork** | `ingress-nginx` | порт 80 напрямую на всех нодах — без платного LoadBalancer |
+| Единый Ingress | `main-ingress` + ExternalName-сервис | `monitoring` | маршрутизация `/` → приложение, `/grafana` → Grafana |
+| Terraform pipeline | GitHub Actions `terraform.yml` | внешняя среда | `init → fmt → validate → plan → apply` при пуше в `main` |
 
-### CI/CD для инфраструктуры (GitHub Actions)
+### Деплой мониторинга (Helm)
 
-Для автоматизации развертывания облачной инфраструктуры настроен пайплайн (`.github/workflows/terraform.yml`).
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install monitoring prometheus-community/kube-prometheus-stack \
+  --namespace monitoring --create-namespace \
+  -f k8s/monitoring/values.yaml
+```
 
-**Триггеры запуска:**
-- Push в ветку `main` при изменении файлов в директориях `devops-diplom-yandexcloud/infra/**` или `devops-diplom-yandexcloud/bootstrap/**`.
-- Ручной запуск через `workflow_dispatch`.
+Финальный `k8s/monitoring/values.yaml` — Grafana за subpath, пароль в Kubernetes Secret,
+корректные пробы здоровья:
 
-**Этапы выполнения пайплайна:**
-1. **Checkout & Setup:** Получение кода и установка Terraform (v1.9.8).
-2. **YC CLI Authorization:** Ручная установка Yandex Cloud CLI и авторизация через сервисный аккаунт (ключ берется из секрета `YC_SA_JSON`).
-3. **Terraform Init:** Инициализация бэкенда в Yandex Object Storage с использованием секретов `AWS_ACCESS_KEY_ID` и `AWS_SECRET_ACCESS_KEY`.
-4. **Static Analysis:** Проверка форматирования (`terraform fmt -check`) и валидация синтаксиса (`terraform validate`).
-5. **Plan & Apply:** Генерация плана изменений и автоматическое применение конфигурации (`terraform apply -auto-approve`).
+```yaml
+grafana:
+  admin:
+    existingSecret: grafana-admin-credentials   # пароль НЕ в коде
+    userKey: admin-user
+    passwordKey: admin-password
+  service:
+    type: ClusterIP
+    port: 80
+  ingress:
+    enabled: false            # управляем единым main-ingress
+  grafana.ini:
+    server:
+      root_url: "http://84.201.173.154/grafana/"
+      serve_from_sub_path: true
+  readinessProbe:
+    httpGet: { path: /grafana/api/health, port: 3000 }
+  livenessProbe:
+    httpGet: { path: /grafana/api/health, port: 3000 }
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false   # видеть все ServiceMonitor'ы
+```
+
+```bash
+kubectl create secret generic grafana-admin-credentials -n monitoring \
+  --from-literal=admin-user=admin \
+  --from-literal=admin-password=netology-diplom-2026
+```
+
+### Ingress: единая точка входа на 80 порту
+
+```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm install ingress-nginx ingress-nginx/ingress-nginx \
+  --namespace ingress-nginx --create-namespace \
+  --set controller.kind=DaemonSet \
+  --set controller.hostNetwork=true
+```
+
+`hostNetwork: true` + DaemonSet = контроллер слушает 80/443 **на каждой ноде напрямую**.
+Внешний IP не нужен — работает публичный IP любой ноды. Это осознанная экономия:
+не создаётся облачный LoadBalancer. Порт 80 открыт в security group через Terraform.
+
+Манифесты в `k8s/`:
+
+```yaml
+# k8s/ingress.yaml — единый Ingress (namespace monitoring)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: main-ingress
+  namespace: monitoring
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: test-app-external      # ExternalName -> default/test-app-service
+            port: { number: 80 }
+      - path: /grafana
+        pathType: Prefix
+        backend:
+          service:
+            name: monitoring-grafana
+            port: { number: 80 }
+---
+# ExternalName-сервис для доступа к приложению из другого namespace
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-app-external
+  namespace: monitoring
+spec:
+  type: ExternalName
+  externalName: test-app-service.default.svc.cluster.local
+```
+
+Приложение деплоится из `k8s/test-app/deployment.yaml` (Deployment, 2 реплики, образ
+`cr.yandex/crpudopro8jpj70h8dn0/test-app`, Service `test-app-service`).
+Никаких `rewrite-target` — Grafana сама обрабатывает префикс благодаря `serve_from_sub_path`.
+
+### Terraform pipeline (CI/CD инфраструктуры)
+
+`.github/workflows/terraform.yml` в репозитории инфраструктуры — альтернатива Atlantis/Terraform Cloud:
+
+- **Триггеры:** push в `main` при изменении `devops-diplom-yandexcloud/infra/**` или `bootstrap/**`; ручной `workflow_dispatch`.
+- **Шаги:** checkout → `hashicorp/setup-terraform@v3` → установка YC CLI → авторизация по ключу SA
+  (секрет `YC_SA_JSON`, валидация JSON через `jq`) → `terraform init` (S3-ключи из секретов) →
+  `terraform fmt -check` → `terraform validate` → `terraform plan` → `terraform apply -auto-approve`.
+- **Секреты GitHub:** `YC_SA_JSON`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `TF_VAR_cloud_id`,
+  `TF_VAR_folder_id`, `TF_VAR_ssh_public_key`. В коде — ни одного секрета.
+- **Адаптация под CI:** SSH-ключ передаётся переменной `var.ssh_public_key` (`TF_VAR_ssh_public_key`),
+  а не `file()` — на runner'е нет локальных файлов ключей.
+
+### Проблемы и решения (troubleshooting)
+
+| Симптом | Причина | Решение |
+|---|---|---|
+| `ImagePullBackOff` у test-app | у kubelet нет доступа к приватному реестру | настроен доступ нод к registry; образы.pullятся, поды `Running` |
+| Ingress webhook: `host "_" and path ... already defined` | два Ingress с пересекающимися путями в разных namespace | удалён старый Ingress, единый `main-ingress` в `monitoring` |
+| Grafana `404` / редирект на `localhost:3000` | не настроен subpath | `grafana.ini.server.root_url` + `serve_from_sub_path: true`, пробы `/grafana/api/health` |
+| Grafana не принимает новый пароль | старый пароль закэширован в SQLite на PVC | `helm uninstall` + `kubectl delete pvc -l app.kubernetes.io/name=grafana`, пароль вынесен в `existingSecret` |
+| `kubectl`/`helm`: `localhost:8080 refused` | `~/.kube/config` случайно перезаписан конфигом с внутренним IP | восстановлен из `admin.conf` мастера, server заменён на публичный IP |
+| Workflow не запускался | фильтр `paths` и `working-directory` | исправлены пути триггеров и рабочая директория job'а |
 
 ### Доступ к сервисам
 
-| Сервис | URL | Учетные данные |
+| Сервис | URL | Учётные данные |
 |---|---|---|
-| **Тестовое приложение** | `http://<EXTERNAL-IP>/` | — |
-| **Grafana** | `http://<EXTERNAL-IP>/grafana` | Логин: `admin`<br>Пароль: `netology-diplom-2026` |
+| Тестовое приложение | http://84.201.173.154/ | — |
+| Grafana | http://84.201.173.154/grafana/ | `admin` / `netology-diplom-2026` |
 
-**Безопасность:**
-Все чувствительные данные (JSON-ключ сервисного аккаунта, токены S3-бэкенда, ID облака/каталога, публичные SSH-ключи) хранятся исключительно в защищенном хранилище **GitHub Secrets** и передаются в Terraform через переменные окружения (`TF_VAR_*`). Пароли и приватные ключи отсутствуют в истории коммитов.
+Проверено: `curl -I http://84.201.173.154/` → `200 OK`; `curl -I http://84.201.173.154/grafana/` → `302` на `/grafana/login`, интерфейс открывается.
+Дашборды `Kubernetes / Compute Resources / Cluster` и дашборды нод отображают живые метрики кластера.
 
 ### Результаты
 
-| Требование задания | Статус выполнения |
+| Требование | Статус |
 |---|---|
-| Задеплоить prometheus, grafana, alertmanager, node_exporter | Все компоненты развернуты через Helm в namespace `monitoring` |
-| Задеплоить тестовое приложение (nginx сервер) | Deployment `test-app` с 2 репликами, образ из Yandex Container Registry |
-| Git репозиторий с конфигурационными файлами K8s | Файлы `k8s/monitoring/values.yaml`, `k8s/test-app/deployment.yaml`, `k8s/ingress.yaml` добавлены в репозиторий |
-| HTTP доступ на 80 порту к web интерфейсу grafana | Доступен по `http://<Public-IP>/grafana` через единый Ingress с настройкой `serve_from_sub_path` |
-| Дашборды в grafana отображающие состояние кластера | Встроенные дашборды `Kubernetes / Compute Resources / Cluster` активны и собирают данные |
-| HTTP доступ на 80 порту к тестовому приложению | Доступен по `http://<Public-IP>/` через Ingress |
-| **Деплой инфраструктуры в terraform pipeline (CI/CD)** | **Настроен workflow в GitHub Actions. Автоматическое применение конфигурации при коммите в `main`. Секреты (ключи YC, S3, SSH) не хранятся в коде, а передаются через переменные окружения.** |
+| prometheus, grafana, alertmanager, node_exporter | ✅ Helm `kube-prometheus-stack`, namespace `monitoring` |
+| Тестовое приложение задеплоено | ✅ Deployment `test-app`, 2 реплики, образ из YC Registry |
+| Git-репозиторий с конфигурациями K8s | ✅ `k8s/monitoring/values.yaml`, `k8s/test-app/deployment.yaml`, `k8s/ingress.yaml` |
+| HTTP :80 к Grafana | ✅ `http://84.201.173.154/grafana/` через единый Ingress |
+| Дашборды состояния кластера | ✅ встроенные дашборды kube-prometheus-stack активны |
+| HTTP :80 к тестовому приложению | ✅ `http://84.201.173.154/` через Ingress |
+| ci/cd-terraform (вместо Atlantis) | ✅ GitHub Actions workflow, скриншоты работы пайплайна ниже |
 
-## Скриншоты
+### Скриншоты
 
 **Тестовое приложение**
 
@@ -321,59 +730,186 @@ output "registry_id" {
 
 <img width="1872" height="705" alt="image" src="https://github.com/user-attachments/assets/98e92920-1201-412a-a304-7dbda9db83f9" />
 
-# Установка и настройка CI/CD
-
-Настройка системы непрерывной интеграции и доставки (CI/CD) для автоматической сборки Docker-образа тестового приложения и его деплоя в Kubernetes-кластер при изменении кода.
-
-## Выбранный инструмент
-Для реализации задачи был выбран **GitHub Actions**.  
-**Обоснование:** 
-- Нативная интеграция с репозиторием кода.
-- Отсутствие необходимости поддерживать отдельный CI-сервер (Jenkins/TeamCity).
-- Гибкая система триггеров (коммиты в ветку, создание тегов).
-- Безопасное хранение чувствительных данных через GitHub Secrets.
-
-## Архитектура пайплайна
-Пайплайн размещен в репозитории с исходным кодом приложения (`Netology_Diplom_TestApp`) и состоит из двух задач (jobs):
-
-1. **`build-and-push`**: 
-   - Скачивает исходный код из директории `app/`.
-   - Авторизуется в Yandex Cloud через сервисный аккаунт.
-   - Собирает Docker-образ и отправляет его в Yandex Container Registry.
-   - *Теги образа:* `latest` и хеш коммита (при пуше в `main`), или версия тега (например, `v1.0.0`).
-
-2. **`deploy-to-k8s`**:
-   - Запускается **только** при создании Git-тега, начинающегося с `v` (условие `if: startsWith(github.ref, 'refs/tags/v')`).
-   - Подключается к Kubernetes-кластеру с использованием конфигурации из защищенного секрета.
-   - Выполняет обновление образа в существующем Deployment (`kubectl set image`).
-
-## Безопасность
-В репозитории **не хранятся** никакие учетные данные. Для работы пайплайна используются следующие GitHub Secrets:
-- `YC_SA_JSON`: JSON-ключ сервисного аккаунта Yandex Cloud (для авторизации в CLI и Container Registry).
-- `KUBE_CONFIG`: Конфигурационный файл `kubectl` для подключения к API-серверу кластера.
-
 ---
 
-## Соответствие ожидаемым результатам
+## Этап 5. Установка и настройка CI/CD
 
-| Требование задания | Описание реализации |
-| :--- | :--- |
-| **Интерфейс CI/CD сервиса доступен по HTTP** | Веб-интерфейс GitHub Actions доступен по адресу репозитория во вкладке Actions. |
-| **При любом коммите происходит сборка и отправка образа в регистр** | Триггер `push` на ветку `main` с фильтром по пути `app/**` запускает задачу `build-and-push`. |
-| **При создании тега (v1.0.0) происходит сборка, отправка с label и деплой в K8s** | Триггер `push` на теги `v*` запускает обе задачи. Задача `deploy-to-k8s` обновляет образ в кластере. |
+### Задача
 
-## Скриншоты
+- Автоматическая сборка docker-образа при коммите в репозиторий приложения.
+- При создании тега (`v1.0.0`) — сборка, отправка с соответствующим label и деплой в кластер.
+- Интерфейс CI/CD доступен по HTTP.
 
-**Сборка образа** 
+### Выбранный инструмент
+
+**GitHub Actions** — нативная интеграция с репозиторием, не нужно поддерживать отдельный
+CI-сервер (Jenkins/TeamCity), гибкие триггеры (ветки, теги, пути), безопасное хранение
+чувствительных данных в GitHub Secrets. Веб-интерфейс — вкладка **Actions** репозитория (HTTP).
+
+### Архитектура пайплайна (`cd-app.yml`)
+
+Пайплайн живёт в репозитории приложения [Netology_Diplom_TestApp](https://github.com/MustWay-byte/Netology_Diplom_TestApp)
+и состоит из двух jobs:
+
+```yaml
+on:
+  push:
+    branches: [main]
+    paths: ['app/**']
+    tags: ['v*']          # один ключ push: и ветка, и теги
+
+env:
+  REGISTRY: cr.yandex
+  REGISTRY_ID: crpudopro8jpj70h8dn0
+  IMAGE_NAME: test-app
+```
+
+**1. `build-and-push`** — при любом коммите в `main` (изменения `app/**`) и при тегах `v*`:
+
+- установка YC CLI, авторизация по ключу SA (`YC_SA_JSON`);
+- `IAM_TOKEN=$(yc iam create-token)` → `docker login --username iam --password-stdin cr.yandex`;
+- `docker/metadata-action@v5` формирует теги: **sha коммита**, **latest** (для default-ветки), **имя git-тега**;
+- `docker/build-push-action@v5` собирает образ из `app/` и пушит в Yandex Container Registry.
+
+**2. `deploy-to-k8s`** — только при тегах `v*` (`if: startsWith(github.ref, 'refs/tags/v')`, `needs: build-and-push`):
+
+- установка kubectl, kubeconfig из секрета `KUBE_CONFIG`;
+- `kubectl set image deployment/test-app test-app=cr.yandex/${REGISTRY_ID}/test-app:${{ github.ref_name }} -n default`;
+- `kubectl rollout status deployment/test-app` — ожидание успешного раскатывания.
+
+### Проверка на практике
+
+- Тег **v1.0.3**: сборка → пуш → деплой, `deployment "test-app" successfully rolled out`.
+- Тег **v1.0.4**: повторный прогон; `kubectl describe pod -l app=test-app` показывает
+  `Image: cr.yandex/crpudopro8jpj70h8dn0/test-app:v1.0.4` на **обеих репликах**
+  (два образа в выводе — это два пода Deployment'а, а не дубликат).
+
+### Безопасность
+
+В репозитории **нет учётных данных**. Секреты GitHub:
+
+| Секрет | Назначение |
+|---|---|
+| `YC_SA_JSON` | JSON-ключ сервисного аккаунта (YC CLI, Container Registry) |
+| `KUBE_CONFIG` | kubeconfig для подключения к API кластера |
+
+### Проблемы и решения
+
+| Симптом | Причина | Решение |
+|---|---|---|
+| `Invalid workflow file: 'push' is already defined` | два ключа `push` в YAML (ветка и теги отдельно) | объединены в один `push` с `branches` + `tags` |
+| `401 Unauthorized` при pull образа во время rollout | у нод не было авторизации в приватном реестре | настроен доступ к registry; rollout завершился успешно |
+
+### Результаты
+
+| Требование | Статус |
+|---|---|
+| Интерфейс CI/CD доступен по HTTP | ✅ вкладка Actions репозитория GitHub |
+| При любом коммите — сборка и отправка образа в регистр | ✅ триггер `push` в `main` (`app/**`) → `build-and-push` |
+| При теге `v*` — сборка, label и деплой в K8s | ✅ теги `v1.0.3`, `v1.0.4` проверены: образ в кластере обновлён, rollout успешен |
+
+### Скриншоты
+
+**Сборка образа**
 
 <img width="1892" height="686" alt="image" src="https://github.com/user-attachments/assets/58ee6795-0d55-466d-a6d6-ebfb776b0bd2" />
 
 <img width="1319" height="893" alt="image" src="https://github.com/user-attachments/assets/70ba458d-a707-4c58-b8b4-632242c657bb" />
 
-*Деплой образа**
+**Деплой образа**
 
 <img width="1885" height="926" alt="image" src="https://github.com/user-attachments/assets/4059065f-492b-4b0c-81df-2140402c2a15" />
 
 **Список задеплоенных образов**
 
 <img width="1188" height="100" alt="image" src="https://github.com/user-attachments/assets/27bbd3fe-3251-4dde-b05c-4a22871a6ee3" />
+
+---
+
+## Сводное соответствие заданию
+
+| Этап | Требование | Реализация | Подтверждение |
+|---|---|---|---|
+| 1 | SA без прав суперпользователя | `bucket-sa`, `storage.admin` | скриншот IAM |
+| 1 | S3-backend через Terraform | `mustway-tfstate-bucket-2026` | скриншот бакета |
+| 1 | Разные папки конфигураций | `bootstrap/`, `infra/` | структура репозитория |
+| 1 | VPC + подсети в разных AZ | 4 подсети (a/b/d/e) | скриншот VPC |
+| 1 | destroy/apply без ручных действий | цикл destroy → apply → plan | скриншоты терминала |
+| 2 | ≥3 ВМ через Terraform | 3 ВМ, тип обоснован | скриншот Compute Cloud |
+| 2 | Ansible (Kubespray) | v2.32.0, inventory из outputs | репозиторий |
+| 2 | Работающий кластер + kubeconfig | v1.36.4, `~/.kube/config` | `get nodes`, `get pods -A` |
+| 2 | Доступ из Интернета | NodePort 200 OK, Ingress :80 | скриншот curl |
+| 3 | Отдельный репозиторий + Dockerfile | Netology_Diplom_TestApp | ссылка |
+| 3 | Registry с образом через Terraform | `registry.tf` + import, образы v1/latest | скриншот образов |
+| 4 | kube-prometheus-stack | Helm, namespace monitoring | скриншот подов |
+| 4 | Grafana :80 + дашборды | Ingress + subpath | скриншот Grafana |
+| 4 | Приложение :80 | Ingress `/` | скриншот приложения |
+| 4 | ci/cd-terraform | GitHub Actions `terraform.yml` | скриншот пайплайна |
+| 5 | Сборка при коммите | `build-and-push` | скриншоты Actions |
+| 5 | Деплой при теге v* | `deploy-to-k8s`, v1.0.3/v1.0.4 | скриншоты rollout |
+
+---
+
+## Экономия ресурсов и безопасность
+
+### Экономия (ограниченный бюджет купона)
+
+- **Минимальные ВМ**: 2 vCPU / 4 GB — нижняя граница требований kubeadm; диски 20 GB `network-hdd`.
+- **Без облачного LoadBalancer**: ingress-nginx в режиме DaemonSet + hostNetwork слушает 80 порт
+  прямо на нодах — не создаётся платный балансировщик.
+- **Один мастер** (неотказоустойчивый) — достаточно для учебного стенда.
+- **S3-бакет с лимитом 1 GB** — state занимает килобайты.
+- **Прерываемые ВМ**: переменная `preemptible` в `compute.tf`; включение для worker-нод —
+  один `terraform apply` (−~70% стоимости ВМ). На момент сдачи стенд работал на обычных ВМ
+  ради стабильности демонстрации; переключение выполняется без ручных действий в облаке.
+- Остановка ВМ на время простоя (`yc compute instance stop`) — оплата только за диски.
+
+### Безопасность
+
+- `key.json`, `*.tfstate`, `terraform.tfvars`, приватные SSH-ключи — в `.gitignore`, в репозиторий не попадают.
+- Ключи S3-backend — только в переменных окружения и GitHub Secrets.
+- Пароль Grafana — в Kubernetes Secret `grafana-admin-credentials` (`existingSecret`), не в values.yaml.
+- Все секреты пайплайнов — в GitHub Secrets (`YC_SA_JSON`, `AWS_*`, `TF_VAR_*`, `KUBE_CONFIG`).
+- Публикация пароля Grafana в этом README — требование задания (доступ к стенду для проверяющего).
+
+---
+
+## Воспроизведение с нуля
+
+```bash
+# 1. Инфраструктура
+cd bootstrap && terraform init && terraform apply -auto-approve
+terraform output -json > /tmp/tfstate-backend.json
+cd ../infra
+export AWS_ACCESS_KEY_ID=$(jq -r .access_key.value /tmp/tfstate-backend.json)
+export AWS_SECRET_ACCESS_KEY=$(jq -r .secret_key.value /tmp/tfstate-backend.json)
+terraform init && terraform apply -auto-approve
+
+# 2. Kubernetes
+cd ../kubespray && source .venv/bin/activate
+../scripts/make_inventory.sh
+ansible-playbook -i inventory/mycluster/inventory.ini cluster.yml -b -v
+cp inventory/mycluster/artifacts/admin.conf ~/.kube/config   # + заменить server на публичный IP
+
+# 3. Мониторинг и приложение
+helm install monitoring prometheus-community/kube-prometheus-stack -n monitoring --create-namespace -f ../k8s/monitoring/values.yaml
+helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --create-namespace --set controller.kind=DaemonSet --set controller.hostNetwork=true
+kubectl apply -f ../k8s/test-app/deployment.yaml
+kubectl apply -f ../k8s/ingress.yaml
+
+# 4. Дальше инфраструктурой управляет CI/CD:
+#    коммит в main (infra/**) -> terraform apply в GitHub Actions
+#    коммит в app/**          -> сборка образа
+#    тег v*                   -> сборка + деплой в кластер
+```
+
+---
+
+## Заключение
+
+Все пять этапов дипломного практикума выполнены: облачная инфраструктура управляется Terraform
+с state в S3-бакете, Kubernetes-кластер развёрнут Kubespray и доступен из Интернета, тестовое
+приложение собирается в Docker и живёт в Yandex Container Registry, мониторинг на kube-prometheus-stack
+отдаёт дашборды и приложение по HTTP на 80 порту, а оба CI/CD-пайплайна (инфраструктура и приложение)
+автоматически применяют изменения из git. Возникшие ограничения облака (квоты, закрытая зона,
+фильтрация IP) и сбои конфигураций диагностированы и устранены через код — без ручных действий в консоли.
