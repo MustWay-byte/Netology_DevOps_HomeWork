@@ -372,3 +372,6 @@ output "registry_id" {
 
 <img width="1885" height="926" alt="image" src="https://github.com/user-attachments/assets/4059065f-492b-4b0c-81df-2140402c2a15" />
 
+**Список задеплоенных образов**
+
+<img width="1188" height="100" alt="image" src="https://github.com/user-attachments/assets/27bbd3fe-3251-4dde-b05c-4a22871a6ee3" />
