@@ -4,11 +4,10 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'devops-diplom-yandexcloud/k8s/test-app/**'
-  push:
     tags:
       - 'v*'
+    paths:
+      - 'devops-diplom-yandexcloud/k8s/test-app/**'
 
 env:
   REGISTRY: cr.yandex
