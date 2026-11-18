@@ -408,18 +408,6 @@ kubectl get pods --all-namespaces         # все Running / Completed
 
 Доступ из Интернета проверен тестовым nginx через NodePort: `curl -I http://<worker_public>:<nodeport>` → `HTTP/1.1 200 OK`.
 
-### Проблемы и решения (troubleshooting)
-
-| Симптом | Диагностика | Решение |
-|---|---|---|
-| `ResourceExhausted: limit on total size of network-ssd disks exceeded` | Консоль → IAM → Квоты: SSD 10 ГБ/зона, HDD 20 ГБ/зона, 2 vCPU/зона | Переход на `network-hdd`, диски 20 ГБ, по 1 ноде на зону; заявка на увеличение квот |
-| `FailedPrecondition: Zone ru-central1-b is not available` | Зона закрыта для новых ВМ в аккаунте | Worker'ы перенесены в `d` и `e`, добавлена `subnet_e`; подсеть `b` сохранена |
-| SSH к master/worker-2: `Connection timed out`, при этом worker-1 работает | Serial-консоль: загрузка OK, ключи на месте; ping: master IP мёртв целиком, у worker-2 проходит ICMP, но не TCP 22; изнутри VPC обе ноды отвечают → фильтрация на пути провайдера, а не проблема облака | Перевыпуск публичных IP: `terraform apply -replace=yandex_compute_instance.master -replace='yandex_compute_instance.worker[1]'` |
-| Kubespray v2.32 не ставится на Python 3.10 | ansible-core 2.19 требует Python ≥ 3.11 | `python3.11` из deadsnakes PPA, venv на его основе |
-
-Эпизод с блокировками IP — пример системной диагностики: serial-консоль → ping vs TCP → проверка
-изнутри VPC через рабочий узел → локализованная причина → исправление через Terraform, без ручных действий в облаке.
-
 ### Результаты
 
 | Требование | Статус |
@@ -679,17 +667,6 @@ spec:
 - **Адаптация под CI:** SSH-ключ передаётся переменной `var.ssh_public_key` (`TF_VAR_ssh_public_key`),
   а не `file()` — на runner'е нет локальных файлов ключей.
 
-### Проблемы и решения (troubleshooting)
-
-| Симптом | Причина | Решение |
-|---|---|---|
-| `ImagePullBackOff` у test-app | у kubelet нет доступа к приватному реестру | настроен доступ нод к registry; образы.pullятся, поды `Running` |
-| Ingress webhook: `host "_" and path ... already defined` | два Ingress с пересекающимися путями в разных namespace | удалён старый Ingress, единый `main-ingress` в `monitoring` |
-| Grafana `404` / редирект на `localhost:3000` | не настроен subpath | `grafana.ini.server.root_url` + `serve_from_sub_path: true`, пробы `/grafana/api/health` |
-| Grafana не принимает новый пароль | старый пароль закэширован в SQLite на PVC | `helm uninstall` + `kubectl delete pvc -l app.kubernetes.io/name=grafana`, пароль вынесен в `existingSecret` |
-| `kubectl`/`helm`: `localhost:8080 refused` | `~/.kube/config` случайно перезаписан конфигом с внутренним IP | восстановлен из `admin.conf` мастера, server заменён на публичный IP |
-| Workflow не запускался | фильтр `paths` и `working-directory` | исправлены пути триггеров и рабочая директория job'а |
-
 ### Доступ к сервисам
 
 | Сервис | URL | Учётные данные |
@@ -793,13 +770,6 @@ env:
 | `YC_SA_JSON` | JSON-ключ сервисного аккаунта (YC CLI, Container Registry) |
 | `KUBE_CONFIG` | kubeconfig для подключения к API кластера |
 
-### Проблемы и решения
-
-| Симптом | Причина | Решение |
-|---|---|---|
-| `Invalid workflow file: 'push' is already defined` | два ключа `push` в YAML (ветка и теги отдельно) | объединены в один `push` с `branches` + `tags` |
-| `401 Unauthorized` при pull образа во время rollout | у нод не было авторизации в приватном реестре | настроен доступ к registry; rollout завершился успешно |
-
 ### Результаты
 
 | Требование | Статус |
@@ -823,85 +793,6 @@ env:
 **Список задеплоенных образов**
 
 <img width="1188" height="100" alt="image" src="https://github.com/user-attachments/assets/27bbd3fe-3251-4dde-b05c-4a22871a6ee3" />
-
----
-
-## Сводное соответствие заданию
-
-| Этап | Требование | Реализация | Подтверждение |
-|---|---|---|---|
-| 1 | SA без прав суперпользователя | `bucket-sa`, `storage.admin` | скриншот IAM |
-| 1 | S3-backend через Terraform | `mustway-tfstate-bucket-2026` | скриншот бакета |
-| 1 | Разные папки конфигураций | `bootstrap/`, `infra/` | структура репозитория |
-| 1 | VPC + подсети в разных AZ | 4 подсети (a/b/d/e) | скриншот VPC |
-| 1 | destroy/apply без ручных действий | цикл destroy → apply → plan | скриншоты терминала |
-| 2 | ≥3 ВМ через Terraform | 3 ВМ, тип обоснован | скриншот Compute Cloud |
-| 2 | Ansible (Kubespray) | v2.32.0, inventory из outputs | репозиторий |
-| 2 | Работающий кластер + kubeconfig | v1.36.4, `~/.kube/config` | `get nodes`, `get pods -A` |
-| 2 | Доступ из Интернета | NodePort 200 OK, Ingress :80 | скриншот curl |
-| 3 | Отдельный репозиторий + Dockerfile | Netology_Diplom_TestApp | ссылка |
-| 3 | Registry с образом через Terraform | `registry.tf` + import, образы v1/latest | скриншот образов |
-| 4 | kube-prometheus-stack | Helm, namespace monitoring | скриншот подов |
-| 4 | Grafana :80 + дашборды | Ingress + subpath | скриншот Grafana |
-| 4 | Приложение :80 | Ingress `/` | скриншот приложения |
-| 4 | ci/cd-terraform | GitHub Actions `terraform.yml` | скриншот пайплайна |
-| 5 | Сборка при коммите | `build-and-push` | скриншоты Actions |
-| 5 | Деплой при теге v* | `deploy-to-k8s`, v1.0.3/v1.0.4 | скриншоты rollout |
-
----
-
-## Экономия ресурсов и безопасность
-
-### Экономия (ограниченный бюджет купона)
-
-- **Минимальные ВМ**: 2 vCPU / 4 GB — нижняя граница требований kubeadm; диски 20 GB `network-hdd`.
-- **Без облачного LoadBalancer**: ingress-nginx в режиме DaemonSet + hostNetwork слушает 80 порт
-  прямо на нодах — не создаётся платный балансировщик.
-- **Один мастер** (неотказоустойчивый) — достаточно для учебного стенда.
-- **S3-бакет с лимитом 1 GB** — state занимает килобайты.
-- **Прерываемые ВМ**: переменная `preemptible` в `compute.tf`; включение для worker-нод —
-  один `terraform apply` (−~70% стоимости ВМ). На момент сдачи стенд работал на обычных ВМ
-  ради стабильности демонстрации; переключение выполняется без ручных действий в облаке.
-- Остановка ВМ на время простоя (`yc compute instance stop`) — оплата только за диски.
-
-### Безопасность
-
-- `key.json`, `*.tfstate`, `terraform.tfvars`, приватные SSH-ключи — в `.gitignore`, в репозиторий не попадают.
-- Ключи S3-backend — только в переменных окружения и GitHub Secrets.
-- Пароль Grafana — в Kubernetes Secret `grafana-admin-credentials` (`existingSecret`), не в values.yaml.
-- Все секреты пайплайнов — в GitHub Secrets (`YC_SA_JSON`, `AWS_*`, `TF_VAR_*`, `KUBE_CONFIG`).
-- Публикация пароля Grafana в этом README — требование задания (доступ к стенду для проверяющего).
-
----
-
-## Воспроизведение с нуля
-
-```bash
-# 1. Инфраструктура
-cd bootstrap && terraform init && terraform apply -auto-approve
-terraform output -json > /tmp/tfstate-backend.json
-cd ../infra
-export AWS_ACCESS_KEY_ID=$(jq -r .access_key.value /tmp/tfstate-backend.json)
-export AWS_SECRET_ACCESS_KEY=$(jq -r .secret_key.value /tmp/tfstate-backend.json)
-terraform init && terraform apply -auto-approve
-
-# 2. Kubernetes
-cd ../kubespray && source .venv/bin/activate
-../scripts/make_inventory.sh
-ansible-playbook -i inventory/mycluster/inventory.ini cluster.yml -b -v
-cp inventory/mycluster/artifacts/admin.conf ~/.kube/config   # + заменить server на публичный IP
-
-# 3. Мониторинг и приложение
-helm install monitoring prometheus-community/kube-prometheus-stack -n monitoring --create-namespace -f ../k8s/monitoring/values.yaml
-helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --create-namespace --set controller.kind=DaemonSet --set controller.hostNetwork=true
-kubectl apply -f ../k8s/test-app/deployment.yaml
-kubectl apply -f ../k8s/ingress.yaml
-
-# 4. Дальше инфраструктурой управляет CI/CD:
-#    коммит в main (infra/**) -> terraform apply в GitHub Actions
-#    коммит в app/**          -> сборка образа
-#    тег v*                   -> сборка + деплой в кластер
-```
 
 ---
 
