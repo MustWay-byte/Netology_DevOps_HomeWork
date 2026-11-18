@@ -1,4 +1,0 @@
----
-dependencies:
-  - role: kubespray_defaults
-  - role: etcd_defaults
