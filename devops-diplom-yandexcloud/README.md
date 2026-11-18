@@ -368,6 +368,8 @@ output "registry_id" {
 
 <img width="1892" height="686" alt="image" src="https://github.com/user-attachments/assets/58ee6795-0d55-466d-a6d6-ebfb776b0bd2" />
 
+<img width="1319" height="893" alt="image" src="https://github.com/user-attachments/assets/70ba458d-a707-4c58-b8b4-632242c657bb" />
+
 *Деплой образа**
 
 <img width="1885" height="926" alt="image" src="https://github.com/user-attachments/assets/4059065f-492b-4b0c-81df-2140402c2a15" />
