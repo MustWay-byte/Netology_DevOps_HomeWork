@@ -696,6 +696,12 @@ spec:
 
 <img width="1847" height="832" alt="image" src="https://github.com/user-attachments/assets/d36f897e-410b-4d5f-9656-46306728486b" />
 
+<img width="1850" height="715" alt="image" src="https://github.com/user-attachments/assets/2f52c63b-aba0-4584-970b-cb25175bf31d" />
+
+<img width="1846" height="707" alt="image" src="https://github.com/user-attachments/assets/4c598e5b-ae18-4c7d-9e45-9d9fac808e8d" />
+
+<img width="1846" height="835" alt="image" src="https://github.com/user-attachments/assets/94fd80f0-c817-4c0d-9e3f-dd2a13126042" />
+
 **Статус подов в кластере**
 
 <img width="983" height="569" alt="image" src="https://github.com/user-attachments/assets/84639077-32f3-4cc6-ab6d-053e042f3916" />
