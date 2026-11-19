@@ -704,7 +704,7 @@ spec:
 
 **Статус подов в кластере**
 
-<img width="983" height="569" alt="image" src="https://github.com/user-attachments/assets/84639077-32f3-4cc6-ab6d-053e042f3916" />
+<img width="979" height="595" alt="image" src="https://github.com/user-attachments/assets/230d3438-d5d2-48ec-8e19-9e3ad9169f81" />
 
 **Работа пайплайна**
 
