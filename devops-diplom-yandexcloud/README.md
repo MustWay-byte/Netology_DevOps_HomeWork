@@ -710,6 +710,8 @@ spec:
 
 <img width="1872" height="705" alt="image" src="https://github.com/user-attachments/assets/98e92920-1201-412a-a304-7dbda9db83f9" />
 
+<img width="933" height="840" alt="image" src="https://github.com/user-attachments/assets/c0350ad4-af0b-446d-9eef-a619ff1d0a8a" />
+
 ---
 
 ## Этап 5. Установка и настройка CI/CD
