@@ -529,6 +529,10 @@ docker push  cr.yandex/${REGISTRY_ID}/test-app:latest
 
 <img width="1839" height="295" alt="image" src="https://github.com/user-attachments/assets/eddefb0c-285c-4007-b3ca-94681a009826" />
 
+**Обзор образа**
+
+<img width="890" height="542" alt="image" src="https://github.com/user-attachments/assets/28a0b12c-d9a8-48f9-a528-5e47841a02e4" />
+
 ---
 
 ## Этап 4. Подготовка системы мониторинга и деплой приложения
