@@ -694,7 +694,7 @@ spec:
 
 **Дашборды Grafana**
 
-<img width="1840" height="818" alt="image" src="https://github.com/user-attachments/assets/46bb9b5a-0b97-45b8-a424-2920429c0662" />
+<img width="1837" height="818" alt="image" src="https://github.com/user-attachments/assets/e3dfe4b3-9eb9-43a1-af54-f000f86ee1ee" />
 
 **Статус подов в кластере**
 
