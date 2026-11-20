@@ -588,12 +588,6 @@ prometheus:
     serviceMonitorSelectorNilUsesHelmValues: false   # видеть все ServiceMonitor'ы
 ```
 
-```bash
-kubectl create secret generic grafana-admin-credentials -n monitoring \
-  --from-literal=admin-user=admin \
-  --from-literal=admin-password=netology-diplom-2026
-```
-
 ### Ingress: единая точка входа на 80 порту
 
 ```bash
@@ -668,7 +662,7 @@ spec:
 | Сервис | URL | Учётные данные |
 |---|---|---|
 | Тестовое приложение | http://84.201.173.154/ | — |
-| Grafana | http://84.201.173.154/grafana/ | `admin` / `netology-diplom-2026` |
+| Grafana | http://84.201.173.154/grafana/ | Kubernetes Secret |
 
 Проверено: `curl -I http://84.201.173.154/` → `200 OK`; `curl -I http://84.201.173.154/grafana/` → `302` на `/grafana/login`, интерфейс открывается.
 Дашборды `Kubernetes / Compute Resources / Cluster` и дашборды нод отображают живые метрики кластера.
