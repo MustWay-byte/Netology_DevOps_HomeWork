@@ -88,7 +88,7 @@
 | Сервис | URL | Учётные данные |
 |---|---|---|
 | Тестовое приложение | http://84.201.173.154/ | — |
-| Grafana | http://84.201.173.154/grafana/ | логин `admin`, пароль `netology-diplom-2026` |
+| Grafana | http://84.201.173.154/grafana/ | Kubernetes Secret |
 | Kubernetes API | `https://84.201.173.154:6443` | kubeconfig `~/.kube/config` |
 
 > [!NOTE]
